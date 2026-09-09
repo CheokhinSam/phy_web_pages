@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astrophysics / 天體物理學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">ASTRO LAB</div>
+            <h1 class="main-title">天體物理學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，探究萬有引力、天體運行與浩瀚宇宙的物理規律。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗標題..." autocomplete="off">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </header>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/10-kepler/" class="exp-card">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>🪐 克卜勒定律</h3>
+                    <p>觀察行星在橢圓軌道上的運動，驗證克卜勒三大定律：軌道定律、面積定律、週期定律。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const cards = document.querySelectorAll('.exp-card');
+
+        // 比對函數：支援多個關鍵字（空格分隔）
+        function matchCard(card, query) {
+            const terms = query.split(/\s+/);
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+            const searchText = title + ' ' + desc;
+            return terms.every(term => searchText.includes(term));
+        }
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+
+            if (!query) {
+                cards.forEach(card => card.style.display = '');
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            let hasResult = false;
+            cards.forEach(card => {
+                if (matchCard(card, query)) {
+                    card.style.display = '';
+                    hasResult = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (!hasResult) {
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = '<div class="no-result">找不到符合的實驗</div>';
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 簡諧運動圖像 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_05</div>
+                <h1 class="lab-title">🌀 簡諧運動圖像</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>本實驗讓你觀察<strong>簡諧運動的位移-時間圖像</strong>。上方是彈簧振子動畫，下方即時繪製 x-t 圖。你可以調整<strong>相位 φ</strong>（0、π/2、π、3π/2、2π），觀察波形如何平移，深入理解公式 $x(t) = A\sin(\omega t + \phi)$ 中每個符號的意義。</p>
+
+<p>按「開始」後小球開始振動，紅色軌跡記錄實際位移，藍色虛線顯示理論曲線。調整相位滑桿，小球會跳到對應的起始位置。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p>簡諧運動的位移可以用一個正弦函數來描述：</p>
+
+\[x(t) = A\sin(\omega t + \phi)\]
+
+<p>這個公式告訴你小球在任何時刻的位置：</p>
+
+<ul>
+  <li><strong>A（振幅）</strong>：小球離平衡位置最遠的距離。振幅越大，擺動範圍越大。</li>
+  <li><strong>ω（角頻率）</strong>：決定振動快慢。ω 越大，來回擺動越快。$\omega = \sqrt{k/m}$</li>
+  <li><strong>φ（相位）</strong>：決定振動的「起始狀態」。</li>
+</ul>
+
+<h3 id="相位的意義">相位的意義</h3>
+
+<p>相位 φ 控制的是「振動從哪個階段開始」：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>相位 φ</th>
+      <th>起始位置</th>
+      <th>起始速度</th>
+      <th>白話說</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>平衡位置</td>
+      <td>向右（最大）</td>
+      <td>從中間衝出去</td>
+    </tr>
+    <tr>
+      <td>π/2</td>
+      <td>最右端 (+A)</td>
+      <td>0</td>
+      <td>從最右邊靜止放開</td>
+    </tr>
+    <tr>
+      <td>π</td>
+      <td>平衡位置</td>
+      <td>向左（最大）</td>
+      <td>從中間往左衝</td>
+    </tr>
+    <tr>
+      <td>3π/2</td>
+      <td>最左端 (-A)</td>
+      <td>0</td>
+      <td>從最左邊靜止放開</td>
+    </tr>
+    <tr>
+      <td>2π</td>
+      <td>平衡位置</td>
+      <td>向右（最大）</td>
+      <td>同 φ=0，回到起點</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>就像兩個人盪鞦韆：同時從最高點出發（φ 相同）會同步擺動；一個從最高點、一個從最低點出發（φ 差 π），動作完全相反。</p>
+
+<h3 id="從圖表看出端倪">從圖表看出端倪</h3>
+
+<ul>
+  <li><strong>藍色虛線</strong>：理論曲線，根據公式畫出的正弦波</li>
+  <li><strong>紅色實線</strong>：模擬的實際軌跡（無阻尼時兩者完全重合）</li>
+  <li><strong>紅點</strong>：小球此刻在圖上的位置</li>
+  <li>調整 φ 時，小球會跳到新的起始位置，藍色曲線也會平移</li>
+</ul>
+
+<h3 id="生活中的相位">生活中的相位</h3>
+
+<ul>
+  <li>🎵 <strong>音樂和弦</strong>：兩個音叉同時振動，相位差決定聲音是加強還是抵消</li>
+  <li>🌊 <strong>海浪干涉</strong>：兩道波浪相遇時，相位相同會疊高，相位相反會抵消</li>
+  <li>💡 <strong>降噪耳機</strong>：產生和噪音相位差 π 的聲波，兩者抵消達到靜音效果</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>為什麼 x-t 圖是正弦波形？它和彈簧的伸縮有什麼對應關係？</li>
+  <li>把相位 φ 從 0 調到 π/2，小球的起始位置有什麼不同？</li>
+  <li>相位 φ = π 和 φ = 0 的波形有什麼關係？為什麼？</li>
+  <li>改變振幅 A，波形有什麼變化？改變彈簧常數 k 呢？</li>
+  <li>如果同時改變 k 和 m 但保持 k/m 不變，週期會變嗎？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/shm-waveform.js"></script>
+    
+
+</body>
+</html>

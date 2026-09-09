@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚾ 拋體運動模擬 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_09</div>
+                <h1 class="lab-title">⚾ 拋體運動模擬</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>本實驗模擬物體在理想狀態下的拋體運動（忽略空氣阻力）。您可以透過左側的控制面板調整<strong>初速度</strong>、<strong>發射角度</strong>與<strong>初始高度</strong>，觀察物體的運動軌跡、速度變化與飛行規律。</p>
+
+<p>按下「發射」後，畫面上會顯示三組速度向量：紅色為合速度 $v$，綠色為水平分量 $v_x$，紫色為垂直分量 $v_y$，幫助您即時觀察速度的分解與變化。</p>
+
+<h2 id="物理知識與公式">物理知識與公式</h2>
+
+<h3 id="運動分解">運動分解</h3>
+
+<p>拋體運動可以分解為兩個獨立的運動：</p>
+
+<ul>
+  <li><strong>水平方向</strong>：不受力，做等速直線運動</li>
+  <li><strong>垂直方向</strong>：受重力作用，做等加速度運動</li>
+</ul>
+
+<h3 id="初速度分解">初速度分解</h3>
+
+<p>設初速度為 $v_0$，發射角度為 $\theta$，則：</p>
+
+\[v_{0x} = v_0 \cos\theta\]
+
+\[v_{0y} = v_0 \sin\theta\]
+
+<h3 id="位置方程">位置方程</h3>
+
+\[x(t) = v_0 \cos\theta \cdot t\]
+
+\[y(t) = h_0 + v_0 \sin\theta \cdot t - \frac{1}{2}gt^2\]
+
+<p>其中 $h_0$ 為初始高度，$g = 9.81 \, \text{m/s}^2$ 為重力加速度。</p>
+
+<h3 id="速度方程">速度方程</h3>
+
+\[v_x(t) = v_0 \cos\theta \quad \text{（恆定）}\]
+
+\[v_y(t) = v_0 \sin\theta - gt\]
+
+\[v(t) = \sqrt{v_x^2 + v_y^2}\]
+
+<h3 id="最高點">最高點</h3>
+
+<p>到達最高點時，$v_y = 0$，所需時間為：</p>
+
+\[t_{\text{peak}} = \frac{v_0 \sin\theta}{g}\]
+
+<p>最大高度為：</p>
+
+\[y_{\text{max}} = h_0 + \frac{(v_0 \sin\theta)^2}{2g}\]
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>在初速度固定的情況下，以哪個角度發射可以獲得最大的<strong>水平射程</strong>？</li>
+  <li>嘗試以 $30^\circ$ 和 $60^\circ$ 分別發射一次，觀察它們的落地點，你發現了什麼物理現象？</li>
+  <li>當飛行時間達到最高點時，垂直方向的速度是多少？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/projectile.js"></script>
+    
+
+</body>
+</html>

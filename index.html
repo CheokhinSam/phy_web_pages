@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam Explorer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f9fa;
+            color: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .accent-bar {
+            height: 6px;
+            background: linear-gradient(90deg, #2d3436, #636e72);
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+
+        .hero {
+            padding: 80px 0 48px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #636e72;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .card-grid {
+            display: flex;
+            justify-content: center;
+            padding-bottom: 80px;
+        }
+
+        .card {
+            display: block;
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #e9ecef;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+
+        .card h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #636e72;
+            line-height: 1.6;
+        }
+
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: #b2bec3;
+        }
+
+        @media (max-width: 480px) {
+            .hero { padding: 48px 0 32px; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .card { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="accent-bar"></div>
+
+    <div class="container">
+        <section class="hero">
+            <h1>Sam Explorer</h1>
+            <p>探索、實驗、創造 — 用好奇心驅動每一個項目。</p>
+        </section>
+
+        <section class="card-grid">
+            <a href="/phylab/" class="card">
+                <div class="card-icon">🔬</div>
+                <h2>虛擬物理實驗室</h2>
+                <p>互動式動態模擬實驗，涵蓋力學、電路、光學、電磁學等物理主題。</p>
+            </a>
+        </section>
+    </div>
+
+    <footer>&copy; 2026 Sam Explorer &middot; Built with curiosity</footer>
+</body>
+</html>

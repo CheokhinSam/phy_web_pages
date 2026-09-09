@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌌 萬有引力定律 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_12</div>
+                <h1 class="lab-title">🌌 萬有引力定律</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>本實驗視覺化兩個天體之間的萬有引力。您可以調整兩個天體的質量和它們之間的距離，觀察引力大小的變化。</p>
+
+<p>畫面中：</p>
+<ul>
+  <li><strong>藍色球體</strong>：天體1（M₁）</li>
+  <li><strong>橙色球體</strong>：天體2（M₂）</li>
+  <li><strong>連接線</strong>：顯示引力方向</li>
+  <li><strong>箭頭</strong>：表示力的大小</li>
+</ul>
+
+<h2 id="物理知識與公式">物理知識與公式</h2>
+
+<h3 id="萬有引力定律">萬有引力定律</h3>
+
+<p>牛頓在 1687 年提出：任意兩個有質量的物體之間都存在引力，大小為：</p>
+
+\[F = G \frac{M_1 M_2}{r^2}\]
+
+<p>其中：</p>
+<ul>
+  <li>$F$：引力（N）</li>
+  <li>$G$：萬有引力常數 = $6.674 \times 10^{-11}$ N·m²/kg²</li>
+  <li>$M_1, M_2$：兩個物體的質量（kg）</li>
+  <li>$r$：兩物體中心的距離（m）</li>
+</ul>
+
+<h3 id="關鍵特性">關鍵特性</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>因素</th>
+      <th>變化</th>
+      <th>引力變化</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>質量加倍</td>
+      <td>$M \rightarrow 2M$</td>
+      <td>$F \rightarrow 2F$</td>
+    </tr>
+    <tr>
+      <td>距離加倍</td>
+      <td>$r \rightarrow 2r$</td>
+      <td>$F \rightarrow F/4$</td>
+    </tr>
+    <tr>
+      <td>質量都加倍</td>
+      <td>$M \rightarrow 2M$</td>
+      <td>$F \rightarrow 4F$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="引力與日常">引力與日常</h3>
+
+<p>雖然引力是「萬有」的，但日常物體之間的引力非常小：</p>
+
+\[F_{apples} \approx 10^{-7} \text{ N}\]
+
+<p>只有當物體質量非常大（如行星、恆星）時，引力才會顯著。</p>
+
+<h3 id="應用">應用</h3>
+
+<ul>
+  <li><strong>行星軌道</strong>：太陽引力使行星繞行</li>
+  <li><strong>潮汐</strong>：月球引力造成海水漲落</li>
+  <li><strong>黑洞</strong>：極大質量產生極強引力</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>當其中一個天體的質量加倍時，引力如何變化？</li>
+  <li>距離變為原來的 2 倍時，引力變為原來的多少？</li>
+  <li>引力常數 G 的物理意義是什麼？</li>
+  <li>為什麼引力是「萬有」的？日常生活中的物體之間也有引力嗎？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/gravitation.js"></script>
+    
+
+</body>
+</html>

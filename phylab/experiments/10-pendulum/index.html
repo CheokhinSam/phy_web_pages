@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔮 單擺運動實驗 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_10</div>
+                <h1 class="lab-title">🔮 單擺運動實驗</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>本實驗模擬單擺的運動。您可以透過控制面板調整<strong>擺長 $L$</strong>、<strong>重力加速度 $g$</strong> 與<strong>初始角度 $\theta_0$</strong>，觀察單擺的振幅與週期變化。畫面上會即時顯示擺球的運動軌跡、角度標示以及動能與位能的能量長條圖。右側圖表即時追蹤角度 $\theta(t)$ 的變化曲線。</p>
+
+<h2 id="物理知識與公式">物理知識與公式</h2>
+
+<h3 id="單擺週期">單擺週期</h3>
+
+<p>在小角度近似下（$\theta &lt; 15°$），單擺的週期為：</p>
+
+\[T = 2\pi\sqrt{\frac{L}{g}}\]
+
+<p>其中 $L$ 為擺長，$g$ 為重力加速度。週期與<strong>擺球質量無關</strong>，也與<strong>振幅無關</strong>（等時性）。</p>
+
+<h3 id="單擺的能量">單擺的能量</h3>
+
+<ul>
+  <li><strong>位能</strong>：$U = mgL(1 - \cos\theta)$</li>
+  <li><strong>動能</strong>：$K = \frac{1}{2}mv^2$</li>
+  <li><strong>機械能守恆</strong>：$U + K = \text{const}$</li>
+</ul>
+
+<h3 id="大角度修正">大角度修正</h3>
+
+<p>當擺角較大時，週期需修正：</p>
+
+\[T = 2\pi\sqrt{\frac{L}{g}} \left(1 + \frac{1}{16}\theta_0^2 + \cdots \right)\]
+
+<p>擺角越大，實際週期越長。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>當小角擺動時，單擺的週期公式為 $T = 2\pi\sqrt{\frac{L}{g}}$。請驗證當你把<strong>擺長 $L$ 加倍</strong>時，週期是否也會加倍？</li>
+  <li>如果把這個單擺拿到<strong>月球</strong>上（重力加速度 $g$ 變小），單擺會擺得比地球快還是慢？</li>
+  <li>觀察底部的<strong>能量長條圖</strong>，當擺球通過最低點時，綠色（動能）和藍色（位能）的比例如何變化？總機械能是否保持不變？</li>
+  <li>將<strong>初始角度 $\theta_0$</strong> 調到最大（90°），觀察角度-時間圖表的波形是否仍為完美的正弦波？與小角度時有什麼差異？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/pendulum.js"></script>
+    
+
+</body>
+</html>

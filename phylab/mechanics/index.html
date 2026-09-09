@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Mechanics / 經典力學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">MECHANICS LAB</div>
+            <h1 class="main-title">經典力學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，探究重力、流體阻力與運動規律。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗標題..." autocomplete="off">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </header>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/01-reference-frame/" class="exp-card">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>🚲🚗🚶 參考系（Canvas 版）</h3>
+                    <p>用原生 Canvas 實現的參考系實驗，切換不同參照物觀察運動描述的變化。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/02-acceleration/" class="exp-card">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🚀 加速度</h3>
+                    <p>調整初速度與加速度，觀察物體在等加速度直線運動中的速度變化與位移關係。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/03-displacement-time-graph/" class="exp-card">
+                <div class="card-number">
+                    03
+                </div>
+                <div class="card-content">
+                    <h3>📈 位移時間圖</h3>
+                    <p>透過即時繪製位移-時間圖，觀察等速、加速、減速運動的圖形特徵，理解斜率與速度的關係。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/04-velocity-time-graph/" class="exp-card">
+                <div class="card-number">
+                    04
+                </div>
+                <div class="card-content">
+                    <h3>📈 速度時間圖</h3>
+                    <p>透過即時繪製速度-時間圖，觀察等速、加速、減速運動的圖形特徵，理解斜率代表加速度、面積代表位移。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/05-free-fall/" class="exp-card">
+                <div class="card-number">
+                    05
+                </div>
+                <div class="card-content">
+                    <h3>🍎 自由落體運動</h3>
+                    <p>同時釋放兩個不同質量的物體，觀察它們是否同時落地，理解自由落體與空氣阻力的關係</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/06-force-composition-decomposition/" class="exp-card">
+                <div class="card-number">
+                    06
+                </div>
+                <div class="card-content">
+                    <h3>⚖️ 力的合成與分解</h3>
+                    <p>調整兩個力的大小和夾角，觀察合力如何用平行四邊形法則和三角形法計算</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/07-newtons-second-law/" class="exp-card">
+                <div class="card-number">
+                    07
+                </div>
+                <div class="card-content">
+                    <h3>⚛️ 牛頓第二運動定律</h3>
+                    <p>調整施力、質量與摩擦係數，觀察 F=ma 如何決定物體的加速度與運動狀態</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/08-collision/" class="exp-card">
+                <div class="card-number">
+                    08
+                </div>
+                <div class="card-content">
+                    <h3>💥 兩球碰撞與動量守恆</h3>
+                    <p>觀察兩顆球碰撞前後的動量變化，驗證動量守恆定律。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/09-projectile/" class="exp-card">
+                <div class="card-number">
+                    09
+                </div>
+                <div class="card-content">
+                    <h3>⚾ 拋體運動模擬</h3>
+                    <p>調整初速度、發射角度與初始高度，觀察拋體運動的軌跡、速度分量與最大射程。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/10-pendulum/" class="exp-card">
+                <div class="card-number">
+                    10
+                </div>
+                <div class="card-content">
+                    <h3>🔮 單擺運動實驗</h3>
+                    <p>調整擺長、重力與初始角度，觀察單擺的週期運動、能量轉換與阻尼效應。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/11-terminal-velocity/" class="exp-card">
+                <div class="card-number">
+                    11
+                </div>
+                <div class="card-content">
+                    <h3>🪂 終端速度與流體阻力</h3>
+                    <p>模擬跳傘員自由落體過程，觀察空氣阻力如何令物體達到終端速度，並在打開降落傘後達到第二次更低的終端速度。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/12-gravitation/" class="exp-card">
+                <div class="card-number">
+                    12
+                </div>
+                <div class="card-content">
+                    <h3>🌌 萬有引力定律</h3>
+                    <p>觀察兩個天體之間的引力如何隨質量和距離變化，驗證牛頓萬有引力定律。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/13-reference-frame-p5/" class="exp-card">
+                <div class="card-number">
+                    13
+                </div>
+                <div class="card-content">
+                    <h3>🚶🚲🚗 參考系（p5.js 版）</h3>
+                    <p>用 p5.js + KaTeX 重做的參考系實驗，可與 Canvas 版比較不同繪圖技術的差異。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/14-pendulum2/" class="exp-card">
+                <div class="card-number">
+                    14
+                </div>
+                <div class="card-content">
+                    <h3>🔮 單擺運動實驗 2</h3>
+                    <p>力分解、相空間圖、自動週期量測、阻尼控制、小角度近似比較</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/17-pendulum-shm/" class="exp-card">
+                <div class="card-number">
+                    15
+                </div>
+                <div class="card-content">
+                    <h3>🌀 單擺的簡諧運動</h3>
+                    <p>透過單擺模擬，認識簡諧運動的週期、頻率與振幅</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const cards = document.querySelectorAll('.exp-card');
+
+        // 比對函數：支援多個關鍵字（空格分隔）
+        function matchCard(card, query) {
+            const terms = query.split(/\s+/);
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+            const searchText = title + ' ' + desc;
+            return terms.every(term => searchText.includes(term));
+        }
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+
+            if (!query) {
+                cards.forEach(card => card.style.display = '');
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            let hasResult = false;
+            cards.forEach(card => {
+                if (matchCard(card, query)) {
+                    card.style.display = '';
+                    hasResult = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (!hasResult) {
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = '<div class="no-result">找不到符合的實驗</div>';
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

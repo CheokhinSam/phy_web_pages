@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magnetism & Induction / 磁學與電磁感應實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">MAGNETISM LAB</div>
+            <h1 class="main-title">磁學與電磁感應實驗室</h1>
+            <p class="sub-title">點擊下方實驗，探究磁場分佈、電流磁效應與電磁感應規律。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗標題..." autocomplete="off">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+        </header>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/06-motor/" class="exp-card">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>⚙️ 直流電動機模擬</h3>
+                    <p>觀察電流通過線圈在磁場中旋轉的原理，調整電壓、磁場與匝數，改變轉速。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/07-lorentz-force/" class="exp-card">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🧲 洛倫茲力</h3>
+                    <p>觀察帶電粒子在均勻磁場中的圓周運動，驗證洛倫茲力公式和迴旋加速器原理。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const cards = document.querySelectorAll('.exp-card');
+
+        // 比對函數：支援多個關鍵字（空格分隔）
+        function matchCard(card, query) {
+            const terms = query.split(/\s+/);
+            const title = card.querySelector('h3').textContent.toLowerCase();
+            const desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+            const searchText = title + ' ' + desc;
+            return terms.every(term => searchText.includes(term));
+        }
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+
+            if (!query) {
+                cards.forEach(card => card.style.display = '');
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            let hasResult = false;
+            cards.forEach(card => {
+                if (matchCard(card, query)) {
+                    card.style.display = '';
+                    hasResult = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (!hasResult) {
+                searchResults.style.display = 'block';
+                searchResults.innerHTML = '<div class="no-result">找不到符合的實驗</div>';
+            } else {
+                searchResults.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
