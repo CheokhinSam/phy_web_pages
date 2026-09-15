@@ -1,0 +1,309 @@
+/* ==========================================================================
+   RESET & BASE STYLES (瑞士國際主義 - 科技藍大字體優化版)
+   ========================================================================== */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    color: #000000;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    font-size: 16px; /* 鎖定基準字體 */
+}
+
+/* 嚴格的網格容器 */
+.landing-container {
+    width: 100%;
+    max-width: 1200px; /* 🔴 稍微放寬，給大字體呼吸空間 */
+    padding: 80px 40px;
+}
+
+/* ==========================================================================
+   HERO SECTION (大標題區)
+   ========================================================================== */
+.hero-section {
+    margin-bottom: 80px;
+    border-bottom: 5px solid #000000; /* 🔴 加粗至 5px，更有結構感 */
+    padding-bottom: 45px;
+    text-align: left;
+}
+
+.brand-tag {
+    font-size: 1.0rem; /* 🔴 從 0.85rem 放大 */
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: #2563eb; /* 克萊因藍 */
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    font-family: monospace;
+}
+
+.main-title {
+    font-size: 4.5rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    margin: 0 0 28px 0;
+    color: #000000;
+    line-height: 1.1;
+}
+
+.sub-title {
+    font-size: 1.35rem;
+    color: #1a1a1a;
+    font-weight: 400;
+    max-width: 800px;
+    line-height: 1.65;
+}
+
+.back-home-link {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1.5px solid #000000;
+    color: #000000;
+    text-decoration: none;
+    font-family: monospace;
+    font-size: 0.85rem;
+    font-weight: 800;
+    background: #ffffff;
+    margin-bottom: 20px;
+    transition: background 0.15s, color 0.15s;
+}
+.back-home-link:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   EXPERIMENT GRID & CARDS (無縫網格與安全鎖)
+   ========================================================================== */
+.experiment-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0px;
+    border-top: 2px solid #000000; /* 🔴 與頂線呼應 */
+}
+
+@media (min-width: 768px) {
+    .experiment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.exp-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #ffffff;
+    padding: 45px 40px; /* 🔴 微調內襯空間 */
+    border-radius: 0px;
+    border-bottom: 2px solid #000000; /* 🔴 格線稍微加粗，強化瑞式線條 */
+    border-right: 2px solid #000000;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s ease;
+    position: relative;
+    min-height: 260px;
+    height: auto;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .experiment-grid .exp-card:nth-child(2n) {
+        border-right: none;
+    }
+    /* 如果最後一個卡片落單，強行補滿底線 */
+    .experiment-grid .exp-card:last-child {
+        border-right: none;
+    }
+}
+
+/* 卡片編號 */
+.card-number {
+    font-size: 1.05rem; /* 🔴 略微調整 */
+    font-weight: 800;
+    color: #000000;
+    margin-bottom: 35px;
+    font-family: monospace; /* 🔴 改為等寬字體，更有儀器感 */
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+}
+
+.card-content {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.card-content h3 {
+    margin: 0 0 16px 0;
+    font-size: 1.7rem; /* 🔴 從 1.5rem 顯著放大，大主題非常醒目 */
+    font-weight: 900;
+    color: #000000;
+    transition: transform 0.25s ease;
+}
+
+.card-content p {
+    margin: 0;
+    font-size: 1.1rem; /* 🔴 從 0.95rem 放大至 1.1rem，與內頁描述呼應 */
+    color: #475569;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* 右下角前進箭頭 */
+.card-arrow {
+    position: absolute;
+    bottom: 45px;
+    right: 40px;
+    font-size: 1.8rem; /* 🔴 箭頭同步放大 */
+    font-weight: 300;
+    color: #000000;
+    transition: all 0.25s ease;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   HOVER EFFECTS (黑白反轉與科技藍點綴)
+   ========================================================================== */
+.exp-card:hover {
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.exp-card:hover .card-content h3 {
+    color: #ffffff;
+    transform: translateX(6px);
+}
+
+.exp-card:hover .card-content p {
+    color: #cbd5e1; /* 🔴 懸停時描述變為高亮淡灰，提升暗色下的可讀性 */
+}
+
+.exp-card:hover .card-number {
+    color: #3b82f6; /* 懸停亮起電光藍 */
+}
+
+.exp-card:hover .card-arrow {
+    color: #3b82f6;
+    transform: translateX(8px);
+}
+
+/* ==========================================================================
+   CARD ICONS (SVG 圖標)
+   ========================================================================== */
+.card-icon {
+    position: absolute;
+    top: 2.5%;
+    left: 2.5%;
+    width: 95%;
+    height: 95%;
+    object-fit: cover;
+    opacity: 0.12;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.exp-card:hover .card-icon {
+    opacity: 0.2;
+}
+
+/* ==========================================================================
+   SEARCH BOX (搜尋框)
+   ========================================================================== */
+.search-box {
+    margin-top: 30px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    max-width: 500px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    font-family: 'Inter', monospace;
+    border: 2px solid #000000;
+    background: #ffffff;
+    color: #000000;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-box input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.search-box input::placeholder {
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.search-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-width: 500px;
+    background: #ffffff;
+    border: 2px solid #000000;
+    border-top: none;
+    z-index: 100;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: #000000;
+    border-bottom: 1px solid #e2e8f0;
+    transition: background 0.15s;
+}
+
+.search-result-item:hover {
+    background: #f1f5f9;
+}
+
+.search-result-item:last-child {
+    border-bottom: none;
+}
+
+.search-result-theme {
+    font-size: 0.75rem;
+    font-weight: 800;
+    font-family: monospace;
+    color: #2563eb;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    white-space: nowrap;
+}
+
+.search-result-title {
+    font-size: 1.0rem;
+    font-weight: 700;
+    color: #000000;
+}
+
+.no-result {
+    padding: 20px;
+    text-align: center;
+    color: #64748b;
+    font-weight: 600;
+}

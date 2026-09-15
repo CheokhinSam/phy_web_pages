@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚛️ 牛頓第二運動定律 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_07</div>
+                <h1 class="lab-title">⚛️ 牛頓第二運動定律</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>這個實驗讓你親眼看到「力」如何改變物體的運動狀態。你可以調整施力大小、物體質量和地面摩擦係數，觀察物體的加速度、速度和位移如何隨時間變化。</p>
+
+<p>畫面上的方塊代表物體，箭頭標示它受到的力：紅色是施力、橙色是摩擦力、藍色是加速度。透過調整參數，你會發現：力越大、質量越小，加速度就越大——這就是牛頓第二定律的核心。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p>牛頓第二定律告訴我們：<strong>物體的加速度與它受到的淨力成正比，與它的質量成反比</strong>。</p>
+
+<p>白話來說：推越大力，動得越快；東西越重，越難推動。</p>
+
+<p>想像你在超市推購物車——空車輕輕一推就跑了（質量小、加速度大），裝滿飲料的車要使勁推才會動（質量大、加速度小）。如果地上鋪了地毯（摩擦大），車子更難推動。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+\[F_{net} = ma\]
+
+<ul>
+  <li>$F_{net}$：淨力（所有外力的合力），單位是牛頓（N）</li>
+  <li>$m$：物體的質量，單位是公斤（kg）</li>
+  <li>$a$：加速度，單位是 m/s²</li>
+</ul>
+
+<p>當有摩擦力時：</p>
+
+\[a = \frac{F - \mu mg}{m}\]
+
+<ul>
+  <li>$F$：施加的外力</li>
+  <li>$\mu$：摩擦係數（表面粗糙程度）</li>
+  <li>$mg$：物體重量（重力）</li>
+</ul>
+
+<h3 id="從圖表看出端倪">從圖表看出端倪</h3>
+
+<ul>
+  <li><strong>速度-時間圖</strong>：斜率就是加速度。斜率越大代表加速越快，水平線代表等速運動</li>
+  <li><strong>加速度-時間圖</strong>：如果施力和質量不變，加速度會是一條水平線——這就是 F=ma 的體現</li>
+</ul>
+
+<h3 id="生活中的牛頓第二定律">生活中的牛頓第二定律</h3>
+
+<ul>
+  <li>🛒 <strong>推購物車</strong>：空車好推、重車難推，就是在體驗 m 對 a 的影響</li>
+  <li>🚗 <strong>汽車加速</strong>：踩油門越深（F 越大），加速越快；載滿乘客（m 越大），加速越慢</li>
+  <li>🛷 <strong>滑雪</strong>：冰面摩擦小（μ 小），輕輕一推就能滑很遠</li>
+  <li>🚚 <strong>剎車距離</strong>：大卡車（m 大）比小客車需要更長的煞車距離，因為要產生同樣的減速度需要更大的力</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>為什麼同樣的力推不同質量的物體，加速度會不一樣？</li>
+  <li>當施力剛好等於摩擦力時，物體會怎麼運動？為什麼？</li>
+  <li>把摩擦係數調到 0，物體的運動會有什麼不同？這在現實中可能發生嗎？</li>
+  <li>為什麼在冰上推箱子比在粗糙地面上輕鬆？這跟摩擦係數有什麼關係？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/newtons-second-law.js"></script>
+    
+
+</body>
+</html>

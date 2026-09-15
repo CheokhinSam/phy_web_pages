@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚖️ 力的合成與分解 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <script id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_06</div>
+                <h1 class="lab-title">⚖️ 力的合成與分解</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>這個實驗讓你看到兩個力如何「合在一起」變成一個合力，以及一個力如何「拆開」變成兩個分力。你可以調整兩個力的大小和它們之間的夾角，觀察合力的大小和方向如何變化。</p>
+
+<p>畫面同時展示兩種方法：左邊是「平行四邊形法」——兩個力構成平行四邊形的兩邊，對角線就是合力；右邊是「三角形法」——兩個力首尾相連，從起點到終點就是合力。這兩種方法算出來的結果完全一樣。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p>力是「向量」，有大小也有方向。兩個力加在一起，不能只把數字相加，還要考慮方向。</p>
+
+<p>想像你和朋友一起推一張桌子。如果你們往同一個方向推，力量會疊加得很大；如果你們往相反方向推，力量會互相抵消；如果你們往不同角度推，合力就介於兩者之間。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+\[F = \sqrt{F_1^2 + F_2^2 + 2F_1 F_2 \cos\theta}\]
+
+<ul>
+  <li>$F_1$、$F_2$：兩個分力的大小（單位：N）</li>
+  <li>$\theta$：兩個力之間的夾角</li>
+  <li>$F$：合力的大小</li>
+</ul>
+
+<p>白話來說：合力不只看兩個力有多大，還要看它們「夾幾度」。夾角越小（方向越接近），合力越大；夾角越大（方向越相反），合力越小。</p>
+
+<h3 id="從圖表看出端倪">從圖表看出端倪</h3>
+
+<ul>
+  <li><strong>夾角 0°</strong>：兩個力同方向，合力 = F₁ + F₂（最大值）</li>
+  <li><strong>夾角 90°</strong>：用畢氏定理，合力 = √(F₁² + F₂²)</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>夾角 180°</strong>：兩個力反方向，合力 =</td>
+          <td>F₁ - F₂</td>
+          <td>（最小值）</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><strong>夾角 120° 且 F₁ = F₂</strong>：合力剛好等於分力大小</li>
+</ul>
+
+<h3 id="生活中的力合成與分解">生活中的力合成與分解</h3>
+
+<ul>
+  <li>🧗 <strong>攀岩者的安全安全繩</strong>：繩子受到的力可以分解為水平和垂直兩個分量，工程師用這個計算繩子夠不夠強</li>
+  <li>⛵ <strong>帆船逆風航行</strong>：風力分解為推動船前進的分力和讓船側傾的分力，水手利用這個原理走之字形路線</li>
+  <li>🏋️ <strong>搬沙發上樓</strong>：斜坡上的重力分解為沿斜面往下的分力和壓緊斜面的分力，角度越陡，沿斜面的分力越大</li>
+  <li>🪁 <strong>風箏飛行</strong>：風力分解為升力和阻力，風箏線的張力也可以分解為水平和垂直分量</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>為什麼兩個力的合力不一定比個別的力大？什麼情況下合力反而比較小？</li>
+  <li>當兩個力的夾角變成 0° 和 180° 時，合力分別是多少？為什麼？</li>
+  <li>平行四邊形法和三角形法算出來的結果一樣嗎？為什麼這兩種方法等價？</li>
+  <li>拔河比賽時，兩邊各用 100N 的力拉繩子，繩子受到的合力是多少？為什麼繩子不會動？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/force-composition-decomposition.js"></script>
+    
+
+</body>
+</html>
