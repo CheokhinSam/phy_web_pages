@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electricity / 基礎電學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/phylab/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">ELECTRICITY LAB</div>
+            <h1 class="main-title">基礎電學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，深入微觀電子世界，探究電路基礎定量關係。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗（標題、關鍵字、標籤）..." autocomplete="off">
+            </div>
+        </header><div id="tagBar" class="tag-bar" style="display: none;"></div>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/04-ohms-law/" class="exp-card"
+               data-tags="電路"
+               data-keywords="歐姆定律 電壓 電流 電阻 V-I曲線 V-I圖 安培計 伏特計 滑動變阻器 電路 直流">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>⚡ 歐姆定律</h3>
+                    <p>接一條真實的電路，用伏特計與安培計的讀數逐點畫出 V–I 直線，看斜率為什麼就是電阻。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/06-resistivity/" class="exp-card"
+               data-tags="電阻與元件"
+               data-keywords="電阻率 電阻定律 ρ R=ρL/A 線長 截面積 銅 鎳鉻 電阻線 微觀 電子 晶格">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🧵 電阻的影響因素</h3>
+                    <p>同一根線拉長、壓扁、換材料，看電阻怎麼變——用兩條完全不同的路算出同一個答案。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/05-series-parallel/" class="exp-card"
+               data-tags="電路"
+               data-keywords="串聯 並聯 分壓 分流 等效電阻 燈泡亮度 電功率 I²R V²/R 電路">
+                <div class="card-number">
+                    03
+                </div>
+                <div class="card-content">
+                    <h3>💡 串聯電路與並聯電路</h3>
+                    <p>兩顆電阻不同的燈泡，切換串聯與並聯，看「哪一顆比較亮」的答案怎麼整個反過來。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/07-electric-power/" class="exp-card"
+               data-tags="電功率與電能"
+               data-keywords="電功率 電能 焦耳 千瓦時 kWh 度電 電費 保險絲 熔斷 額定電流 P=VI I²R V²/R">
+                <div class="card-number">
+                    04
+                </div>
+                <div class="card-content">
+                    <h3>🔥 電功率與電能</h3>
+                    <p>P = VI = I²R = V²/R 三個算法永遠給出同一個數；再加上電能、電費，還有會燒斷的保險絲。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/08-emf-internal-resistance/" class="exp-card"
+               data-tags="電功率與電能"
+               data-keywords="電動勢 emf 內電阻 端電壓 開路電壓 短路電流 V-I圖 斜率 電池 效率 測定內電阻">
+                <div class="card-number">
+                    05
+                </div>
+                <div class="card-content">
+                    <h3>🔋 電動勢與內電阻</h3>
+                    <p>改變外電阻，逐點畫出 V–I 直線——截距是電動勢、斜率是內電阻。這是測定電源內電阻的標準做法。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/09-iv-characteristics/" class="exp-card"
+               data-tags="電阻與元件"
+               data-keywords="I-V圖 V-I曲線 歐姆 非歐姆 二極體 燈泡 熱敏電阻 金屬 導通電壓 逆向偏壓 特性曲線">
+                <div class="card-number">
+                    06
+                </div>
+                <div class="card-content">
+                    <h3>📈 非歐姆元件的 I–V 特性</h3>
+                    <p>金屬、鎢絲燈泡、二極體、熱敏電阻，四條 I–V 曲線排在一起——只有一條是直線。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/10-kirchhoff/" class="exp-card"
+               data-tags="電路"
+               data-keywords="基爾霍夫 克希荷夫 KCL KVL 節點 迴路 電流定律 電壓定律 ΣI=0 ΣV=0 雙迴路 分支電流 電路分析">
+                <div class="card-number">
+                    07
+                </div>
+                <div class="card-content">
+                    <h3>🔀 基爾霍夫定律</h3>
+                    <p>雙迴路電路沒辦法用串並聯化簡——只能靠 ΣI = 0 與 ΣV = 0。中間那一支的電流還會整支掉頭。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+
+        <div id="gridEmpty" class="no-result" style="display: none;">找不到符合的實驗</div>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const tagBar      = document.getElementById('tagBar');
+        const gridEmpty   = document.getElementById('gridEmpty');
+        const cards       = Array.from(document.querySelectorAll('.exp-card'));
+        const wideGrid    = window.matchMedia('(min-width: 768px)');
+
+        let activeTag = null;
+
+        function tagsOf(card) {
+            return (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        }
+
+        // 建立每張卡片的可比對文字：標題 + 描述 + keywords + tags。
+        // keywords 每個實驗檔都有寫，但 Liquid 從沒把它輸出到 DOM，所以分類頁
+        // 以前搜「SHM」「虎克」「彈簧常數」都是 0 筆——而實驗室首頁有納入。
+        // 這裡只算一次，之後每次按鍵不必重讀 DOM。
+        cards.forEach(card => {
+            const title = card.querySelector('h3');
+            const desc  = card.querySelector('p');
+            card.dataset.searchText = [
+                title ? title.textContent : '',
+                desc  ? desc.textContent  : '',
+                card.dataset.keywords || '',
+                card.dataset.tags || ''
+            ].join(' ').toLowerCase();
+        });
+
+        // 標籤清單與計數直接從卡片掃出來，不另外維護一份資料
+        const tagCounts = new Map();
+        cards.forEach(card => {
+            tagsOf(card).forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+        });
+
+        function renderTagBar() {
+            if (tagCounts.size < 2) return;   // 整個分類只有一種標籤時，chips 沒有意義
+
+            const chips = Array.from(tagCounts.entries())
+                .sort((a, b) => b[1] - a[1])   // 實驗多的標籤排前面
+                .map(([tag, n]) =>
+                    `<button type="button" class="tag-chip" data-tag="${tag}"
+                             title="篩選：${tag}">${tag}<span class="tag-count">${n}</span></button>`
+                ).join('');
+
+            tagBar.innerHTML = '<span class="tag-bar-label">依主題篩選</span>' + chips;
+            tagBar.style.display = '';
+
+            tagBar.addEventListener('click', function (e) {
+                const chip = e.target.closest('.tag-chip');
+                if (!chip) return;
+                const tag = chip.dataset.tag;
+                activeTag = (activeTag === tag) ? null : tag;   // 再點一次 = 取消篩選
+                applyFilters();
+            });
+        }
+
+        // 篩選與搜尋是「且」的關係，統一在這裡決定誰顯示，避免兩處各自
+        // hide/show 造成狀態不同步
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const terms = query ? query.split(/\s+/) : [];
+            let shown = 0;
+
+            tagBar.querySelectorAll('.tag-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.tag === activeTag);
+            });
+
+            cards.forEach(card => {
+                const matchTag  = !activeTag || tagsOf(card).includes(activeTag);
+                const matchText = terms.every(term => card.dataset.searchText.includes(term));
+
+                card.style.display = (matchTag && matchText) ? '' : 'none';
+                if (!(matchTag && matchText)) return;
+
+                // 原本靠 :nth-child(2n) 拿掉每列第二張的右框，但 :nth-child 數的是
+                // DOM 位置，篩選後會對不上，卡片之間會少一條線或多一條線。
+                // 所以在雙欄模式下自己按「看得見的張數」重算。
+                shown++;
+                card.style.borderRight = wideGrid.matches
+                    ? (shown % 2 === 0 ? 'none' : '2px solid #000000')
+                    : '';
+            });
+
+            // 空狀態：顯示在 grid 的位置，而不是搜尋框底下的下拉——
+            // 用 chip 篩選時使用者未必在看搜尋框
+            gridEmpty.style.display = shown ? 'none' : 'block';
+            if (!shown) {
+                gridEmpty.textContent = activeTag && query
+                    ? `找不到同時符合「${activeTag}」與「${query}」的實驗。點一下藍色標籤可取消篩選。`
+                    : activeTag
+                        ? `找不到標籤「${activeTag}」的實驗。`
+                        : `找不到符合「${query}」的實驗。`;
+            }
+
+            // 讓篩選後的檢視可以直接分享：/phylab/mechanics/?tag=運動學
+            const url = new URL(window.location.href);
+            if (activeTag) url.searchParams.set('tag', activeTag);
+            else           url.searchParams.delete('tag');
+            history.replaceState(null, '', url);
+        }
+
+        renderTagBar();
+
+        // 讀取分享連結裡的 ?tag=（標籤不存在就忽略，applyFilters 會把它從網址清掉）
+        const initialTag = new URLSearchParams(window.location.search).get('tag');
+        if (initialTag && tagCounts.has(initialTag)) activeTag = initialTag;
+
+        searchInput.addEventListener('input', applyFilters);
+        wideGrid.addEventListener('change', applyFilters);   // 跨過 768px 時重算邊框
+
+        applyFilters();
+    </script>
+
+</body>
+</html>

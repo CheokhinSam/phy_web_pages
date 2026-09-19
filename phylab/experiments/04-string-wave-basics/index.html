@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪢 繩波的產生與傳播 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_02</div>
+                <h1 class="lab-title">🪢 繩波的產生與傳播</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>抓住跳繩的一端上下抖，就會有一個波浪沿著繩子跑出去。這個實驗要你仔細看那條繩子：<strong>跑掉的到底是什麼？</strong></p>
+
+<p>答案是<strong>「擾動」，不是繩子</strong>。每一小段都只在原地上下振動，沒有任何一段真的被帶到另一端去。</p>
+
+<p>畫面上是一條 8 公尺長的繩子，左邊是你的手（波源），紅線穿過的那顆紅珠點是被追蹤的目標。按下開始後波形從左端產生、往右跑，下方那張圖同步畫出<strong>紅珠點的位移-時間圖</strong>。</p>
+
+<p>左邊面板有四根滑桿：<strong>張力 $T$</strong>、<strong>線密度 $\mu$</strong>、<strong>頻率 $f$</strong>、<strong>振幅 $A$</strong>。前三根決定波跑多快，第四根不會。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念波速由介質決定不是由波源">核心概念：波速由介質決定，不是由波源</h3>
+
+<p>繩波的介質就是繩子本身，它的兩個性質決定了波跑多快：</p>
+
+\[v = \sqrt{\frac{T}{\mu}}\]
+
+<ul>
+  <li>$v$：波速（m/s），擾動沿繩子前進的速度</li>
+  <li>$T$：張力（N），繩子被拉得多緊</li>
+  <li>$\mu$：線密度（kg/m），每公尺的繩子有多重</li>
+</ul>
+
+<p><strong>繩子拉得越緊 → 波跑得越快；繩子越粗越重 → 波跑得越慢。</strong> 拉緊一點，繩子急著彈回原位，訊息傳得快；繩子重一點，每一段都很遲鈍，訊息傳得慢。</p>
+
+<p>注意式子裡<strong>沒有 f，也沒有 A</strong>——手抖得多快、多大，都改變不了波速。手只是製造擾動的人，波跑多快是繩子決定的。手抖得快改變的是<strong>波長</strong>：</p>
+
+\[v = f\lambda\]
+
+<p>$v$ 被繩子鎖死，$f$ 變大 $\lambda$ 就必須變小。手抖快一倍，波長縮短一半，波還是用同樣的速度前進。</p>
+
+<h3 id="怎麼從畫面讀出來">怎麼從畫面讀出來</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>你在畫面上看到什麼</th>
+      <th>代表什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>波形整體往右平移，形狀不變</td>
+      <td>波以固定的 $v$ 前進，波形不變形</td>
+    </tr>
+    <tr>
+      <td>珠點只在原地上下動，水平位置不動</td>
+      <td>介質不隨波前進，傳播的是擾動</td>
+    </tr>
+    <tr>
+      <td>時間圖一開始是<strong>平的</strong>，過一會才開始振動</td>
+      <td>波需要時間傳到紅珠點，這段時間就是 $x/v$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>那條平線就是波<strong>還沒走到</strong>紅珠點的那段時間——波不是一產生就讓整條繩子同時開始動。</p>
+
+<h3 id="兩個容易搞錯的地方">兩個容易搞錯的地方</h3>
+
+<ul>
+  <li><strong>波速 ≠ 質點速度</strong>。珠點上下振動的速度（零點幾 m/s）和波形前進的速度（好幾 m/s）是兩件完全不同的事。</li>
+  <li><strong>振幅 A 不影響波速，也不影響波長</strong>。手抖大力一點只是讓波形更明顯。</li>
+</ul>
+
+<h2 id="生活中的波">生活中的波</h2>
+
+<ul>
+  <li>🪢 <strong>甩跳繩</strong>：抖動的一端產生波，波沿繩子跑到另一端，但繩子本身留在原地</li>
+  <li>🎸 <strong>吉他弦</strong>：調緊弦（$T$ 變大）音就變高，因為波速變快、頻率跟著提高</li>
+  <li>📣 <strong>人浪</strong>：觀眾一個接一個站起來又坐下，人並沒有整排移動，但「站起來」這個動作沿著看台跑了一圈</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>波往前跑的時候，繩子上每一顆珠點有沒有跟著往前跑？把紅珠點盯住看十秒，它從頭到尾只做了什麼運動？</li>
+  <li>把「頻率 f」拉大（手抖快一點），波速 v 的卡片數字變了嗎？變的是哪一格？為什麼？</li>
+  <li>把「張力 T」拉大，波速怎麼變？把「線密度 μ」拉大，波速又怎麼變？兩者的效果為什麼方向相反？</li>
+  <li>波前還沒走到紅珠點之前，下面那張「紅珠點的位移-時間圖」是一條平線。這條平線在告訴你什麼？</li>
+  <li>用卡片上的三個數字（波速 v、波長 λ、頻率 f）算算看 v ÷ λ 等於多少。跟 f 比一比，你發現什麼？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/string-wave-basics.js"></script>
+    
+
+</body>
+</html>

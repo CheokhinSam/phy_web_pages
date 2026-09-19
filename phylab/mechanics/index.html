@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classical Mechanics / 經典力學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/phylab/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">MECHANICS LAB</div>
+            <h1 class="main-title">經典力學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，探究重力、流體阻力與運動規律。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗（標題、關鍵字、標籤）..." autocomplete="off">
+            </div>
+        </header><div id="tagBar" class="tag-bar" style="display: none;"></div>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/01-reference-frame/" class="exp-card"
+               data-tags="運動學"
+               data-keywords="參考系 參照物 相對運動 速度變換 運動描述 慣性 p5.js">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>🚶🚲🚗 參考系</h3>
+                    <p>切換不同參照物，觀察同一事件的運動描述如何隨參考系改變。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/02-acceleration/" class="exp-card"
+               data-tags="運動學"
+               data-keywords="加速 減速 速度變化 勻加速 自由落體">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🚀 加速度</h3>
+                    <p>調整初速度與加速度，觀察物體在等加速度直線運動中的速度變化與位移關係。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/03-displacement-time-graph/" class="exp-card"
+               data-tags="運動學,圖表分析"
+               data-keywords="x-t圖 位置時間 運動圖形 斜率 等速 加速 減速 分段變速 小車">
+                <div class="card-number">
+                    03
+                </div>
+                <div class="card-content">
+                    <h3>📈 位移時間圖</h3>
+                    <p>透過即時繪製位移-時間圖，觀察等速、等加速度、等減速與分段變速的圖形特徵，理解斜率與速度的關係。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/04-velocity-time-graph/" class="exp-card"
+               data-tags="運動學,圖表分析"
+               data-keywords="v-t圖 速度圖 加速度 面積位移 等速運動 勻速 分段變速 小車">
+                <div class="card-number">
+                    04
+                </div>
+                <div class="card-content">
+                    <h3>📈 速度時間圖</h3>
+                    <p>透過即時繪製速度-時間圖，觀察等速、等加速度、等減速與分段變速的圖形特徵，理解斜率代表加速度、面積代表位移。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/17-acceleration-time-graph/" class="exp-card"
+               data-tags="運動學,圖表分析"
+               data-keywords="a-t圖 加速度圖 加速度時間 面積 速度變化 等加速度 變加速度 圖表分析 運動圖形">
+                <div class="card-number">
+                    05
+                </div>
+                <div class="card-content">
+                    <h3>📈 加速度時間圖</h3>
+                    <p>繪製加速度-時間圖，觀察等加速度其實是一條水平線，並理解圖形底下的面積代表速度變化量。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/05-free-fall/" class="exp-card"
+               data-tags="運動學"
+               data-keywords="自由落體 重力加速度 g 伽利略 落體 空氣阻力 free fall gravity">
+                <div class="card-number">
+                    06
+                </div>
+                <div class="card-content">
+                    <h3>🍎 自由落體運動</h3>
+                    <p>同時釋放兩個不同質量的物體，觀察它們是否同時落地，理解自由落體與空氣阻力的關係</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/06-force-composition-decomposition/" class="exp-card"
+               data-tags="力與牛頓定律"
+               data-keywords="力的合成 力的分解 平行四邊形法 三角形法 向量 分力 合力 force composition decomposition parallelogram">
+                <div class="card-number">
+                    07
+                </div>
+                <div class="card-content">
+                    <h3>⚖️ 力的合成與分解</h3>
+                    <p>調整兩個力的大小和夾角，觀察合力如何用平行四邊形法則和三角形法計算</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/07-newtons-second-law/" class="exp-card"
+               data-tags="力與牛頓定律"
+               data-keywords="牛頓第二定律 F=ma 力 加速度 質量 摩擦力 淨力 運動定律 Newton&#39;s second law">
+                <div class="card-number">
+                    08
+                </div>
+                <div class="card-content">
+                    <h3>⚛️ 牛頓第二運動定律</h3>
+                    <p>調整施力、質量與摩擦係數，觀察 F=ma 如何決定物體的加速度與運動狀態</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/08-collision/" class="exp-card"
+               data-tags="動量守恆"
+               data-keywords="碰撞 動量守恆 彈性碰撞 非彈性碰撞 恢復係數 動量">
+                <div class="card-number">
+                    09
+                </div>
+                <div class="card-content">
+                    <h3>💥 兩球碰撞與動量守恆</h3>
+                    <p>觀察兩顆球碰撞前後的動量變化，驗證動量守恆定律。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/09-projectile/" class="exp-card"
+               data-tags="運動學"
+               data-keywords="拋物線 射程 角度 發射 水平 垂直 拋射">
+                <div class="card-number">
+                    10
+                </div>
+                <div class="card-content">
+                    <h3>⚾ 拋體運動模擬</h3>
+                    <p>調整初速度、發射角度與初始高度，觀察拋體運動的軌跡、速度分量與最大射程。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/10-pendulum/" class="exp-card"
+               data-tags="振動與簡諧"
+               data-keywords="單擺 擺動 週期 鐘擺 能量 動能 位能 振盪 阻尼 相空間 力分解 小角度 pendulum">
+                <div class="card-number">
+                    11
+                </div>
+                <div class="card-content">
+                    <h3>🔮 單擺運動實驗</h3>
+                    <p>力分解、相空間圖、自動週期量測、阻尼控制、小角度近似比較</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/11-terminal-velocity/" class="exp-card"
+               data-tags="力與牛頓定律"
+               data-keywords="終端速度 空氣阻力 流體阻力 跳傘 自由落體 力平衡">
+                <div class="card-number">
+                    12
+                </div>
+                <div class="card-content">
+                    <h3>🪂 終端速度與流體阻力</h3>
+                    <p>模擬跳傘員自由落體過程，觀察空氣阻力如何令物體達到終端速度，並在打開降落傘後達到第二次更低的終端速度。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/12-gravitation/" class="exp-card"
+               data-tags="萬有引力"
+               data-keywords="萬有引力 牛頓 引力常數 天體 質量 距離 平方反比">
+                <div class="card-number">
+                    13
+                </div>
+                <div class="card-content">
+                    <h3>🌌 萬有引力定律</h3>
+                    <p>觀察兩個天體之間的引力如何隨質量和距離變化，驗證牛頓萬有引力定律。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/15-spring-oscillator/" class="exp-card"
+               data-tags="振動與簡諧"
+               data-keywords="彈簧 簡諧運動 振動 SHM 彈簧常數 週期 頻率 阻尼 Hooke spring oscillator 振子 彈簧質量系統">
+                <div class="card-number">
+                    14
+                </div>
+                <div class="card-content">
+                    <h3>🌀 彈簧振子</h3>
+                    <p>拖拉小球改變位移，放開後觀察彈簧振子的簡諧運動與阻尼振動。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/16-shm-waveform/" class="exp-card"
+               data-tags="振動與簡諧"
+               data-keywords="簡諧運動 x-t圖 位移時間圖 相位 波形 正弦 SHM 振動 彈簧振子 waveform phase">
+                <div class="card-number">
+                    15
+                </div>
+                <div class="card-content">
+                    <h3>🌀 簡諧運動圖像</h3>
+                    <p>調整相位觀察簡諧運動的位移-時間圖像平移，理解 x(t) = A·sin(ωt + φ) 中各參數的意義。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/17-pendulum-shm/" class="exp-card"
+               data-tags="振動與簡諧"
+               data-keywords="單擺 簡諧運動 SHM 週期 頻率 振幅 回復力 擺動 鐘擺">
+                <div class="card-number">
+                    16
+                </div>
+                <div class="card-content">
+                    <h3>🌀 單擺的簡諧運動</h3>
+                    <p>透過單擺模擬，認識簡諧運動的週期、頻率與振幅</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/18-vertical-spring/" class="exp-card"
+               data-tags="振動與簡諧"
+               data-keywords="豎直彈簧 垂直彈簧 彈簧振子 簡諧運動 SHM 週期 靜態伸長 平衡位置 重力加速度 彈簧常數 虎克定律">
+                <div class="card-number">
+                    17
+                </div>
+                <div class="card-content">
+                    <h3>🌀 豎直彈簧振子</h3>
+                    <p>把彈簧垂直吊起來掛重物，觀察重力如何移動平衡位置，卻完全動不了週期</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/19-lever/" class="exp-card"
+               data-tags="簡單機械,力與牛頓定律"
+               data-keywords="槓桿 力臂 支點 力矩 平衡條件 翹翹板 撬棒 桿秤 定盤星 省力槓桿 費力槓桿 等臂槓桿 中學物理">
+                <div class="card-number">
+                    18
+                </div>
+                <div class="card-content">
+                    <h3>⚖️ 槓桿與力臂</h3>
+                    <p>力臂不是「支點到作用點的距離」——把手的施力方向斜過來，作用點一寸都沒動，力臂當場縮短，畫面上那條虛線自己變短給你看。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/20-pulleys/" class="exp-card"
+               data-tags="簡單機械,力與牛頓定律"
+               data-keywords="定滑輪 動滑輪 滑輪 等臂槓桿 省力 費距離 力的方向 拉力 繩子 中學物理">
+                <div class="card-number">
+                    19
+                </div>
+                <div class="card-content">
+                    <h3>🎡 定滑輪與動滑輪</h3>
+                    <p>定滑輪跟動滑輪長得一模一樣，一個完全不省力、一個省一半。差別只在一件事：繩子那一頭綁在哪裡。而它們其實都是槓桿。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/21-pulley-systems/" class="exp-card"
+               data-tags="簡單機械,功與能量"
+               data-keywords="滑輪組 滑輪 定滑輪 動滑輪 段數 省力 奇動偶定 機械效率 省力不省功 拉力 繩子 中學物理">
+                <div class="card-number">
+                    20
+                </div>
+                <div class="card-content">
+                    <h3>🏗️ 滑輪組</h3>
+                    <p>繩子繞成幾段，力就只剩幾分之一——但這個「幾」不是滑輪的個數，是畫面上數得出來的那幾段繩子。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/22-efficiency/" class="exp-card"
+               data-tags="簡單機械,功與能量"
+               data-keywords="機械效率 有用功 額外功 總功 省力不省功 效率 滑輪組 功與能量 中學物理">
+                <div class="card-number">
+                    21
+                </div>
+                <div class="card-content">
+                    <h3>⚙️ 機械效率</h3>
+                    <p>學會滑輪組省力之後，最容易有的錯覺就是「那我也省了功」。兩條總高度一樣的長條，把省力不省功變成一條長度。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+
+        <div id="gridEmpty" class="no-result" style="display: none;">找不到符合的實驗</div>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const tagBar      = document.getElementById('tagBar');
+        const gridEmpty   = document.getElementById('gridEmpty');
+        const cards       = Array.from(document.querySelectorAll('.exp-card'));
+        const wideGrid    = window.matchMedia('(min-width: 768px)');
+
+        let activeTag = null;
+
+        function tagsOf(card) {
+            return (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        }
+
+        // 建立每張卡片的可比對文字：標題 + 描述 + keywords + tags。
+        // keywords 每個實驗檔都有寫，但 Liquid 從沒把它輸出到 DOM，所以分類頁
+        // 以前搜「SHM」「虎克」「彈簧常數」都是 0 筆——而實驗室首頁有納入。
+        // 這裡只算一次，之後每次按鍵不必重讀 DOM。
+        cards.forEach(card => {
+            const title = card.querySelector('h3');
+            const desc  = card.querySelector('p');
+            card.dataset.searchText = [
+                title ? title.textContent : '',
+                desc  ? desc.textContent  : '',
+                card.dataset.keywords || '',
+                card.dataset.tags || ''
+            ].join(' ').toLowerCase();
+        });
+
+        // 標籤清單與計數直接從卡片掃出來，不另外維護一份資料
+        const tagCounts = new Map();
+        cards.forEach(card => {
+            tagsOf(card).forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+        });
+
+        function renderTagBar() {
+            if (tagCounts.size < 2) return;   // 整個分類只有一種標籤時，chips 沒有意義
+
+            const chips = Array.from(tagCounts.entries())
+                .sort((a, b) => b[1] - a[1])   // 實驗多的標籤排前面
+                .map(([tag, n]) =>
+                    `<button type="button" class="tag-chip" data-tag="${tag}"
+                             title="篩選：${tag}">${tag}<span class="tag-count">${n}</span></button>`
+                ).join('');
+
+            tagBar.innerHTML = '<span class="tag-bar-label">依主題篩選</span>' + chips;
+            tagBar.style.display = '';
+
+            tagBar.addEventListener('click', function (e) {
+                const chip = e.target.closest('.tag-chip');
+                if (!chip) return;
+                const tag = chip.dataset.tag;
+                activeTag = (activeTag === tag) ? null : tag;   // 再點一次 = 取消篩選
+                applyFilters();
+            });
+        }
+
+        // 篩選與搜尋是「且」的關係，統一在這裡決定誰顯示，避免兩處各自
+        // hide/show 造成狀態不同步
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const terms = query ? query.split(/\s+/) : [];
+            let shown = 0;
+
+            tagBar.querySelectorAll('.tag-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.tag === activeTag);
+            });
+
+            cards.forEach(card => {
+                const matchTag  = !activeTag || tagsOf(card).includes(activeTag);
+                const matchText = terms.every(term => card.dataset.searchText.includes(term));
+
+                card.style.display = (matchTag && matchText) ? '' : 'none';
+                if (!(matchTag && matchText)) return;
+
+                // 原本靠 :nth-child(2n) 拿掉每列第二張的右框，但 :nth-child 數的是
+                // DOM 位置，篩選後會對不上，卡片之間會少一條線或多一條線。
+                // 所以在雙欄模式下自己按「看得見的張數」重算。
+                shown++;
+                card.style.borderRight = wideGrid.matches
+                    ? (shown % 2 === 0 ? 'none' : '2px solid #000000')
+                    : '';
+            });
+
+            // 空狀態：顯示在 grid 的位置，而不是搜尋框底下的下拉——
+            // 用 chip 篩選時使用者未必在看搜尋框
+            gridEmpty.style.display = shown ? 'none' : 'block';
+            if (!shown) {
+                gridEmpty.textContent = activeTag && query
+                    ? `找不到同時符合「${activeTag}」與「${query}」的實驗。點一下藍色標籤可取消篩選。`
+                    : activeTag
+                        ? `找不到標籤「${activeTag}」的實驗。`
+                        : `找不到符合「${query}」的實驗。`;
+            }
+
+            // 讓篩選後的檢視可以直接分享：/phylab/mechanics/?tag=運動學
+            const url = new URL(window.location.href);
+            if (activeTag) url.searchParams.set('tag', activeTag);
+            else           url.searchParams.delete('tag');
+            history.replaceState(null, '', url);
+        }
+
+        renderTagBar();
+
+        // 讀取分享連結裡的 ?tag=（標籤不存在就忽略，applyFilters 會把它從網址清掉）
+        const initialTag = new URLSearchParams(window.location.search).get('tag');
+        if (initialTag && tagCounts.has(initialTag)) activeTag = initialTag;
+
+        searchInput.addEventListener('input', applyFilters);
+        wideGrid.addEventListener('change', applyFilters);   // 跨過 768px 時重算邊框
+
+        applyFilters();
+    </script>
+
+</body>
+</html>

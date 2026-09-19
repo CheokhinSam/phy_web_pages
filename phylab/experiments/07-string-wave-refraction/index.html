@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪢 繩波的折射與透射 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_05</div>
+                <h1 class="lab-title">🪢 繩波的折射與透射</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>把兩段<strong>粗細不同</strong>的繩子綁在一起拉緊，然後從細的那一端抖一個波過去。波跑到接點的時候，<strong>一部分反射回去，一部分透射過去</strong>——不是全過，也不是全彈回來，而是同時發生。只要介質變了，介面就一定同時產生反射波和透射波。</p>
+
+<p>畫面上有兩條 lane：上面是<strong>實際的繩子</strong>（左右兩段顏色不同），下面是<strong>分解</strong>——入射、反射、透射三條各自畫出來。分解那條把入射波一路畫到繩子右端，那是「如果沒有接點，它本來會繼續走」的虛像。</p>
+
+<p>左邊可以調<strong>兩段的線密度 μ₁、μ₂</strong>（張力兩邊當然一樣）與<strong>振幅 A</strong>，並切換兩個模式：</p>
+
+<ul>
+  <li><strong>單一脈衝</strong>（預設）：送出一個脈衝，看它當場裂成反射與透射兩個脈衝——「入射／反射／透射振幅」三張卡片就是它的重點。</li>
+  <li><strong>連續波</strong>：看波長——透射過去的那一段波長會變，但頻率一個都沒少。</li>
+</ul>
+
+<p>脈衝模式可以調<strong>脈衝寬度 w</strong>，連續波模式可以調<strong>頻率 f</strong>。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="什麼變什麼不變">什麼變、什麼不變</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>物理量</th>
+      <th>過介面時</th>
+      <th>為什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>頻率 f</strong></td>
+      <td><strong>不變</strong></td>
+      <td>介面兩側是同一條繩子連著，左邊每秒被抖幾下，右邊就被拉幾下</td>
+    </tr>
+    <tr>
+      <td><strong>波速 v</strong></td>
+      <td><strong>改變</strong></td>
+      <td>$v = \sqrt{T/\mu}$，張力一樣但線密度變了</td>
+    </tr>
+    <tr>
+      <td><strong>波長 λ</strong></td>
+      <td><strong>改變</strong></td>
+      <td>$v = f\lambda$，$f$ 不變、$v$ 變了，$\lambda$ 只能跟著變</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\frac{\lambda_1}{\lambda_2} = \frac{v_1}{v_2} = \sqrt{\frac{\mu_2}{\mu_1}}\]
+
+<p>繩子變重（μ 變大）→ 波跑得慢 → <strong>波長變短</strong>，但一秒鐘還是一樣幾個波。脈衝版本講的是同一件事：同樣的<strong>時間</strong>變化換到波速 $v_2$ 的繩子上，空間上就得伸縮 $v_2/v_1$ 倍——所以<strong>透射脈衝的寬度變成 $v_2/v_1$ 倍</strong>。</p>
+
+<h3 id="部分反射能量怎麼分">部分反射：能量怎麼分</h3>
+
+<p>介面上位移和斜率都必須連續，這兩個條件就把比例鎖死了：</p>
+
+\[r = \frac{v_2 - v_1}{v_1 + v_2} \qquad \tau = 1 + r\]
+
+<p>其中 $P = \tfrac{1}{2}Z\omega^2A^2$ 是波的能量通量（$Z = \sqrt{T\mu}$ 是阻抗）。</p>
+
+<ul>
+  <li>$r$：反射係數，反射波的振幅是 $rA$；$\mu_1 &lt; \mu_2$ 時 $r &lt; 0$，反射脈衝<strong>上下反轉</strong></li>
+  <li>$\tau$：透射係數，透射波的振幅是 $\tau A$，一定和入射同號</li>
+  <li>能量：<strong>反射拿走 $r^2$，透射拿走 $1 - r^2$</strong>，兩者加起來永遠是 1</li>
+</ul>
+
+<p>這正是右邊「反射能量比」卡片在顯示的東西：把兩段繩子調成一樣（μ₁ = μ₂），它會變成 0.0%，因為根本沒有介面。</p>
+
+<p>（這式子用<strong>速度</strong>寫，只在兩邊張力相同時成立；張力不同要用阻抗版 $r = (Z_1-Z_2)/(Z_1+Z_2)$。）</p>
+
+<h3 id="一維沒有偏折">一維沒有「偏折」</h3>
+
+<p><strong>一維的繩波不會轉彎</strong>——繩子只有一個方向，波只能沿著它跑。水波會偏折是因為它是<strong>二維</strong>的：波前斜斜撞上界面時，一部分先變速，整條波前就被扭轉了，這就是 Snell 定律（由「水波折射」那一頁負責）。</p>
+
+<h2 id="生活中的介面">生活中的介面</h2>
+
+<ul>
+  <li>🪢 <strong>繩子接橡皮筋</strong>：波從繩子傳到橡皮筋時會變慢、波長變短，同時有一部分彈回來</li>
+  <li>🌊 <strong>淺灘上的浪</strong>：浪從深海進入淺海，速度變慢、波長變短、波高變高（前後的能量擠在一起），最後才碎掉</li>
+  <li>🩺 <strong>超音波與地震波</strong>：工程師靠「反射回來多少、透射過去多少」判斷地底或人體內部的結構，用的就是這一組係數</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>「頻率 F」的卡片不管你把 μ₁、μ₂ 怎麼調，一直都是你設定的那個值。為什麼頻率可以不變，波速和波長卻要變？</li>
+  <li>把 μ₂ 調得比 μ₁ 大很多，透射波的波長是變長還是變短？和波速的變化方向一樣嗎？</li>
+  <li>反射能量比會隨 μ₁ 與 μ₂ 的差距變大而增加。如果兩段繩子完全一樣（μ₁ = μ₂），這個數字會是多少？實際調調看。</li>
+  <li>波在接點上「分裂」成兩條。如果反射的拿走了一部分能量，透射的拿走多少？（提示：加起來是多少？）</li>
+  <li>把繩子接上一根彈簧（張力一樣但重得多），你覺得反射會接近固定端還是自由端？</li>
+  <li>切成「單一脈衝」，盯著反射與透射那兩個脈衝看。它們的振幅、寬度、行進方向各和原來的脈衝差在哪裡？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/string-wave-refraction.js"></script>
+    
+
+</body>
+</html>

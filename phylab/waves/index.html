@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wave Mechanics / 波動學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/phylab/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">WAVE LAB</div>
+            <h1 class="main-title">波動學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，對比觀察橫波與縱波中介質的運動本質。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗（標題、關鍵字、標籤）..." autocomplete="off">
+            </div>
+        </header><div id="tagBar" class="tag-bar" style="display: none;"></div>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/01-waves/" class="exp-card"
+               data-tags="波的性質與行為"
+               data-keywords="橫波 縱波 波速 頻率 波長 週期 質點振動 密部 疏部 聲波 彈簧波">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>🌊 橫波與縱波</h3>
+                    <p>同一條介質上同時看橫波與縱波：質點振動的方向一個垂直、一個平行於傳播方向，但質點本身都不會被波帶走。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/04-string-wave-basics/" class="exp-card"
+               data-tags="波的性質與行為"
+               data-keywords="繩波 波的傳播 波速 波長 頻率 週期 張力 線密度 介質 橫波 波前 v=fλ">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🪢 繩波的產生與傳播</h3>
+                    <p>拉一條繩子上下抖動，觀察波往前跑但繩子本身沒有跑掉——理解波是擾動的傳播，並動手驗證 v = √(T/μ) 與 v = fλ。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/05-wave-superposition/" class="exp-card"
+               data-tags="波的性質與行為,波的疊加與駐波"
+               data-keywords="疊加原理 干涉 建設性干涉 破壞性干涉 波的疊加 脈衝 相長 相消 獨立傳播">
+                <div class="card-number">
+                    03
+                </div>
+                <div class="card-content">
+                    <h3>🪢 波的疊加與干涉</h3>
+                    <p>讓兩個脈衝在同一條繩子上對撞，看它們相遇時位移直接相加、分開後又各自完好如初——這就是疊加原理。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/06-string-wave-reflection/" class="exp-card"
+               data-tags="波的傳播與邊界"
+               data-keywords="波的反射 固定端 自由端 相位反轉 半波損失 反射係數 邊界條件 節點 腹點 繩波">
+                <div class="card-number">
+                    04
+                </div>
+                <div class="card-content">
+                    <h3>🪢 繩波的反射</h3>
+                    <p>同一個脈衝撞上固定端會上下反轉，撞上自由端卻原封不動——端點能不能動，決定了反射要不要反相。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/07-string-wave-refraction/" class="exp-card"
+               data-tags="波的傳播與邊界"
+               data-keywords="波的折射 透射 反射 部分反射 介面 波速 波長 頻率不變 阻抗 能量守恆 繩波">
+                <div class="card-number">
+                    05
+                </div>
+                <div class="card-content">
+                    <h3>🪢 繩波的折射與透射</h3>
+                    <p>把兩段粗細不同的繩子接起來，看波通過接點時波速與波長怎麼變、頻率為什麼不變，以及能量怎麼分配。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/08-standing-wave/" class="exp-card"
+               data-tags="波的疊加與駐波"
+               data-keywords="駐波 諧音 泛音 節點 腹點 共振 波長 弦樂器 基頻 二倍頻 一端固定一端自由">
+                <div class="card-number">
+                    06
+                </div>
+                <div class="card-content">
+                    <h3>🪢 駐波與諧音</h3>
+                    <p>把繩子兩端固定，只有特定波長活得下來：L = nλ/2。看節點永遠不動、腹點上下跳，並拆解成兩個反向行進波。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/02-wave-reflection/" class="exp-card"
+               data-tags="波的性質與行為,波的傳播與邊界"
+               data-keywords="水波 反射 反射定律 入射角 反射角 波前 法線">
+                <div class="card-number">
+                    07
+                </div>
+                <div class="card-content">
+                    <h3>🌊 水波的反射實驗</h3>
+                    <p>探究水波碰撞固定障礙物時的反射規律，動態驗證入射角等於反射角，並觀察波前的變化。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/03-wave-refraction/" class="exp-card"
+               data-tags="波的性質與行為,波的傳播與邊界"
+               data-keywords="水波 折射 Snell定律 折射角 波速 深水 淺水">
+                <div class="card-number">
+                    08
+                </div>
+                <div class="card-content">
+                    <h3>🌊 水波折射</h3>
+                    <p>觀察水波從深水區進入淺水區（或反向）時的波速、波長與折射角變化，驗證 Snell's law。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+
+        <div id="gridEmpty" class="no-result" style="display: none;">找不到符合的實驗</div>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const tagBar      = document.getElementById('tagBar');
+        const gridEmpty   = document.getElementById('gridEmpty');
+        const cards       = Array.from(document.querySelectorAll('.exp-card'));
+        const wideGrid    = window.matchMedia('(min-width: 768px)');
+
+        let activeTag = null;
+
+        function tagsOf(card) {
+            return (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        }
+
+        // 建立每張卡片的可比對文字：標題 + 描述 + keywords + tags。
+        // keywords 每個實驗檔都有寫，但 Liquid 從沒把它輸出到 DOM，所以分類頁
+        // 以前搜「SHM」「虎克」「彈簧常數」都是 0 筆——而實驗室首頁有納入。
+        // 這裡只算一次，之後每次按鍵不必重讀 DOM。
+        cards.forEach(card => {
+            const title = card.querySelector('h3');
+            const desc  = card.querySelector('p');
+            card.dataset.searchText = [
+                title ? title.textContent : '',
+                desc  ? desc.textContent  : '',
+                card.dataset.keywords || '',
+                card.dataset.tags || ''
+            ].join(' ').toLowerCase();
+        });
+
+        // 標籤清單與計數直接從卡片掃出來，不另外維護一份資料
+        const tagCounts = new Map();
+        cards.forEach(card => {
+            tagsOf(card).forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+        });
+
+        function renderTagBar() {
+            if (tagCounts.size < 2) return;   // 整個分類只有一種標籤時，chips 沒有意義
+
+            const chips = Array.from(tagCounts.entries())
+                .sort((a, b) => b[1] - a[1])   // 實驗多的標籤排前面
+                .map(([tag, n]) =>
+                    `<button type="button" class="tag-chip" data-tag="${tag}"
+                             title="篩選：${tag}">${tag}<span class="tag-count">${n}</span></button>`
+                ).join('');
+
+            tagBar.innerHTML = '<span class="tag-bar-label">依主題篩選</span>' + chips;
+            tagBar.style.display = '';
+
+            tagBar.addEventListener('click', function (e) {
+                const chip = e.target.closest('.tag-chip');
+                if (!chip) return;
+                const tag = chip.dataset.tag;
+                activeTag = (activeTag === tag) ? null : tag;   // 再點一次 = 取消篩選
+                applyFilters();
+            });
+        }
+
+        // 篩選與搜尋是「且」的關係，統一在這裡決定誰顯示，避免兩處各自
+        // hide/show 造成狀態不同步
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const terms = query ? query.split(/\s+/) : [];
+            let shown = 0;
+
+            tagBar.querySelectorAll('.tag-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.tag === activeTag);
+            });
+
+            cards.forEach(card => {
+                const matchTag  = !activeTag || tagsOf(card).includes(activeTag);
+                const matchText = terms.every(term => card.dataset.searchText.includes(term));
+
+                card.style.display = (matchTag && matchText) ? '' : 'none';
+                if (!(matchTag && matchText)) return;
+
+                // 原本靠 :nth-child(2n) 拿掉每列第二張的右框，但 :nth-child 數的是
+                // DOM 位置，篩選後會對不上，卡片之間會少一條線或多一條線。
+                // 所以在雙欄模式下自己按「看得見的張數」重算。
+                shown++;
+                card.style.borderRight = wideGrid.matches
+                    ? (shown % 2 === 0 ? 'none' : '2px solid #000000')
+                    : '';
+            });
+
+            // 空狀態：顯示在 grid 的位置，而不是搜尋框底下的下拉——
+            // 用 chip 篩選時使用者未必在看搜尋框
+            gridEmpty.style.display = shown ? 'none' : 'block';
+            if (!shown) {
+                gridEmpty.textContent = activeTag && query
+                    ? `找不到同時符合「${activeTag}」與「${query}」的實驗。點一下藍色標籤可取消篩選。`
+                    : activeTag
+                        ? `找不到標籤「${activeTag}」的實驗。`
+                        : `找不到符合「${query}」的實驗。`;
+            }
+
+            // 讓篩選後的檢視可以直接分享：/phylab/mechanics/?tag=運動學
+            const url = new URL(window.location.href);
+            if (activeTag) url.searchParams.set('tag', activeTag);
+            else           url.searchParams.delete('tag');
+            history.replaceState(null, '', url);
+        }
+
+        renderTagBar();
+
+        // 讀取分享連結裡的 ?tag=（標籤不存在就忽略，applyFilters 會把它從網址清掉）
+        const initialTag = new URLSearchParams(window.location.search).get('tag');
+        if (initialTag && tagCounts.has(initialTag)) activeTag = initialTag;
+
+        searchInput.addEventListener('input', applyFilters);
+        wideGrid.addEventListener('change', applyFilters);   // 跨過 768px 時重算邊框
+
+        applyFilters();
+    </script>
+
+</body>
+</html>

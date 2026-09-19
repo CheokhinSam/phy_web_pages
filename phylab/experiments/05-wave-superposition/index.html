@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪢 波的疊加與干涉 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_03</div>
+                <h1 class="lab-title">🪢 波的疊加與干涉</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>同時從兩端各抖一個波浪出去。兩個波在繩子中間碰到的時候會發生什麼事？<strong>它們會撞歪嗎？會彈開嗎？</strong></p>
+
+<p>答案比你想的簡單：<strong>什麼都不會發生，它們只是直接加起來。</strong></p>
+
+<p>畫面上有三條繩子（其實是同一條繩子的三次紀錄疊起來）：最上面是脈衝 A，中間是脈衝 B，最下面是它們的<strong>和</strong>。最下面那條墊了兩條淡色虛線，就是上面兩條平移下來的形狀——可以直接看到「黑線高度 = 藍虛線 + 橘虛線」。</p>
+
+<p>左邊可以調<strong>脈衝 A 的振幅</strong>、<strong>脈衝 B 的振幅</strong>、<strong>脈衝寬度 w</strong>，並選擇 <strong>B 是正脈衝還是負脈衝</strong>。把 B 切成負的，就是這個實驗最有趣的地方。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p><strong>疊加原理</strong>：兩條波同時經過繩子上的同一點時，那一點的位移就是兩條波各自位移的<strong>和</strong>。</p>
+
+\[y(x,t) = y_1(x,t) + y_2(x,t)\]
+
+<p>這條式子看起來平凡到不像物理定律，但它是整個波動學的地基——干涉、駐波、繞射，甚至量子力學的波函數，全部靠它。原因是繩波的張力對位移是<strong>線性</strong>的：兩條波各自產生的力加起來就是總力，線性方程的解可以直接相加。</p>
+
+<h3 id="三種重疊的結果">三種重疊的結果</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>重疊的情況</th>
+      <th>合成結果</th>
+      <th>名字</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>波峰對上波峰（同相）</td>
+      <td>位移相加，變成更大的波峰</td>
+      <td>建設性干涉</td>
+    </tr>
+    <tr>
+      <td>波峰對上波谷（反相）</td>
+      <td>位移相減，甚至完全抵消</td>
+      <td>破壞性干涉</td>
+    </tr>
+    <tr>
+      <td>部分重疊</td>
+      <td>各點各自相加，形狀是歪的</td>
+      <td>一般情形</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>把「B 是正還是負」切成負的、兩個振幅調成一樣大，就會看到<strong>完全抵消</strong>：兩條脈衝完全重疊的那一瞬間，整條繩子是平的。</p>
+
+<h3 id="一個很容易誤會的地方">一個很容易誤會的地方</h3>
+
+<p><strong>繩子平掉的時候，能量並沒有消失。</strong> 那一瞬間兩條波各自都還在，能量都還在繩子上，只是剛好互相抵消。證據就是再過一瞬間它們就分開了，兩條脈衝原封不動地繼續前進——如果能量真的消失，分開之後就不會再有脈衝了。<strong>能量守恆在這裡的表現是「波形各自保留」，不是「合成之後留下什麼」。</strong></p>
+
+<h3 id="疊加不是碰撞">疊加不是碰撞</h3>
+
+<p>粒子對撞是「撞完之後東西變了」——速度變了、方向變了、可能碎掉。波不一樣：相遇之前是什麼形狀，分開之後<strong>還是什麼形狀</strong>，兩條波<strong>互相穿過</strong>，好像對方不存在一樣。</p>
+
+<p>這就是為什麼無線電波可以同時在空中傳遞幾千個電台——它們互相穿過，只有在你的收音機把其中一個挑出來的時候，你才知道有幾個電台。</p>
+
+<h2 id="生活中的疊加">生活中的疊加</h2>
+
+<ul>
+  <li>🌊 <strong>海邊的瘋狗浪</strong>：好幾個方向不同的浪偶然疊在一起，波高可以突然變成好幾倍</li>
+  <li>🎧 <strong>抗噪耳機</strong>：量到外面的噪音，立刻播一個完全相反的聲波出去，兩者相消——就是這個實驗的負脈衝</li>
+  <li>📡 <strong>無線電</strong>：成千上萬個電台的訊號在空中疊加、互相穿過，各自到達自己的收音機</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>兩條脈衝疊在一起的時候，繩子上的位移是怎麼決定的？把下面那條合成波的黑色曲線，和兩條淡色虛線的高度對一照，你發現什麼關係？</li>
+  <li>把「脈衝 B」切成負脈衝，讓兩條一上一下完全重疊。那一瞬間繩子是平的——繩子上的能量消失了嗎？放開之後兩條脈衝還在嗎？</li>
+  <li>兩條脈衝分開之後，形狀和相遇之前比起來有沒有一點不一樣？這告訴你「疊加」和「碰撞」有什麼根本差別？</li>
+  <li>如果兩條脈衝的波速不一樣（例如接到不同粗細的繩子上），它們還會在正中間相遇嗎？為什麼？</li>
+  <li>海邊兩個浪疊起來會變成更大的浪，這和這個實驗有什麼關係？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/wave-superposition.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam Explorer — 探索、實驗、創造</title>
+    <meta name="description" content="Sam Explorer：用好奇心驅動每一個項目。互動式物理模擬實驗。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+    <style>
+        /* ==================================================================
+           首頁專用樣式
+           ------------------------------------------------------------------
+           版面語言全部沿用 /phylab/assets/css/main-style.css（瑞士國際主義：
+           極淡網格底、方角、2px 黑框、等寬字標籤）。這裡只補分類頁沒有
+           用到的部分——footer、emoji 圖示，以及首頁才需要的斷點調整。
+           ================================================================== */
+
+        /* 首頁比分類頁短，把 footer 壓到視窗底部 */
+        .landing-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* 分類頁的卡片圖示是 SVG 浮水印（.card-icon），首頁用 emoji */
+        .card-emoji {
+            font-size: 2.6rem;
+            line-height: 1;
+            margin-bottom: 20px;
+        }
+
+        /* 分類頁的卡片標題是 h3（它上面還有頁面標題），首頁的卡片就是
+           頁面主體，用 h2 才不會跳級。樣式必須與 main-style.css 的
+           .card-content h3 一致，改一邊要記得改另一邊。 */
+        .card-content h2 {
+            margin: 0 0 16px 0;
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: #000000;
+            transition: transform 0.25s ease;
+        }
+
+        .exp-card:hover .card-content h2 {
+            color: #ffffff;
+            transform: translateX(6px);
+        }
+
+        /* footer 靠 margin-top:auto 沉到底部；內容太長時 auto 會變 0，
+           所以 grid 自己留 80px 下緣，兩種情況都有呼吸空間 */
+        .experiment-grid {
+            margin-bottom: 80px;
+        }
+
+        .site-footer {
+            margin-top: auto;
+            padding-top: 24px;
+            border-top: 2px solid #000000;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #64748b;
+        }
+
+        /* 只有一張卡時讓它撐滿整列（分類頁沒有這條——那裡半寬的卡片
+           自成一個完整的方框，看起來是刻意的）。
+           內容靠左、圖示移到右側當視覺錨點，否則 1200px 的帶狀區右半邊
+           會整片空掉，箭頭也會孤零零地飄在很遠處。
+           card-content 限寬是為了避免日後描述變長時壓到圖示。 */
+        @media (min-width: 768px) {
+            .experiment-grid .exp-card:only-child {
+                grid-column: 1 / -1;   /* 右邊框由 main-style.css 的 :last-child 拿掉 */
+            }
+            .experiment-grid .exp-card:only-child .card-content {
+                max-width: 62%;
+            }
+            .experiment-grid .exp-card:only-child .card-emoji {
+                position: absolute;
+                top: 50%;
+                right: 40px;
+                transform: translateY(-50%);
+                font-size: 6rem;
+                margin: 0;
+            }
+        }
+
+        /* 4.5rem 的大標題在窄螢幕會斷在詞中間（「探索、實／驗、創造」），
+           縮到 2.6rem 剛好一行放得下 */
+        @media (max-width: 640px) {
+            .landing-container { padding: 48px 24px; }
+            .hero-section { margin-bottom: 48px; padding-bottom: 32px; }
+            .main-title { font-size: 2.6rem; letter-spacing: -1px; }
+            .sub-title { font-size: 1.1rem; }
+            .exp-card { padding: 32px 24px; }
+            /* 窄螢幕上描述會折行折到右下角，絕對定位的箭頭會壓在字上。
+               改成留在版面流裡靠右，卡片自己長高就不會疊到。 */
+            .card-arrow {
+                position: static;
+                align-self: flex-end;
+                margin-top: 16px;
+            }
+            .experiment-grid { margin-bottom: 48px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="landing-container">
+        <header class="hero-section">
+            <div class="brand-tag">SAM EXPLORER</div>
+            <h1 class="main-title">探索、實驗、創造</h1>
+            <p class="sub-title">用好奇心驅動每一個項目。</p>
+        </header>
+
+        <section class="experiment-grid">
+            <a href="/phylab/" class="exp-card">
+                <div class="card-number">01</div>
+                <div class="card-content">
+                    <div class="card-emoji">🔬</div>
+                    <h2>虛擬物理實驗室</h2>
+                    <p>互動式動態模擬實驗，涵蓋力學、電學、波動、熱學等主題。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+        </section>
+
+        <footer class="site-footer">
+            <span>&copy; 2026 SAM EXPLORER</span>
+            <span>BUILT WITH CURIOSITY</span>
+        </footer>
+    </main>
+</body>
+</html>

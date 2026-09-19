@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Physics Lab / 虛擬物理實驗室</title>
+
+<link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+
+</head>
+
+<body>
+
+
+
+<main class="landing-container">
+
+<header class="hero-section">
+
+<div class="brand-tag">SIMULATION LAB</div>
+
+<h1 class="main-title">虛擬物理實驗室</h1>
+
+<p class="sub-title">請選擇物理學大主題，進入探索對應的互動式動態模擬實驗。</p>
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="搜尋所有實驗標題..." autocomplete="off">
+    <div id="searchResults" class="search-results"></div>
+</div>
+
+</header>
+
+
+
+<section class="experiment-grid">
+
+
+<a href="/phylab/mechanics/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/mechanics.png" alt="Mechanics & Kinematics">
+
+<div class="card-number">01</div>
+
+<div class="card-content">
+
+<h3>Mechanics & Kinematics / 力學與運動學</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+<a href="/phylab/electricity/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/electricity.png" alt="Electricity & Circuits">
+
+<div class="card-number">02</div>
+
+<div class="card-content">
+
+<h3>Electricity & Circuits / 電路與電子學</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+<a href="/phylab/waves/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/waves.png" alt="Optics & Waves">
+
+<div class="card-number">03</div>
+
+<div class="card-content">
+
+<h3>Optics & Waves / 光學與波動</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+<a href="/phylab/magnetism/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/magnetism.png" alt="Electromagnetism">
+
+<div class="card-number">04</div>
+
+<div class="card-content">
+
+<h3>Electromagnetism / 電磁學</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+<a href="/phylab/thermal/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/thermal.png" alt="Thermodynamics">
+
+<div class="card-number">05</div>
+
+<div class="card-content">
+
+<h3>Thermodynamics / 熱學</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+<a href="/phylab/modern-physics/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/modern-physics.png" alt="Modern Physics">
+
+<div class="card-number">06</div>
+
+<div class="card-content">
+
+<h3>Modern Physics / 近代物理</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+<a href="/phylab/astrophysics/" class="exp-card">
+
+<img class="card-icon" src="/phylab/assets/images/topics/astrophysics.png" alt="Astrophysics">
+
+<div class="card-number">07</div>
+
+<div class="card-content">
+
+<h3>Astrophysics / 天體物理學</h3>
+
+</div>
+
+<div class="card-arrow">→</div>
+
+</a>
+
+
+
+</section>
+
+</main>
+
+<script>
+    // 所有實驗資料（用於搜尋）
+    const allExperiments = [
+        
+        {
+            title: "🚶🚲🚗 參考系",
+            url: '/phylab/experiments/01-reference-frame/',
+            theme: 'mechanics',
+            description: "切換不同參照物，觀察同一事件的運動描述如何隨參考系改變。",
+            keywords: "參考系 參照物 相對運動 速度變換 運動描述 慣性 p5.js"
+        },
+        
+        {
+            title: "🌊 橫波與縱波",
+            url: '/phylab/experiments/01-waves/',
+            theme: 'waves',
+            description: "同一條介質上同時看橫波與縱波：質點振動的方向一個垂直、一個平行於傳播方向，但質點本身都不會被波帶走。",
+            keywords: "橫波 縱波 波速 頻率 波長 週期 質點振動 密部 疏部 聲波 彈簧波"
+        },
+        
+        {
+            title: "🚀 加速度",
+            url: '/phylab/experiments/02-acceleration/',
+            theme: 'mechanics',
+            description: "調整初速度與加速度，觀察物體在等加速度直線運動中的速度變化與位移關係。",
+            keywords: "加速 減速 速度變化 勻加速 自由落體"
+        },
+        
+        {
+            title: "🌊 水波的反射實驗",
+            url: '/phylab/experiments/02-wave-reflection/',
+            theme: 'waves',
+            description: "探究水波碰撞固定障礙物時的反射規律，動態驗證入射角等於反射角，並觀察波前的變化。",
+            keywords: "水波 反射 反射定律 入射角 反射角 波前 法線"
+        },
+        
+        {
+            title: "📈 位移時間圖",
+            url: '/phylab/experiments/03-displacement-time-graph/',
+            theme: 'mechanics',
+            description: "透過即時繪製位移-時間圖，觀察等速、等加速度、等減速與分段變速的圖形特徵，理解斜率與速度的關係。",
+            keywords: "x-t圖 位置時間 運動圖形 斜率 等速 加速 減速 分段變速 小車"
+        },
+        
+        {
+            title: "🌊 水波折射",
+            url: '/phylab/experiments/03-wave-refraction/',
+            theme: 'waves',
+            description: "觀察水波從深水區進入淺水區（或反向）時的波速、波長與折射角變化，驗證 Snell's law。",
+            keywords: "水波 折射 Snell定律 折射角 波速 深水 淺水"
+        },
+        
+        {
+            title: "⚡ 歐姆定律",
+            url: '/phylab/experiments/04-ohms-law/',
+            theme: 'electricity',
+            description: "接一條真實的電路，用伏特計與安培計的讀數逐點畫出 V–I 直線，看斜率為什麼就是電阻。",
+            keywords: "歐姆定律 電壓 電流 電阻 V-I曲線 V-I圖 安培計 伏特計 滑動變阻器 電路 直流"
+        },
+        
+        {
+            title: "🪢 繩波的產生與傳播",
+            url: '/phylab/experiments/04-string-wave-basics/',
+            theme: 'waves',
+            description: "拉一條繩子上下抖動，觀察波往前跑但繩子本身沒有跑掉——理解波是擾動的傳播，並動手驗證 v = √(T/μ) 與 v = fλ。",
+            keywords: "繩波 波的傳播 波速 波長 頻率 週期 張力 線密度 介質 橫波 波前 v=fλ"
+        },
+        
+        {
+            title: "📈 速度時間圖",
+            url: '/phylab/experiments/04-velocity-time-graph/',
+            theme: 'mechanics',
+            description: "透過即時繪製速度-時間圖，觀察等速、等加速度、等減速與分段變速的圖形特徵，理解斜率代表加速度、面積代表位移。",
+            keywords: "v-t圖 速度圖 加速度 面積位移 等速運動 勻速 分段變速 小車"
+        },
+        
+        {
+            title: "🍎 自由落體運動",
+            url: '/phylab/experiments/05-free-fall/',
+            theme: 'mechanics',
+            description: "同時釋放兩個不同質量的物體，觀察它們是否同時落地，理解自由落體與空氣阻力的關係",
+            keywords: "自由落體 重力加速度 g 伽利略 落體 空氣阻力 free fall gravity"
+        },
+        
+        {
+            title: "💡 串聯電路與並聯電路",
+            url: '/phylab/experiments/05-series-parallel/',
+            theme: 'electricity',
+            description: "兩顆電阻不同的燈泡，切換串聯與並聯，看「哪一顆比較亮」的答案怎麼整個反過來。",
+            keywords: "串聯 並聯 分壓 分流 等效電阻 燈泡亮度 電功率 I²R V²/R 電路"
+        },
+        
+        {
+            title: "🪢 波的疊加與干涉",
+            url: '/phylab/experiments/05-wave-superposition/',
+            theme: 'waves',
+            description: "讓兩個脈衝在同一條繩子上對撞，看它們相遇時位移直接相加、分開後又各自完好如初——這就是疊加原理。",
+            keywords: "疊加原理 干涉 建設性干涉 破壞性干涉 波的疊加 脈衝 相長 相消 獨立傳播"
+        },
+        
+        {
+            title: "⚖️ 力的合成與分解",
+            url: '/phylab/experiments/06-force-composition-decomposition/',
+            theme: 'mechanics',
+            description: "調整兩個力的大小和夾角，觀察合力如何用平行四邊形法則和三角形法計算",
+            keywords: "力的合成 力的分解 平行四邊形法 三角形法 向量 分力 合力 force composition decomposition parallelogram"
+        },
+        
+        {
+            title: "⚙️ 直流電動機",
+            url: '/phylab/experiments/06-motor/',
+            theme: 'magnetism',
+            description: "通電的線圈在磁場中轉起來——但它為什麼不會一直加速下去？看反電動勢怎麼把電流壓住。",
+            keywords: "電動機 馬達 線圈 磁場 力矩 安培力 換向器 反電動勢 啟動電流"
+        },
+        
+        {
+            title: "🧵 電阻的影響因素",
+            url: '/phylab/experiments/06-resistivity/',
+            theme: 'electricity',
+            description: "同一根線拉長、壓扁、換材料，看電阻怎麼變——用兩條完全不同的路算出同一個答案。",
+            keywords: "電阻率 電阻定律 ρ R=ρL/A 線長 截面積 銅 鎳鉻 電阻線 微觀 電子 晶格"
+        },
+        
+        {
+            title: "🪢 繩波的反射",
+            url: '/phylab/experiments/06-string-wave-reflection/',
+            theme: 'waves',
+            description: "同一個脈衝撞上固定端會上下反轉，撞上自由端卻原封不動——端點能不能動，決定了反射要不要反相。",
+            keywords: "波的反射 固定端 自由端 相位反轉 半波損失 反射係數 邊界條件 節點 腹點 繩波"
+        },
+        
+        {
+            title: "🔥 電功率與電能",
+            url: '/phylab/experiments/07-electric-power/',
+            theme: 'electricity',
+            description: "P = VI = I²R = V²/R 三個算法永遠給出同一個數；再加上電能、電費，還有會燒斷的保險絲。",
+            keywords: "電功率 電能 焦耳 千瓦時 kWh 度電 電費 保險絲 熔斷 額定電流 P=VI I²R V²/R"
+        },
+        
+        {
+            title: "🧲 帶電粒子在磁場中",
+            url: '/phylab/experiments/07-lorentz-force/',
+            theme: 'magnetism',
+            description: "拉動速率與磁場滑桿，看帶電粒子的圓周運動怎麼變大變小——以及為什麼繞一圈的時間跟速率無關。",
+            keywords: "洛倫茲力 帶電粒子 圓周運動 磁場 迴旋加速器 左手定則 電子 質子"
+        },
+        
+        {
+            title: "⚛️ 牛頓第二運動定律",
+            url: '/phylab/experiments/07-newtons-second-law/',
+            theme: 'mechanics',
+            description: "調整施力、質量與摩擦係數，觀察 F=ma 如何決定物體的加速度與運動狀態",
+            keywords: "牛頓第二定律 F=ma 力 加速度 質量 摩擦力 淨力 運動定律 Newton's second law"
+        },
+        
+        {
+            title: "🪢 繩波的折射與透射",
+            url: '/phylab/experiments/07-string-wave-refraction/',
+            theme: 'waves',
+            description: "把兩段粗細不同的繩子接起來，看波通過接點時波速與波長怎麼變、頻率為什麼不變，以及能量怎麼分配。",
+            keywords: "波的折射 透射 反射 部分反射 介面 波速 波長 頻率不變 阻抗 能量守恆 繩波"
+        },
+        
+        {
+            title: "💥 兩球碰撞與動量守恆",
+            url: '/phylab/experiments/08-collision/',
+            theme: 'mechanics',
+            description: "觀察兩顆球碰撞前後的動量變化，驗證動量守恆定律。",
+            keywords: "碰撞 動量守恆 彈性碰撞 非彈性碰撞 恢復係數 動量"
+        },
+        
+        {
+            title: "🔥 熱傳導",
+            url: '/phylab/experiments/08-conduction/',
+            theme: 'thermal',
+            description: "握住金屬棒的一端去烤，另一端多久會燙手？用溫度分布、分子抖動與熱流功率，看見熱傳導的三個面向。",
+            keywords: "熱傳導 傅立葉定律 熱導率 溫度梯度 穩態 熱阻 熱擴散率 銅 木材 隔熱"
+        },
+        
+        {
+            title: "🔋 電動勢與內電阻",
+            url: '/phylab/experiments/08-emf-internal-resistance/',
+            theme: 'electricity',
+            description: "改變外電阻，逐點畫出 V–I 直線——截距是電動勢、斜率是內電阻。這是測定電源內電阻的標準做法。",
+            keywords: "電動勢 emf 內電阻 端電壓 開路電壓 短路電流 V-I圖 斜率 電池 效率 測定內電阻"
+        },
+        
+        {
+            title: "🧲 磁場與磁力線",
+            url: '/phylab/experiments/08-field-lines/',
+            theme: 'magnetism',
+            description: "切換磁鐵、導線與螺線管，用羅盤指針探測磁場的方向與強度，看磁力線怎麼畫出來。",
+            keywords: "磁場 磁力線 磁力 羅盤 指南針 安培定律 螺線管 條形磁鐵 右手定則"
+        },
+        
+        {
+            title: "🪢 駐波與諧音",
+            url: '/phylab/experiments/08-standing-wave/',
+            theme: 'waves',
+            description: "把繩子兩端固定，只有特定波長活得下來：L = nλ/2。看節點永遠不動、腹點上下跳，並拆解成兩個反向行進波。",
+            keywords: "駐波 諧音 泛音 節點 腹點 共振 波長 弦樂器 基頻 二倍頻 一端固定一端自由"
+        },
+        
+        {
+            title: "🌊 熱對流",
+            url: '/phylab/experiments/09-convection/',
+            theme: 'thermal',
+            description: "從下面加熱一層水，什麼時候會滾起來？用溫度場與流線粒子，找出熱對流的門檻，以及它為什麼對「層厚」這麼敏感。",
+            keywords: "熱對流 對流 對流胞 浮力 瑞利數 雷利數 臨界溫差 熱傳導 流體 密度"
+        },
+        
+        {
+            title: "🔄 電磁感應與楞次定律",
+            url: '/phylab/experiments/09-induction/',
+            theme: 'magnetism',
+            description: "把磁鐵推近線圈再拉遠，看磁通量的變化怎麼生出電壓——以及為什麼線圈一下子推你、一下子拉你。",
+            keywords: "電磁感應 楞次定律 法拉第定律 磁通量 感應電動勢 感應電流 發電機 磁鐵穿過線圈"
+        },
+        
+        {
+            title: "📈 非歐姆元件的 I–V 特性",
+            url: '/phylab/experiments/09-iv-characteristics/',
+            theme: 'electricity',
+            description: "金屬、鎢絲燈泡、二極體、熱敏電阻，四條 I–V 曲線排在一起——只有一條是直線。",
+            keywords: "I-V圖 V-I曲線 歐姆 非歐姆 二極體 燈泡 熱敏電阻 金屬 導通電壓 逆向偏壓 特性曲線"
+        },
+        
+        {
+            title: "⚾ 拋體運動模擬",
+            url: '/phylab/experiments/09-projectile/',
+            theme: 'mechanics',
+            description: "調整初速度、發射角度與初始高度，觀察拋體運動的軌跡、速度分量與最大射程。",
+            keywords: "拋物線 射程 角度 發射 水平 垂直 拋射"
+        },
+        
+        {
+            title: "🪐 克卜勒定律",
+            url: '/phylab/experiments/10-kepler/',
+            theme: 'astrophysics',
+            description: "觀察行星在橢圓軌道上的運動，驗證克卜勒三大定律：軌道定律、面積定律、週期定律。",
+            keywords: "克卜勒定律 橢圓軌道 離心率 面積定律 週期定律 行星"
+        },
+        
+        {
+            title: "🔀 基爾霍夫定律",
+            url: '/phylab/experiments/10-kirchhoff/',
+            theme: 'electricity',
+            description: "雙迴路電路沒辦法用串並聯化簡——只能靠 ΣI = 0 與 ΣV = 0。中間那一支的電流還會整支掉頭。",
+            keywords: "基爾霍夫 克希荷夫 KCL KVL 節點 迴路 電流定律 電壓定律 ΣI=0 ΣV=0 雙迴路 分支電流 電路分析"
+        },
+        
+        {
+            title: "🔮 單擺運動實驗",
+            url: '/phylab/experiments/10-pendulum/',
+            theme: 'mechanics',
+            description: "力分解、相空間圖、自動週期量測、阻尼控制、小角度近似比較",
+            keywords: "單擺 擺動 週期 鐘擺 能量 動能 位能 振盪 阻尼 相空間 力分解 小角度 pendulum"
+        },
+        
+        {
+            title: "🔌 變壓器",
+            url: '/phylab/experiments/10-transformer/',
+            theme: 'magnetism',
+            description: "兩顆線圈纏在同一個鐵芯上，一顆接電源、一顆接電器——電壓怎麼被「換」掉，代價又是什麼。",
+            keywords: "變壓器 升壓 降壓 匝數比 高壓輸電 交流電 鐵芯 效率 電壓比 電流比 電力傳輸"
+        },
+        
+        {
+            title: "🪂 終端速度與流體阻力",
+            url: '/phylab/experiments/11-terminal-velocity/',
+            theme: 'mechanics',
+            description: "模擬跳傘員自由落體過程，觀察空氣阻力如何令物體達到終端速度，並在打開降落傘後達到第二次更低的終端速度。",
+            keywords: "終端速度 空氣阻力 流體阻力 跳傘 自由落體 力平衡"
+        },
+        
+        {
+            title: "🌌 萬有引力定律",
+            url: '/phylab/experiments/12-gravitation/',
+            theme: 'mechanics',
+            description: "觀察兩個天體之間的引力如何隨質量和距離變化，驗證牛頓萬有引力定律。",
+            keywords: "萬有引力 牛頓 引力常數 天體 質量 距離 平方反比"
+        },
+        
+        {
+            title: "🔬 光電效應",
+            url: '/phylab/experiments/12-photoelectric-effect/',
+            theme: 'modern-physics',
+            description: "探索光子能量、金屬功函數與光電流之間的量子關係，重現愛因斯坦的諾貝爾獎實驗。",
+            keywords: "光電效應 光子 功函數 截止頻率 停止電壓 量子 愛因斯坦"
+        },
+        
+        {
+            title: "☀️ 熱輻射",
+            url: '/phylab/experiments/13-thermal-radiation/',
+            theme: 'thermal',
+            description: "四個一樣的罐子只差表面處理——黑的、白的、灰的、亮晶晶的。它們誰先涼？答案會推翻你對「白色會反光」的直覺。",
+            keywords: "熱輻射 輻射 史蒂芬波茲曼 發射率 輻射率 黑體 保溫瓶 散熱 降溫 紅外線"
+        },
+        
+        {
+            title: "🧊 比熱容量與潛熱",
+            url: '/phylab/experiments/14-heat-capacity/',
+            theme: 'thermal',
+            description: "一直加熱，溫度就會一直上升嗎？把冰塊一路加熱到水蒸氣，你會看到曲線上有兩段完全平坦的地方——而其中一段吃掉了七成的能量。",
+            keywords: "比熱容量 比熱 潛熱 熔化熱 汽化熱 加熱曲線 相變 狀態變化 熱量 冰 水蒸氣"
+        },
+        
+        {
+            title: "🧪 氣體定律",
+            url: '/phylab/experiments/15-gas-laws/',
+            theme: 'thermal',
+            description: "活塞汽缸裡關著一團氣體，壓力、體積、溫度三個量在互相牽制。固定其中一個，另外兩個就綁在一起——而不管你怎麼拉，右邊那個 pV/(nT) 永遠是同一個數。",
+            keywords: "氣體定律 理想氣體 波以耳定律 查理定律 壓力定律 絕對零度 分子運動 方均根速率 pV=nRT 等溫 等壓 等容 氣體常數"
+        },
+        
+        {
+            title: "🌀 彈簧振子",
+            url: '/phylab/experiments/15-spring-oscillator/',
+            theme: 'mechanics',
+            description: "拖拉小球改變位移，放開後觀察彈簧振子的簡諧運動與阻尼振動。",
+            keywords: "彈簧 簡諧運動 振動 SHM 彈簧常數 週期 頻率 阻尼 Hooke spring oscillator 振子 彈簧質量系統"
+        },
+        
+        {
+            title: "🌀 簡諧運動圖像",
+            url: '/phylab/experiments/16-shm-waveform/',
+            theme: 'mechanics',
+            description: "調整相位觀察簡諧運動的位移-時間圖像平移，理解 x(t) = A·sin(ωt + φ) 中各參數的意義。",
+            keywords: "簡諧運動 x-t圖 位移時間圖 相位 波形 正弦 SHM 振動 彈簧振子 waveform phase"
+        },
+        
+        {
+            title: "📈 加速度時間圖",
+            url: '/phylab/experiments/17-acceleration-time-graph/',
+            theme: 'mechanics',
+            description: "繪製加速度-時間圖，觀察等加速度其實是一條水平線，並理解圖形底下的面積代表速度變化量。",
+            keywords: "a-t圖 加速度圖 加速度時間 面積 速度變化 等加速度 變加速度 圖表分析 運動圖形"
+        },
+        
+        {
+            title: "🌀 單擺的簡諧運動",
+            url: '/phylab/experiments/17-pendulum-shm/',
+            theme: 'mechanics',
+            description: "透過單擺模擬，認識簡諧運動的週期、頻率與振幅",
+            keywords: "單擺 簡諧運動 SHM 週期 頻率 振幅 回復力 擺動 鐘擺"
+        },
+        
+        {
+            title: "🌀 豎直彈簧振子",
+            url: '/phylab/experiments/18-vertical-spring/',
+            theme: 'mechanics',
+            description: "把彈簧垂直吊起來掛重物，觀察重力如何移動平衡位置，卻完全動不了週期",
+            keywords: "豎直彈簧 垂直彈簧 彈簧振子 簡諧運動 SHM 週期 靜態伸長 平衡位置 重力加速度 彈簧常數 虎克定律"
+        },
+        
+        {
+            title: "⚖️ 槓桿與力臂",
+            url: '/phylab/experiments/19-lever/',
+            theme: 'mechanics',
+            description: "力臂不是「支點到作用點的距離」——把手的施力方向斜過來，作用點一寸都沒動，力臂當場縮短，畫面上那條虛線自己變短給你看。",
+            keywords: "槓桿 力臂 支點 力矩 平衡條件 翹翹板 撬棒 桿秤 定盤星 省力槓桿 費力槓桿 等臂槓桿 中學物理"
+        },
+        
+        {
+            title: "🎡 定滑輪與動滑輪",
+            url: '/phylab/experiments/20-pulleys/',
+            theme: 'mechanics',
+            description: "定滑輪跟動滑輪長得一模一樣，一個完全不省力、一個省一半。差別只在一件事：繩子那一頭綁在哪裡。而它們其實都是槓桿。",
+            keywords: "定滑輪 動滑輪 滑輪 等臂槓桿 省力 費距離 力的方向 拉力 繩子 中學物理"
+        },
+        
+        {
+            title: "🏗️ 滑輪組",
+            url: '/phylab/experiments/21-pulley-systems/',
+            theme: 'mechanics',
+            description: "繩子繞成幾段，力就只剩幾分之一——但這個「幾」不是滑輪的個數，是畫面上數得出來的那幾段繩子。",
+            keywords: "滑輪組 滑輪 定滑輪 動滑輪 段數 省力 奇動偶定 機械效率 省力不省功 拉力 繩子 中學物理"
+        },
+        
+        {
+            title: "⚙️ 機械效率",
+            url: '/phylab/experiments/22-efficiency/',
+            theme: 'mechanics',
+            description: "學會滑輪組省力之後，最容易有的錯覺就是「那我也省了功」。兩條總高度一樣的長條，把省力不省功變成一條長度。",
+            keywords: "機械效率 有用功 額外功 總功 省力不省功 效率 滑輪組 功與能量 中學物理"
+        }
+        
+    ];
+
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    // 比對函數：支援多個關鍵字（空格分隔）
+    function matchExperiment(exp, query) {
+        const terms = query.split(/\s+/);
+        const searchText = [exp.title, exp.description, exp.keywords].join(' ').toLowerCase();
+        return terms.every(term => searchText.includes(term));
+    }
+
+    searchInput.addEventListener('input', function() {
+        const query = this.value.trim().toLowerCase();
+
+        if (!query) {
+            searchResults.style.display = 'none';
+            return;
+        }
+
+        const matches = allExperiments.filter(exp => matchExperiment(exp, query));
+
+        if (matches.length === 0) {
+            searchResults.style.display = 'block';
+            searchResults.innerHTML = '<div class="no-result">找不到符合的實驗</div>';
+        } else {
+            searchResults.style.display = 'block';
+            searchResults.innerHTML = matches.map(exp => `
+                <a href="${exp.url}" class="search-result-item">
+                    <span class="search-result-theme">${exp.theme}</span>
+                    <span class="search-result-title">${exp.title}</span>
+                </a>
+            `).join('');
+        }
+    });
+
+    // 點擊外部時關閉搜尋結果
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+            searchResults.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+
+</html>
+

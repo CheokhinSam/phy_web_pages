@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪢 繩波的反射 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_04</div>
+                <h1 class="lab-title">🪢 繩波的反射</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>抓住跳繩的一端，另一端請人綁在柱子上，抖一個波浪出去。<strong>波浪撞到柱子反彈回來的時候，長什麼樣子？</strong></p>
+
+<p><strong>回來的波是上下顛倒的。</strong> 送上去一個波峰，回來的是波谷。</p>
+
+<p>更奇怪的是，如果另一端不是綁死，而是穿過一個光滑的環、可以自由上下滑動，反彈回來的波就<strong>完全不會顛倒</strong>。同樣的波、同樣的繩子，只差在端點的固定方式。</p>
+
+<p>畫面上有兩條 lane：上面是<strong>實際的繩子</strong>（入射與反射疊在一起的結果），下面是<strong>分解</strong>——兩者各自畫出來。分解那條把入射波畫到端點右邊去，那是「如果沒有端點，它本來會繼續走過去」的虛像，方便對照反射波到底翻了沒有。</p>
+
+<p>左邊可以選<strong>端點類型</strong>與<strong>波形</strong>，也可以調振幅、脈衝寬度、頻率。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念取決於端點能不能動">核心概念：取決於端點能不能動</h3>
+
+<ul>
+  <li><strong>固定端</strong>：端點被釘死，位移<strong>永遠是零</strong>。波傳到這裡時繩子必須把自己拉回零，結果就是產生一個完全相反的波往回跑。反射波和入射波在端點處<strong>大小相等、方向相反</strong>，加起來剛好是零。</li>
+  <li><strong>自由端</strong>：端點套在光滑桿上可以自由滑，沒有東西把它拉回零，繩子反而<strong>動得最厲害</strong>。反射波和入射波在端點處方向相同，加起來變成兩倍振幅。</li>
+</ul>
+
+<h3 id="核心公式">核心公式</h3>
+
+<p>用<strong>反射係數 $r$</strong> 把兩件事寫成同一個形式：</p>
+
+\[r = \frac{Z_1 - Z_2}{Z_1 + Z_2} \qquad Z = \sqrt{T\mu}\]
+
+<ul>
+  <li>固定端：等於接到一段<strong>無窮重</strong>的繩子（$Z_2 \to \infty$），$r = -1$ → <strong>相位反轉</strong></li>
+  <li>自由端：等於接到一段<strong>沒有質量</strong>的繩子（$Z_2 \to 0$），$r = +1$ → <strong>不反轉</strong></li>
+</ul>
+
+<p>$Z$ 叫做<strong>阻抗</strong>，是繩子「抵抗被晃動」的程度。反射就是兩個阻抗不匹配的地方一定會發生的事。</p>
+
+<h3 id="換成形狀來想">換成形狀來想</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>端點</th>
+      <th>端點必須滿足</th>
+      <th>反射波只好</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>固定端</td>
+      <td>位移 $y = 0$</td>
+      <td>和入射波完全相反</td>
+      <td>波峰變波谷</td>
+    </tr>
+    <tr>
+      <td>自由端</td>
+      <td>斜率 $\partial y/\partial x = 0$</td>
+      <td>和入射波完全相同</td>
+      <td>波形原封不動</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>自由端那個「斜率 = 0」就是<strong>繩子在端點是水平的</strong>。如果末端是斜的，張力就會有個垂直分量把環往上或往下拉，環就會滑動，所以平衡時末端一定是平的。</p>
+
+<h3 id="連續波駐波長出來了">連續波：駐波長出來了</h3>
+
+<p>切成「連續波」、端點選固定端，會看到一件新事情：波一直送過去、一直反射回來，兩者在繩子上疊加，最後<strong>繩子不再有波跑出去，只是在原地分段上下跳</strong>。靠近牆的地方幾乎不動（固定端是<strong>節點</strong>），每隔半個波長就再出現一個不動的點——這就是<strong>駐波</strong>。自由端則相反：端點是<strong>腹點</strong>，動得最厲害，繩子看起來像在甩尾。</p>
+
+<h2 id="生活中的反射">生活中的反射</h2>
+
+<ul>
+  <li>🪢 <strong>甩跳繩綁在柱子上</strong>：抖一下，回來的波浪是顛倒的</li>
+  <li>🎸 <strong>弦樂器的琴橋</strong>：弦在琴橋那一端幾乎不能動，所以兩端都是固定端——這正是弦上能形成駐波、發出聲音的原因</li>
+  <li>🩺 <strong>超音波檢查</strong>：聲波進到人體，遇到不同密度的組織就反射一部分回來。反射特別強的地方就代表那裡「阻抗不匹配」——可能是骨頭，也可能是腫瘤</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>脈衝撞上固定端之後回來的形狀，和撞上自由端之後回來的形狀，最大的差別是什麼？把兩次都跑一遍再回答。</li>
+  <li>固定端的「端點位移」卡片一直顯示 0.00。如果端點不能動，那入射波的能量跑到哪裡去了？</li>
+  <li>自由端反彈的那一瞬間，端點的位移卡片會顯示多少？為什麼會超過你設定的振幅？</li>
+  <li>切成「連續波」、端點選固定端。等波跑滿整條繩子之後，繩子變成什麼圖形？為什麼靠近牆壁的地方幾乎不動？</li>
+  <li>把同樣的實驗換成「一端綁在牆上、另一端綁在彈簧上」，你覺得反射回來的波會比較像固定端還是自由端？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/string-wave-reflection.js"></script>
+    
+
+</body>
+</html>
