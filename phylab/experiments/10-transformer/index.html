@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔌 變壓器 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/magnetism/" class="bc-back">← 磁學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_05</div>
+                <h1 class="lab-title">🔌 變壓器</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p><strong>為什麼兩顆沒有接在一起的線圈，可以決定彼此的電壓？</strong></p>
+
+<p>兩顆線圈纏在同一個鐵芯上。一次線圈接交流電源，鐵芯裡就有一股<strong>不斷變大變小、又不停換方向</strong>的磁通；二次線圈纏在同一根鐵芯上，鏈到的是<strong>同一股磁通</strong>，於是被感應出電壓。兩顆線圈之間沒有任何導線相連——能量是隔著鐵芯傳過去的。</p>
+
+<p>按「開始」，看左上的兩條正弦：<strong>形狀完全一樣</strong>，只有高度不同。那個高度差就是電壓比。右下角把「每匝電壓」兩邊並排，理想時它們逐位相同。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p><strong>電壓比等於匝數比。</strong> 二次匝數是一次的三倍，二次電壓就是一次的三倍：</p>
+
+\[\frac{V_2}{V_1} = \frac{N_2}{N_1}\]
+
+<p>這也是為什麼變壓器只對<strong>交流電</strong>有效。直流電的磁通是一個定值，$\frac{d\Phi}{dt} = 0$，二次線圈一點電壓都沒有。</p>
+
+<p><strong>根本原因：兩邊每匝分到的電壓一樣。</strong> $V_2/V_1 = N_2/N_1$ 不是一條要背的公式，它是結果。真正發生的事是：兩顆線圈鏈到的是<strong>同一股變化中的磁通</strong>，所以每一匝分到的電壓 $V_1/N_1$ 與 $V_2/N_2$ <strong>必然相等</strong>——它們都等於 $\frac{d\Phi}{dt}$。匝數只是把「每匝的電壓」乘起來而已。</p>
+
+<p><strong>升壓的代價是電流變小。</strong> 理想變壓器不消耗功率，能量進多少就出多少：</p>
+
+\[V_1 I_1 = V_2 I_2\]
+
+<p>二次電壓變成三倍，二次電流就只剩三分之一。變壓器能把電壓「變大」，但<strong>不能把功率變大</strong>——這就是能量守恆。</p>
+
+<p><strong>高壓輸電就是靠這件事。</strong> 輸電線本身有電阻，沿途的損耗是 $I^2R$。把電壓升高 20 倍，同樣的功率下電流就只剩 $\frac{1}{20}$，線路上的損耗變成 $\frac{1}{400}$。發電廠升到 40 萬伏特送出去，到了社區再用降壓變壓器降回 220 V。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+\[\frac{V_2}{V_1} = \frac{N_2}{N_1} \qquad V_1 I_1 = V_2 I_2 \qquad \frac{V_1}{N_1} = \frac{V_2}{N_2} = \frac{d\Phi}{dt}\]
+
+<table>
+  <thead>
+    <tr>
+      <th>符號</th>
+      <th>意思</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$V_1, V_2$</td>
+      <td>一次／二次電壓（V）</td>
+    </tr>
+    <tr>
+      <td>$N_1, N_2$</td>
+      <td>一次／二次匝數</td>
+    </tr>
+    <tr>
+      <td>$I_1, I_2$</td>
+      <td>一次／二次電流（A）</td>
+    </tr>
+    <tr>
+      <td>$\frac{d\Phi}{dt}$</td>
+      <td>鐵芯裡磁通的變化率——<strong>兩邊共用同一個值</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>$N_2 &gt; N_1$ 叫<strong>升壓</strong>，$N_2 &lt; N_1$ 叫<strong>降壓</strong>，$N_2 = N_1$ 時電壓不變（隔離）。頻率不在公式裡——<strong>變壓器不改變頻率</strong>。</p>
+
+<h3 id="從畫面看出端倪">從畫面看出端倪</h3>
+
+<ul>
+  <li><strong>兩條正弦同頻率、同相位</strong>，只有振幅不同。把二次匝數加倍，紅線的高度就變成兩倍</li>
+  <li><strong>鐵芯上的紫色箭頭</strong>隨交流不停伸縮、換向。它們縮成一條線的那一刻，正是電壓衝到最高的那一刻——磁通落後電壓 90°</li>
+  <li><strong>圖上的每一個點</strong>都是一次調整落下來的。不管怎麼調 $N_1$、$N_2$、電壓、負載，點全都落在那條 45° 的線上</li>
+  <li><strong>切到「有損耗」</strong>：新落的點開始掉到線的下面，紅色的虛線是「理想值與實際值的缺口」，右下角的效率也跟著掉</li>
+  <li><strong>右下角兩列「每匝電壓」</strong> 理想時永遠相等。這就是變壓器能成立的原因</li>
+</ul>
+
+<h3 id="生活中的變壓器">生活中的變壓器</h3>
+
+<ul>
+  <li>🗼 <strong>高壓輸電</strong>：發電廠升到 40 萬伏特，沿途的 $I^2R$ 損耗降到萬分之一</li>
+  <li>🔌 <strong>路邊的電線桿</strong>：上面掛的灰色圓筒就是降壓變壓器，把 11 kV 降到 220 V 送進家裡</li>
+  <li>💻 <strong>筆電的充電器</strong>：把 220 V 降到 19 V，順便整流成直流</li>
+  <li>📱 <strong>無線充電</strong>：本質上是一個鐵芯被拆開的變壓器，一次線圈在充電板裡、二次線圈在手機背蓋裡</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>拉「二次匝數」時電壓比跟著變，但一拉「頻率」，兩邊的電壓一動也不動。為什麼頻率不是變壓器的變數？</li>
+  <li>升壓的時候二次電壓變高，二次<strong>電流</strong>卻變小了。變壓器到底把什麼「變大」了？</li>
+  <li>切到「有損耗」之後，圖上落的點全部掉到那條理想線的下面。那些少掉的電壓跑到哪裡去了？</li>
+  <li>發電廠用 40 萬伏特送電，到了社區才降到 220 V。中間省下來的到底是什麼？為什麼不直接送 220 V？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/magnetic-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/magnetic-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/transformer.js"></script>
+    
+
+</body>
+</html>

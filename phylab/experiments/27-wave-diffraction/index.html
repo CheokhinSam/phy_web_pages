@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 水波的繞射 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_11</div>
+                <h1 class="lab-title">🌊 水波的繞射</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是一座造波水槽：左邊送來平直的水波，中間一道障礙物，右邊是牆後的世界。
+整片顏色就是這一刻的水面高低——<strong>藍是波谷、橙是波峰</strong>，白色是水面，左下角有
+顏色圖例可以對照。牆上開口的寬度用小括號標著，右緣那一排刻度是條紋的位置。</p>
+
+<p>按「開始」之後水波會動起來。先看牆<strong>後面</strong>那一邊：波是照直線穿過去，還是往四
+面八方散開？</p>
+
+<ul>
+  <li><strong>拉「開口寬 a」</strong>：開口比波長窄的時候，牆後面整個都是亮的，一道暗紋都沒有；
+把開口拉寬，波幾乎照直線前進，牆後留下一道「影子」。</li>
+  <li><strong>拉「兩開口中心距 d」</strong>：從 0 慢慢拉大（0 就是只有一個開口），第二個開口長
+出來之後，牆後面開始出現一明一暗的條紋。</li>
+</ul>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p><strong>惠更斯原理</strong>：波前上的每一個點，都可以看成一個新的點波源。</p>
+
+<p>障礙物上的每一個開口點都在發出圓形波，牆後面任何一點的水面高低，
+就是這些圓形波疊加起來的結果。畫面上那一整片顏色不是貼圖，是一個點一個點疊出來的。</p>
+
+<p><strong>開口窄的時候</strong>，開口上只有一小段在發波，圓形波幾乎不受限制地散開——
+牆後面整個都是亮的，找不到暗紋。</p>
+
+<p><strong>開口寬的時候</strong>，開口上有非常多個點，它們發出的圓形波在斜的方向上互相抵消，
+只剩下正前方那一小段還留著——波幾乎照直線前進，牆後留下一道缺口形狀的「影子」。</p>
+
+<p>判斷的標準不是「開口幾公分」，而是<strong>開口有幾個波長寬</strong>。</p>
+
+<p><strong>一個開口</strong>——第一道暗紋出現在</p>
+
+\[a\sin\theta_1 = \lambda\]
+
+<p><strong>兩個開口</strong>——到兩邊的距離差是整數個波長的方向，就是亮紋：</p>
+
+\[d\sin\theta = m\lambda\]
+
+<ul>
+  <li><strong>a</strong>：開口的寬度　<strong>d</strong>：兩個開口的中心距　<strong>m</strong> = 0, ±1, ±2, …</li>
+  <li>第一式左右同除以 a：$\sin\theta_1 = \lambda / a$。$\lambda \ge a$ 的時候右邊超過 1，
+<strong>這條式子沒有解</strong>——不是算不出來，是真的沒有暗紋。</li>
+</ul>
+
+<h3 id="怎麼從畫面讀出來">怎麼從畫面讀出來</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>畫面上的東西</th>
+      <th>代表什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>藍／橙條紋的方向</td>
+      <td>波前，和波的傳播方向垂直</td>
+    </tr>
+    <tr>
+      <td>條紋之間的距離</td>
+      <td>波長 λ</td>
+    </tr>
+    <tr>
+      <td>右緣那一排刻度</td>
+      <td>條紋的位置，<strong>從水面高度本身量出來的</strong></td>
+    </tr>
+    <tr>
+      <td>「第 1 暗紋」</td>
+      <td>最靠近中線的那一道暗紋</td>
+    </tr>
+    <tr>
+      <td>雙開口刻度上的 Δ = mλ</td>
+      <td>這一條到兩個開口的距離差，是 m 個波長</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="兩個容易搞錯的地方">兩個容易搞錯的地方</h3>
+
+<p><strong>一、繞射不是「撞到東西就散開」。</strong> 把 a 從 40 cm 拉到 200 cm，同樣的波、
+同樣形狀的開口，牆後的亮帶卻愈縮愈窄。決定散得多開的是<strong>開口有幾個波長寬</strong>，
+不是開口本身的大小。</p>
+
+<p><strong>二、穿過開口之後波長沒有變。</strong> 條紋的疏密（＝波長）和牆前面完全一樣。
+開口改變的是波<strong>往哪個方向</strong>走，不是波長。</p>
+
+<h2 id="生活中的繞射">生活中的繞射</h2>
+
+<ul>
+  <li>🔊 <strong>隔著牆聽得到聲音、看不到人</strong>：聲波波長大約 1 公尺，門窗的寬度差不多，繞得過去；可見光波長只有約 0.0000005 公尺，繞不過去</li>
+  <li>🚪 <strong>音樂從門縫傳出來悶悶的</strong>：高音波長短，繞不過門縫；低音波長長，繞得過去</li>
+  <li>🌊 <strong>防波堤的缺口</strong>：港內照樣起浪，而且缺口愈窄，港內散得愈均勻</li>
+  <li>📡 <strong>收音機在室內收得到訊號</strong>：無線電波波長比門窗還長得多</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把開口寬 a 拉到最小（比波長還窄），牆後面還找得到暗紋嗎？「第一暗紋夾角」那張卡片顯示什麼？</li>
+  <li>再把 a 拉到最大。牆後面出現一道「影子」——影子的邊緣是清楚的還是模糊的？和開口很小時比起來，波散開的角度差多少？</li>
+  <li>把「兩開口中心距 d」從 0 慢慢拉大。第二個開口是從哪個數字開始出現的？條紋是突然冒出來，還是慢慢長出來的？</li>
+  <li>拉「波長 λ」。右緣那些刻度是變寬還是變窄？「λ ÷ 開口總寬」那張卡片和你看到的條紋疏密有什麼關係？</li>
+  <li>把 d 固定、只改 λ。刻度上方標的 Δ = mλ 有沒有變？波長變長時，同一個位置對應的 m 是變大還是變小？</li>
+  <li>水面上的顏色是這一刻的水面高低。沿著某一條亮紋從牆邊往右看，它是筆直的還是彎的？為什麼靠近牆的地方會彎？</li>
+  <li>隔著一道牆聽得到另一邊的人說話，卻看不到人。水槽上的哪一個數字決定了「繞不繞得過去」？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-tank.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/wave-diffraction.js"></script>
+    
+
+</body>
+</html>
