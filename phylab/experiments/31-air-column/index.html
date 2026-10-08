@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎺 開管與閉管的空氣柱駐波 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_12</div>
+                <h1 class="lab-title">🎺 開管與閉管的空氣柱駐波</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上有兩條並排的圖。上面是<strong>位移圖</strong>：每一點的高度是「這個位置的空氣往右跑了多少」——縱波沒有上下起伏，這是同一個函式的另一種長相。下面是<strong>管內的空氣</strong>：一圈圈質點沿著管子左右來回振動，擠在一起的地方色帶就深。</p>
+
+<ul>
+  <li>管子可以切換<strong>開管</strong>（兩端開口）與<strong>閉管</strong>（左端封閉、右端開口），切到閉管時左邊會多出一面牆。紅點是波節、綠圈是波腹（會跟著波腹上下跑），藍色括號量的是相鄰兩個波腹的距離 λ/2；切到閉管時它改量封閉端到第一個波腹的 λ/4。</li>
+  <li>拉<strong>管長</strong>與<strong>第幾個諧音</strong>，上面那條曲線會重新排列，右邊的波長、頻率、模態、波節數跟著跳。按最下面的<strong>諧音清單</strong>可以一個一個聽，最下面那顆按鈕是把所有諧音疊起來的音色。</li>
+  <li>切到閉管再看一次清單——有幾列會變成灰的、打上刪除線。那些就是閉管吹不出來的音。</li>
+</ul>
+
+<p>按「開始」，質點開始左右振動：密部和疏部在原地交替出現，波形本身不跑。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="兩條-lane-看的是同一件事">兩條 lane 看的是同一件事</h3>
+
+<p>下面那條 lane 的每一顆質點，位置就是從上面那條曲線讀出來的：</p>
+
+\[\begin{aligned}
+x_{\text{質點}}(t) &amp;= x_0 + A\cos\!\left(\frac{2\pi x_0}{\lambda}\right)\cos(\omega t) \\[2pt]
+\omega &amp;= 2\pi f = \frac{2\pi v}{\lambda}
+\end{aligned}\]
+
+<p>波節的地方 $\cos\frac{2\pi x_0}{\lambda} = 0$，空氣從頭到尾不動（紅點）；波腹的地方它等於 $\pm 1$，動得最厲害（綠圈）。$v = 343$ m/s 是常溫空氣中的聲速。</p>
+
+<p>上面那條曲線的縱軸是<strong>放大過的</strong>：0.6 公分的振幅放進 1.60 公尺長的管子裡，照原比例畫出來比一根頭髮還細。紅點永遠釘在平衡線上（波節本來就不動），綠圈跟著波腹上下跑。所以<strong>形狀</strong>（哪裡是波節、哪裡是波腹）看上面那條，<strong>動了多大</strong>看下面那條。</p>
+
+<h3 id="邊界條件決定一切">邊界條件決定一切</h3>
+
+<p>聲波是縱波，但「端點能不能動」這件事換了一種說法：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>端點</th>
+      <th>空氣在這裡</th>
+      <th>駐波上的位置</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>開口（通大氣）</td>
+      <td>可以自由進出，壓力不變</td>
+      <td><strong>波腹</strong></td>
+    </tr>
+    <tr>
+      <td>封閉（被牆擋住）</td>
+      <td>貼著牆動不了</td>
+      <td><strong>波節</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>整根管子要能穩定地站著一個駐波，兩端就必須各放一個波節或一個波腹——中間不夠放就是站不住。這一條推出來的結果，就是下面兩條式子。</p>
+
+<h3 id="開管兩端都是波腹">開管：兩端都是波腹</h3>
+
+<p>一端波腹、另一端也是波腹，中間最省力的放法是「一個半波長」；再多放就依此類推：</p>
+
+\[L = n\frac{\lambda}{2} \quad\Longrightarrow\quad \lambda = \frac{2L}{n}, \qquad f = \frac{v}{\lambda} = n\frac{v}{2L}\]
+
+<p>$n$ 是任何正整數，所以頻率是 $f_1, 2f_1, 3f_1, \dots$——<strong>諧音比 1 : 2 : 3 : 4 : 5，一個都不缺</strong>。管長 1.60 公尺時基頻是</p>
+
+\[f_1 = \frac{343}{2 \times 1.60} = 107.2 \ \text{Hz}\]
+
+<h3 id="閉管一端波節一端波腹">閉管：一端波節、一端波腹</h3>
+
+<p>左端是波節、右端是波腹。一個半波長需要<strong>兩個</strong>波節（或兩個波腹），這裡湊不出來；能放進去的最短的一段是「波節到相鄰波腹 = 四分之一波長」：</p>
+
+\[L = n\frac{\lambda}{4}, \quad n = 1, 3, 5, 7, \dots \quad\Longrightarrow\quad f = n\frac{v}{4L}\]
+
+<p>管長一樣是 1.60 公尺時</p>
+
+\[f_1 = \frac{343}{4 \times 1.60} = 53.6 \ \text{Hz}, \qquad f = 53.6,\ 160.8,\ 268.0, \dots\]
+
+<p><strong>基頻只剩開管的一半</strong>，而且往上跳的間隔是 $2f_1$ 不是 $f_1$——第 2、第 4、第 6 個諧音的位置上是空的。同樣的管長，閉管吹出來的聲音比開管低八度，而且音色比較「空」：缺少偶數諧音正是這個感覺的來源。</p>
+
+<h3 id="兩根管子擺在一起看">兩根管子擺在一起看</h3>
+
+<p>以 $L = 1.60$ m、$v = 343$ m/s 為例：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>開管</th>
+      <th>閉管</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>端點</td>
+      <td>兩端都是波腹</td>
+      <td>一端波節、一端波腹</td>
+    </tr>
+    <tr>
+      <td>管長與波長</td>
+      <td>$L = n\lambda/2$</td>
+      <td>$L = n\lambda/4$，$n$ 只能奇數</td>
+    </tr>
+    <tr>
+      <td>基頻 $f_1$</td>
+      <td>107.2 Hz</td>
+      <td>53.6 Hz</td>
+    </tr>
+    <tr>
+      <td>諧音比</td>
+      <td>1 : 2 : 3 : 4 : 5</td>
+      <td>1 : 3 : 5 : 7 : 9</td>
+    </tr>
+    <tr>
+      <td>相鄰諧音間隔</td>
+      <td>$f_1$</td>
+      <td>$2f_1$</td>
+    </tr>
+    <tr>
+      <td>第 2 個諧音</td>
+      <td>214.4 Hz</td>
+      <td>吹不出來</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>畫面上預設是開管的第 2 個諧音：模態 $n = 2$、$\lambda = 1.600$ m、$f = 214.4$ Hz，管內有 2 個波節、3 個波腹。切到閉管、把「第幾個諧音」拉到 3，得到的是模態 $n = 5$、$\lambda = 1.280$ m、$f = 268.0$ Hz——同一個滑桿位置，兩根管子給的模態號碼不一樣，因為閉管跳過了偶數。</p>
+
+<h3 id="開口端其實還要再長一點">開口端，其實還要再長一點</h3>
+
+<p>真實的管子，開口端的波腹並不在管口那一刀切下去的地方，而是稍微<strong>探出管子外</strong>一點點，大約 $0.6r$（$r$ 是管半徑）：</p>
+
+\[L_{\text{有效}} = L + 0.6r\]
+
+<p>所以實際吹出來的頻率會比 $v/2L$ 算出來的<strong>低一點</strong>，管子愈細這個差別愈小。這一頁用的是理想模型，畫面上的數字就是 $v/\lambda$ 的結果，沒有把這一截補進去。這也解釋了為什麼真實的管樂器調音時，除了改變管長，還要動一下吹嘴或管口的形狀。</p>
+
+<h3 id="生活中的空氣柱">生活中的空氣柱</h3>
+
+<ul>
+  <li>🎺 <strong>管風琴</strong>：每一根管子是一根固定長度的空氣柱，管長決定音高。兩端開口的（開管音栓）音亮、一端封閉的（閉管音栓）音暗，差的就是那批失蹤的偶數諧音——所以管風琴要用兩種管子才能湊出完整的音色。</li>
+  <li>🎵 <strong>直笛與笛子</strong>：按放指孔就是在改變「有效管長」，按住愈多孔管子愈短、頻率愈高。</li>
+  <li>🍶 <strong>吹瓶口</strong>：對著空瓶口吹氣會有一個低音；倒進一些水，聲音就變高——水面上升，空氣柱變短。</li>
+  <li>🚗 <strong>排氣管與風管</strong>：引擎的排氣脈衝、空調風管裡的氣流都會在管子裡激起駐波，出現一個固定的低頻嗡嗡聲。師傅把管子接長或加一段消音器，改的就是這根空氣柱的共振條件。</li>
+</ul>
+
+<h2 id="換你試試">換你試試</h2>
+
+<p>把「第幾個諧音」固定在 1，切換開管與閉管，看基頻卡片上的數字怎麼變。再切回開管、把管長拉到 2.00 公尺，猜猜頻率會變成多少再拉。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>同樣 1.60 公尺，開管的基頻是 107.2 Hz，閉管卻只有 53.6 Hz。為什麼閉管的基頻剛好是開管的一半？</li>
+  <li>為什麼閉管吹不出第 2、第 4、第 6 個諧音？從「一端是波節、一端是波腹」想想看，一個完整的半波長需要什麼。</li>
+  <li>開管的第 2 個諧音是 214.4 Hz，閉管的第 3 個諧音是 160.8 Hz。兩根管子一樣長，為什麼這兩個數字對不上？</li>
+  <li>把管長從 1.60 公尺拉到 2.00 公尺，右邊的頻率卡片會變大還是變小？先猜，再拉。</li>
+  <li>吹直笛時手指按放不同的孔，改變的是管子的哪一個量？按住愈多孔，音是變高還是變低？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/air-column.js"></script>
+    
+
+</body>
+</html>

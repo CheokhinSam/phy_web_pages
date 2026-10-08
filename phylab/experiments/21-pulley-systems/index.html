@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏗️ 滑輪組 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_20</div>
+                <h1 class="lab-title">🏗️ 滑輪組</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>滑輪組的公式只有兩條，難的是<strong>那個 $n$ 到底是什麼</strong>——它不是滑輪的顆數，是<strong>畫面上數得出來的繩段數</strong>。</p>
+
+<ul>
+  <li><strong>承擔重物的繩段是藍色的，還編了號 ①②③④。</strong>不承擔的（例如垂下來讓你拉的那一段自由端）是灰色的，標著「不計」。</li>
+  <li>切換上面那個下拉，<strong>繩子會整條重繞</strong>——同一條繩子真的走了一條不同的路，編號跟著變，因為段數是繞出來的。</li>
+  <li>左邊的 <strong>h 尺標</strong>量物體上升了多少，右邊的 <strong>s 尺標</strong>量你的手移動了多少。拉的同時兩條一起長，但長的<strong>速度不一樣</strong>。</li>
+  <li>畫面下方兩行會跟著跳，那就是答案：</li>
+</ul>
+
+<blockquote>
+  <p><strong>4 段繩子分擔 460 N　→　手的力 F = 460 ÷ 4 = 115.0 N</strong></p>
+
+  <p><strong>s ÷ h = 4</strong>　（4 段繩子，手就得多拉 4 倍的距離）</p>
+</blockquote>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="n-是數出來的不是背下來的">n 是數出來的，不是背下來的</h3>
+
+<p>一個滑輪組的「省力倍數」$n$，指的是<strong>有幾段繩子直接承擔著重物</strong>。就這麼一句話，但它在畫面上很難數——繩子在滑輪之間繞來繞去，哪些算、哪些不算？</p>
+
+<p>判準是：<strong>每一顆動滑輪，繩子從它的兩邊兜住它，那就是兩段。</strong>動滑輪會跟著重物一起上升，所以撐住動滑輪的繩子，就是撐住重物的繩子。定滑輪掛在天花板上不動，繩子只是「跨過去」，那不承擔重物。</p>
+
+<p>所以：</p>
+
+\[\begin{aligned}
+n &amp;= 2 \times (\text{動滑輪的顆數}) \\[2pt]
+  &amp;+ (\text{繩頭綁在動滑輪上？})
+\end{aligned}\]
+
+<p>數一數動滑輪有幾顆，再從畫面上確認編號，兩個數字一定會一樣。</p>
+
+<h3 id="兩條公式一個帳本">兩條公式，一個帳本</h3>
+
+\[\begin{aligned}
+F &amp;= \frac{G + G_{動}}{n} + f \\[2pt]
+s &amp;= n\,h
+\end{aligned}\]
+
+<ul>
+  <li>$G$：物體的重量（N）</li>
+  <li>$G_{動}$：<strong>動滑輪和它的框</strong>的重量（N）。定滑輪不算——它掛在天花板上，沒有被提起來</li>
+  <li>$n$：段數（上面數出來的那個）</li>
+  <li>$f$：摩擦阻力（N）。每拉 1 公尺的繩子，要額外對抗的力</li>
+  <li>$h$：物體上升的高度（m）</li>
+  <li>$s$：繩端（手）移動的距離（m）</li>
+</ul>
+
+<p>第二條 $s = nh$ 反直覺得多。它說：<strong>手移動的距離是物體上升距離的 $n$ 倍。</strong></p>
+
+<p>為什麼？因為 $n$ 段繩子把重物撐住了，每一段都要縮短 $h$ 才能讓重物上升 $h$。這 $n$ 段繩子是<strong>同一條繩子</strong>，所以繩子的其中一端（你拉的那一端）總共被抽走了 $n \cdot h$。</p>
+
+<p><strong>兩條公式其實是同一件事。</strong>手出的力變成 $1/n$，但手要拉 $n$ 倍的距離——乘起來，<strong>功一模一樣</strong>：</p>
+
+\[\begin{aligned}
+W = F \cdot s &amp;= \frac{G + G_{動}}{n} \times n\,h \\[2pt]
+&amp;= (G + G_{動})\,h
+\end{aligned}\]
+
+<p>這就是「省力不省功」。滑輪組讓你省力，但它從來沒有讓你少作功。</p>
+
+<h3 id="用具體數字看一次">用具體數字看一次</h3>
+
+<p>物重 $G = 400$ N、動滑輪＋框 $G_{動} = 60$ N、不計摩擦，把 $n$ 從 2 一路切到 5：</p>
+
+<ul>
+  <li>手的力從 <strong>230 N 掉到 92 N</strong>（只剩 23%）——看起來省了很多</li>
+  <li>但手拉的距離從 $2h$ 變成 $5h$——<strong>多拉了 2.5 倍</strong></li>
+  <li>乘起來永遠是 $460h$，一格都沒動</li>
+</ul>
+
+<p><strong>力小了，距離就長了。乘起來的功一樣多。</strong></p>
+
+<h3 id="奇動偶定繩頭綁在哪裡">奇動偶定：繩頭綁在哪裡</h3>
+
+<p>仔細看每一種繞法，繩子的那一頭（圖上圈起來的綠色點，標著「固定端」）位置會跳：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>段數 $n$</th>
+      <th>繩頭綁在</th>
+      <th>手拉的結局</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>偶數（2、4）</td>
+      <td><strong>定滑輪</strong>那一側（天花板）</td>
+      <td>往下拉</td>
+    </tr>
+    <tr>
+      <td>奇數（3、5）</td>
+      <td><strong>動滑輪</strong>的框上</td>
+      <td>往上拉</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>這不是誰規定的口訣，是<strong>繞線順序的必然結果</strong>：繩子從第一顆滑輪開始，一進一出、一上一下地繞過去，繞到最後繩頭落在哪一側，取決於總共繞了奇數次還是偶數次。</p>
+
+<p>（往下拉還是往上拉，哪一種比較順手？搬東西上樓的時候，你是往下拉繩子還是往上拉繩子？——這就是「往哪個方向拉」有時候比「省多少力」更重要的地方。）</p>
+
+<h3 id="動滑輪本身也有重量">動滑輪本身也有重量</h3>
+
+<p>把「動滑輪＋框重」這個滑桿拉到 0，$F$ 會掉下去一點點——那些多出來的力是在對抗<strong>動滑輪和它的框自己的重量</strong>。它們跟著重物一起上升 $h$，所以要作的額外功是 $G_{動} \cdot h$。</p>
+
+<p>定滑輪就沒有這個問題——它掛在天花板上，繩子只是滑過它，它自己一動也不動，所以 $G_{動}$ 裡不算定滑輪。</p>
+
+<h3 id="省力有極限嗎">省力有極限嗎？</h3>
+
+<p>$n$ 在分母，所以省力的效果<strong>一次比一次小</strong>。切換上面那個下拉，盯著「手的拉力 F」和「F ÷ G（力剩幾成）」兩張卡片（$G = 400$ N、$G_{動} = 60$ N、摩擦拉到 0）：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>段數 $n$</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>手的拉力 $F$</td>
+      <td>230 N</td>
+      <td>153 N</td>
+      <td>115 N</td>
+      <td>92 N</td>
+    </tr>
+    <tr>
+      <td>力剩幾成</td>
+      <td>58%</td>
+      <td>38%</td>
+      <td>29%</td>
+      <td>23%</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>$n$ 從 1 加到 2，力<strong>砍半</strong>——效果最大</li>
+  <li>$n$ 從 4 加到 5，只再省下 20%</li>
+  <li>$n$ 再怎麼加，<strong>它永遠碰不到 0</strong></li>
+</ul>
+
+<p>因為分母是 $n$，不是 $2^n$。想再省一半的力，你得把段數<strong>加倍</strong>（從 4 段變 8 段），而那意味著手要多拉一倍的距離、繩子要長一倍、滑輪要多一倍。</p>
+
+<p>還有一個跨不過去的下限：$f$。不管 $n$ 多大，$F$ 都不可能低於摩擦阻力——把「摩擦阻力 f」那一支拉起來，四張卡片會一起往上跳，從此 $F$ 就停在那條線之上。</p>
+
+<h2 id="生活中的滑輪組">生活中的滑輪組</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>現象</th>
+      <th>為什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🏗️ 工地上的吊車吊鉤</td>
+      <td>好幾顆滑輪疊在一起，繩子繞成很多段——起重機吊得動幾十噸，靠的就是 $n$ 大</td>
+    </tr>
+    <tr>
+      <td>🚩 旗桿上的定滑輪</td>
+      <td>$n = 1$，完全不省力。它存在的唯一目的是<strong>讓你在下面往下拉，旗子在上面往上升</strong></td>
+    </tr>
+    <tr>
+      <td>🪟 百葉窗的拉繩</td>
+      <td>一串小小的滑輪組——往下拉一小段，葉片跑一大段</td>
+    </tr>
+    <tr>
+      <td>🏋️ 健身房的滑輪配重</td>
+      <td>換一個掛鉤的位置就換一種繞法，所以同樣的配重塊可以有兩三種「重量」</td>
+    </tr>
+    <tr>
+      <td>⚓ 帆船的索具</td>
+      <td>桅杆和帆桁之間塞滿了滑輪組，一個人就能拉緊整面帆</td>
+    </tr>
+    <tr>
+      <td>🪣 井上的轆轤</td>
+      <td>嚴格說是輪軸不是滑輪組（軸上繞繩、輪上施力），但同樣是「省力不省功」</td>
+    </tr>
+  </tbody>
+</table>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把「繩子繞成幾段」切換一輪，仔細數畫面上<strong>藍色有編號</strong>的繩段。切到 4 段的時候，畫面上總共有幾顆滑輪？切到 5 段的時候呢？那為什麼同一組滑輪可以有兩種不同的「省力倍數」？</li>
+  <li>n 是奇數的時候，繩子的那一頭綁在<strong>動滑輪的框</strong>上；n 是偶數的時候綁在<strong>天花板</strong>。這個規律不是誰規定的——從繩子一進一出繞過每一顆滑輪的走法，你能自己把它推出來嗎？</li>
+  <li>拉著手讓它跑，同時盯著左右兩個尺標。手往下拉了 100 cm 的時候，物體上升了幾公分？如果這個滑輪組是 4 段繩子，那 400 cm 的繩子跑到哪裡去了？</li>
+  <li>把「動滑輪＋框重」從 0 慢慢加大，手的力會跟著變。但<strong>物體本身</strong>的重量並沒有變——那些多出來的力是在對抗什麼？如果動滑輪是沒有重量的、也沒有摩擦，F 會等於多少？</li>
+  <li>拉到一半停住，把 n 從 2 切到 5。物體的高度當場跳到另一個位置——可是你的手明明沒有動過。這件事在說什麼？（提示：固定的東⻄到底是「手拉的距離」還是「物體上升的距離」？）</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/machine-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/machine-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/pulley-systems.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚙️ 直流電動機 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/magnetism/" class="bc-back">← 磁學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_03</div>
+                <h1 class="lab-title">⚙️ 直流電動機</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p><strong>為什麼電動機不會一直加速下去？</strong></p>
+
+<p>通電的線圈在磁場中受力，開始旋轉。如果照「電壓越高 → 電流越大 → 力越大 → 轉越快」推下去，轉速應該無限制上升。但真實的馬達會停在一個固定的轉速。原因是：<strong>線圈一轉起來，自己就變成一台發電機</strong>。它在磁場中掃過磁力線，產生一個跟電源反向的電壓——<strong>反電動勢</strong>——把電流壓下去。</p>
+
+<p>按「開始」，看左下角的電流曲線從<strong>啟動電流</strong>掉到穩態值，右下角的三根長條是一個電源分給兩個去向：<strong>機械輸出</strong>和<strong>線圈發熱</strong>。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p><strong>線圈靜止時，電流只受電阻限制。</strong> 這時 $I = \dfrac{V}{R}$，叫做啟動電流。馬達剛通電的那一瞬間就是這個狀態，所以<strong>啟動電流最大</strong>——家裡的馬達啟動時燈會閃一下，就是這個電流在拉。</p>
+
+<p><strong>線圈轉起來之後，它自己發電。</strong> 線圈在磁場中轉動，穿過它的磁通量不斷改變，於是有感應電動勢。這個電動勢的方向由楞次定律決定——它<strong>反對</strong>造成它的變化，也就是反對電源推電流，所以叫反電動勢，記作 $\varepsilon_{\text{back}}$。</p>
+
+<p><strong>反電動勢把電流壓住，轉速就自動收斂。</strong> 轉得越快，反電動勢越大，能推動的電流就越小；電流小、轉矩就小。轉速會一直上升到「電磁轉矩剛好抵得過摩擦」為止，那之後就不再加速。</p>
+
+<p><strong>能量的帳要算平。</strong> 電源給的功率是 $VI$，其中一部分變成線圈的熱，剩下的才是機械輸出：</p>
+
+\[VI = \varepsilon I + I^2R\]
+
+<p>這條是<strong>恆等式</strong>，不是「大約相等」——畫面右下那三根長條，上面一根和下面兩根加起來一樣長。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+\[\varepsilon_{\text{back}} = NBA\omega \qquad I = \frac{V - \varepsilon_{\text{back}}}{R} \qquad \tau = NBAI\]
+
+<table>
+  <thead>
+    <tr>
+      <th>符號</th>
+      <th>意思</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$V$</td>
+      <td>電源電壓（V）</td>
+    </tr>
+    <tr>
+      <td>$N$</td>
+      <td>線圈匝數</td>
+    </tr>
+    <tr>
+      <td>$B$</td>
+      <td>磁場（T），由 N 極指向 S 極</td>
+    </tr>
+    <tr>
+      <td>$A$</td>
+      <td>線圈的面積（m²）</td>
+    </tr>
+    <tr>
+      <td>$\omega$</td>
+      <td>角速度（rad/s）—— 轉得越快，反電動勢越大</td>
+    </tr>
+    <tr>
+      <td>$\varepsilon_{\text{back}}$</td>
+      <td>反電動勢（V），就是線圈自己的發電機</td>
+    </tr>
+    <tr>
+      <td>$\tau$</td>
+      <td>電磁轉矩（N·m）</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>注意 $NBA$ 在三個式子裡都出現，它同時是「每單位電流的轉矩」也是「每單位角速度的反電動勢」——<strong>同一台馬達，這兩個數字必然相等</strong>，這正是能量守恆在這裡的長相。</p>
+
+<h3 id="從畫面看出端倪">從畫面看出端倪</h3>
+
+<ul>
+  <li><strong>啟動那一瞬間電流衝到最大</strong>，然後往下掉到穩態值</li>
+  <li><strong>線圈兩端的 ⊙ 和 ⊗ 每半圈互換一次位置</strong>——那是換向器在做的事。少了它，線圈過了死點就會被往反方向推，只會前後晃動，轉不起來</li>
+  <li><strong>兩條功率長條的接縫</strong>：機械輸出 + 發熱，剛好等於上面那根電源輸入</li>
+  <li><strong>負載調重</strong>：轉速下降、反電動勢變小、電流上升 —— 爬坡的腳踏車就是這樣</li>
+  <li><strong>效率</strong>卡片顯示 $\varepsilon_{\text{back}} / V$：轉得越快效率越高，因為發熱那一項變小了</li>
+</ul>
+
+<h3 id="生活中的電動機">生活中的電動機</h3>
+
+<ul>
+  <li>🚇 <strong>捷運的再生煞車</strong>：減速時把馬達當發電機用，反過來把電送回電網</li>
+  <li>🧺 <strong>洗衣機卡住會燒掉</strong>：卡住時 $\omega = 0$，反電動勢是 0，電流衝回啟動電流，全部變成熱</li>
+  <li>🔌 <strong>啟動電流</strong>：馬達啟動電流可以是運轉電流的 5 倍以上，這就是為什麼大功率馬達要用降壓啟動</li>
+  <li>🚗 <strong>電動車的動能回收</strong>：跟捷運是同一個原理，只是儲存的地方從電網變成電池</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>按開始的瞬間電流最大，然後一路往下掉。掉下來的那個「煞車」是什麼？</li>
+  <li>把「負載」調重，轉速下降、電流反而上升。這跟腳踏車爬坡要更用力有什麼關係？</li>
+  <li>電源的功率 V·I 和「機械輸出 + 發熱」兩根長條加起來一樣長。如果線圈是超導體（R = 0），效率會是多少？</li>
+  <li>馬達卡住不轉的時候（例如洗衣機被衣服纏住），發熱功率會變成多少？為什麼會燒起來？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/magnetic-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/magnetic-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/motor.js"></script>
+    
+
+</body>
+</html>
