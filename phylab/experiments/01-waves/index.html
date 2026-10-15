@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌊 橫波與縱波 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_01</div>
+                <h1 class="lab-title">🌊 橫波與縱波</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>波往前跑，繩子上的每一點卻只在自己原來的位置上下晃。<strong>波傳的是「擾動」，不是「物質」。</strong></p>
+
+<p>畫面上並排著兩種最常見的波：<strong>橫波</strong>（質點上下振動，垂直於傳播方向——繩波、水波、光）與<strong>縱波</strong>（質點左右振動，平行於傳播方向——聲波、彈簧波）。兩條波吃同一組介質參數、同一個頻率、同一個振幅，所以波速、波長、週期完全一樣，<strong>差別只在質點怎麼動</strong>。</p>
+
+<p>左邊可以選<strong>介質</strong>（決定波速）並調整<strong>頻率 $f$</strong> 與<strong>振幅 $A$</strong>。橘色那顆是追蹤質點，右邊卡片會顯示它的位移——還有它的<strong>平衡位置</strong>，那張卡片從頭到尾都不會變。</p>
+
+<blockquote>
+  <p>⚠️ 縱波的質點其實只在極小的範圍內來回移動（真實聲波的位移大約只有波長的千分之一），照真實比例畫會什麼都看不到，所以畫面把水平位移放大了。橫波的振幅同樣是放大的。</p>
+</blockquote>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="橫波與縱波">橫波與縱波</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>橫波</th>
+      <th>縱波</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>質點振動方向</strong></td>
+      <td>↕️ 垂直於傳播方向</td>
+      <td>↔️ 平行於傳播方向</td>
+    </tr>
+    <tr>
+      <td><strong>長相</strong></td>
+      <td>波峰、波谷</td>
+      <td>密部、疏部</td>
+    </tr>
+    <tr>
+      <td><strong>例子</strong></td>
+      <td>繩波、水面波、地震 S 波、光</td>
+      <td>聲波、彈簧波、地震 P 波</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>橫波的曲線高度就是質點當下的位移，所以質點看起來<strong>貼在曲線上</strong>。縱波沒有波峰波谷，取而代之的是<strong>疏密</strong>：<strong>密部</strong>是質點擠在一起的地方，<strong>疏部</strong>是被拉開的地方，兩者都跟著波一起往前跑。</p>
+
+<h3 id="容易搞錯密部不是位移最大的地方">容易搞錯：密部不是位移最大的地方</h3>
+
+<p>密部中心的質點位移其實是<strong>零</strong>——它剛好位在平衡位置上。密部之所以「密」，是因為左右兩邊的質點都往它靠過來。位移是零，但位移的<strong>空間變化率</strong>（對 $x$ 的斜率）最負：</p>
+
+<p>\(\text{密部} \Longleftrightarrow \frac{\partial \xi}{\partial x} \text{ 最負}\)
+\(\text{質點位移} = 0\)</p>
+
+<p>反過來，位移最大的地方左右鄰居的位移幾乎一樣，間距幾乎沒變，那裡不是密部也不是疏部。</p>
+
+<h3 id="波源決定頻率介質決定波速">波源決定頻率，介質決定波速</h3>
+
+<p>介質一換，波速立刻改變；但只調<strong>頻率</strong>，波速<strong>不會</strong>變——變的是波長：</p>
+
+\[v = f\lambda \qquad T = \frac{1}{f}\]
+
+<ul>
+  <li>$v$：由介質決定（繩子是 $\sqrt{T/\mu}$，空氣是溫度與壓力）</li>
+  <li>$f$：由<strong>波源</strong>決定，你手搖多快就是多快</li>
+  <li>$\lambda$：$v$ 和 $f$ 一確定，它就被逼著只能等於 $v/f$</li>
+</ul>
+
+<p><strong>波源決定頻率，介質決定波速，波長是兩者相除的結果。</strong> 這也是為什麼海浪不管怎麼產生的，只要進到水深一樣的地方，速度就一樣。</p>
+
+<h2 id="生活中的橫波與縱波">生活中的橫波與縱波</h2>
+
+<ul>
+  <li>🔊 <strong>聲音</strong>是縱波，所以<strong>不能在真空裡傳</strong>——沒有介質就沒有質點可以推</li>
+  <li>🌊 <strong>地震</strong>：P 波是縱波（跑得快、先到），S 波是橫波（跑得慢、搖得兇）。比較兩者抵達的時間差，就能算出震央有多遠</li>
+  <li>🧲 <strong>光</strong>是橫波。這件事直到 19 世紀才被確認，也是「光不需要介質」的第一個線索</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>畫面上下兩條波的波速、波長、頻率完全一樣，但質點動的方向不同。既然介質一樣，為什麼可以是兩種不同的波？</li>
+  <li>盯著橘色那顆質點看完整段動畫。它有沒有被波從左邊帶到右邊？右邊那張「追蹤質點的平衡位置」卡片從頭到尾有變過嗎？</li>
+  <li>把介質換成「拉緊的繩子」，波速變快了。這時候波長變長還是變短？頻率有沒有跟著變？（想想看：你搖手的快慢是你決定的，還是繩子決定的？）</li>
+  <li>把頻率調高、介質不動。波速有沒有變？如果沒變，多出來的「每秒振動次數」跑到哪裡去了？</li>
+  <li>下面那條縱波裡，橘色色帶比較深的地方是密部。相鄰兩個密部之間的距離和你上面量到的 λ 一樣嗎？</li>
+  <li>聲音在空氣中是縱波，那它有沒有波峰和波谷？如果沒有的話，我們平常說「聲音比較大」，指的是縱波的哪個量？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/waves.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 熱傳導 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/thermal/" class="bc-back">← 熱學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_01</div>
+                <h1 class="lab-title">🔥 熱傳導</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>這是一根 4 公分長的棒子，左端接著一個固定溫度的水浴，右端接著另一個。按下開始之後，棒子上每一點的溫度會慢慢從一條平線變成<strong>一條斜直線</strong>——那就是熱傳導最後的穩定狀態。</p>
+
+<p>畫面上同時有四件事在講同一根棒子：</p>
+
+<ul>
+  <li><strong>顏色</strong>：棒子上每一點的顏色就是它的溫度</li>
+  <li><strong>白色的點</strong>：那是棒子裡的分子，抖動的幅度由<strong>它自己那個位置</strong>的溫度決定</li>
+  <li><strong>右下角的圖</strong>：把棒子上每一點的溫度畫成 T(x) 曲線</li>
+  <li><strong>右邊的卡片</strong>：k、P、q、R 這幾個數字</li>
+</ul>
+
+<p>四者讀的是同一份溫度分布，所以永遠互相吻合。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="熱是怎麼傳過去的">熱是怎麼「傳」過去的？</h3>
+
+<p>把金屬棒的一端放在火上，另一端過一會兒也會燙。中間沒有任何東西流過去——能量是靠<strong>鄰居互相撞擊</strong>傳的：熱端的分子抖得凶，撞到隔壁，把一部分能量交出去；隔壁再撞下一個。一個傳一個，能量就往冷端走了。</p>
+
+<p>所以在這個實驗裡，「熱的地方分子抖得厲害」不是比喻，而是<strong>同一份溫度的另一個長相</strong>：抖動幅度正比於 √T（T 要用克氏溫標）。</p>
+
+<h3 id="傅立葉定律">傅立葉定律</h3>
+
+\[\begin{aligned} q &amp;= -k\frac{dT}{dx} \\[2pt] P &amp;= \frac{kA\,(T_1 - T_2)}{L} \end{aligned}\]
+
+<ul>
+  <li>$q$：<strong>熱流密度</strong>，每秒每平方公尺穿過去多少能量（W/m²）</li>
+  <li>$k$：<strong>熱導率</strong>，材料自己的性質。銅 401、木材 0.15（W/(m·K)）</li>
+  <li>$\dfrac{dT}{dx}$：溫度梯度。負號的意思是「熱往溫度<strong>下降</strong>的方向流」</li>
+  <li>$P$：整根棒子每秒搬過去的總功率（W），等於 $q$ 乘上截面積</li>
+</ul>
+
+<h3 id="為什麼穩定之後是一條直線">為什麼穩定之後是一條直線？</h3>
+
+<p>穩定狀態（穩態）的意思是「每一點的溫度都不再變」。如果某一小段左右兩邊流進來的能量不一樣，那一小段就會繼續升溫或降溫——所以穩態的條件就是<strong>每一個截面每秒通過的能量都相同</strong>。</p>
+
+<p>$P$ 固定、$A$ 固定、$k$ 固定，$q = -k\,dT/dx$ 就要求 $dT/dx$ 處處相同——<strong>斜率固定的函數就是直線</strong>。</p>
+
+<h3 id="熱阻跟電路一樣的想法">熱阻：跟電路一樣的想法</h3>
+
+\[R = \frac{L}{kA}\]
+
+<p>把「溫差」想成電壓、「熱流」想成電流，這根棒子就是一個電阻：溫差越大流得越快，$R$ 越大流得越慢。銅棒的熱阻只有約 1 K/W（1 瓦可以撐住 1 度的溫差），木棒是 2667 K/W——同一個溫差下只能搬過去 0.075 瓦。</p>
+
+<h3 id="為什麼要時間壓縮">為什麼要「時間壓縮」？</h3>
+
+<p>銅的熱擴散率是木材的 <strong>790 倍</strong>。同一根 4 公分的棒子，銅 <strong>5.6 秒</strong>就走到穩態，木材要 <strong>1.2 小時</strong>。</p>
+
+<p>如果照真實時間播，木材那條曲線要兩小時才會變成直線，畫面上一動也不動。所以程式讓每一種材質都在<strong>同樣的 6 秒畫面時間</strong>裡走完自己的過程——但卡片上的「已過時間」和「時間壓縮」印的是真實數字：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>材質</th>
+      <th>畫面 6 秒 ≈ 真實</th>
+      <th>時間壓縮</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>銅</td>
+      <td>5.6 秒</td>
+      <td>×0.9（幾乎是真實速度）</td>
+    </tr>
+    <tr>
+      <td>鐵</td>
+      <td>29 秒</td>
+      <td>×4.8</td>
+    </tr>
+    <tr>
+      <td>玻璃</td>
+      <td>23 分鐘</td>
+      <td>×227</td>
+    </tr>
+    <tr>
+      <td>木材</td>
+      <td>1.2 小時</td>
+      <td>×736</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>「木材隔熱」的意思就是：同樣一段畫面時間裡，它只過了 0.008 秒。</strong></p>
+
+<h3 id="生活中的熱傳導">生活中的熱傳導</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>現象</th>
+      <th>為什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🍳 鍋子用金屬、握把用塑膠或木頭</td>
+      <td>金屬 $k$ 大（傳熱快），木頭 $k$ 小（隔熱）</td>
+    </tr>
+    <tr>
+      <td>🧊 保溫瓶的內膽用玻璃、中間抽真空</td>
+      <td>玻璃 $k$ 小，真空根本沒有分子可以撞</td>
+    </tr>
+    <tr>
+      <td>🚀 太空梭外層貼隔熱磚</td>
+      <td>再入大氣時外表面一千多度，艙內要維持常溫</td>
+    </tr>
+    <tr>
+      <td>🧤 摸鐵欄杆比摸木欄杆冷</td>
+      <td>兩者溫度一樣，但鐵把體溫<strong>搬走得快</strong>——「冷」是熱流出去的速度，不是溫度</td>
+    </tr>
+  </tbody>
+</table>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把材質從<strong>銅</strong>換成<strong>木材</strong>，畫面上的「時間壓縮」變成幾倍？為什麼兩者的差別會這麼大？</li>
+  <li>銅的熱導率是木材的 2670 倍。但畫面上那條「穩態」的參考線（灰色的虛線）從頭到尾都沒動過——為什麼穩態的形狀和材質無關？</li>
+  <li>切到<strong>只看分子</strong>，比較棒子左端和右端的分子。它們的抖動幅度相差多少？如果是 0 °C 和 400 °C，這個差距是幾倍？</li>
+  <li>加熱一段時間之後，把左端溫度滑桿拉高。曲線要多久才會變成新的直線？跟一開始從平線變成直線的時間比較，哪個比較快？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/thermal-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/thermal-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/conduction.js"></script>
+    
+
+</body>
+</html>
