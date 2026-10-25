@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌈 彩虹與水滴中的色散 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_11</div>
+                <h1 class="lab-title">🌈 彩虹與水滴中的色散</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面中央是一顆圓形的水滴，左邊一束平行的陽光照進來。黃色是入射光；進水滴後，紅色與紫色兩條光線各自折射、在內壁反射，再折射出去。</p>
+
+<p>拖動「撞擊參數 b/R」，入射光在水滴上的位置會上下移動，出射線的方向也跟著變。出射線與水平線的夾角就是彩虹角；右側的小圖畫出偏向角 D 隨 b/R 的變化，曲線的最低點就是彩虹。</p>
+
+<p>切到「副虹（兩次內反射）」，光在水滴裡多反射一次，從水滴左側退出。彩虹角變成約 51°，而且紅、紫的位置對調：紫光在外側。</p>
+
+<p>按下「開始 START」，撞擊參數會來回掃描，出射線與卡片上的角度跟著變。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="光在水滴裡走的路">光在水滴裡走的路</h3>
+
+<p>把水滴看成一個半徑 $R$ 的球。陽光平行射來，某一條光線離球心軸線的距離是 $b$，稱為<strong>撞擊參數</strong>；用半徑為單位寫成 $b/R$。</p>
+
+<p>光從左側進入水滴。入射點的半徑與入射光線的夾角 $i$ 滿足</p>
+
+\[\sin i=\frac{b}{R}\]
+
+<p>進入水中時，光向法線靠近，折射角 $r$ 由斯涅爾定律決定：</p>
+
+\[\sin i=n\sin r\]
+
+<p>光在水滴裡走一段弦，打到球的後壁。因為球的半徑處處相等，入射點、球心與後壁的反射點構成一個等腰三角形，所以光在後壁的入射角也等於 $r$。反射之後，光走到前面的球面，再一次折射出去；由對稱性，出射角等於 $i$。</p>
+
+<p>主虹是<strong>一次內反射</strong>：折射 → 反射 → 折射。副虹是<strong>兩次內反射</strong>：折射 → 反射 → 反射 → 折射。</p>
+
+<h3 id="偏向角與彩虹角">偏向角與彩虹角</h3>
+
+<p>入射線與出射線的夾角叫<strong>偏向角</strong> $D$。把三次轉彎加起來：</p>
+
+<ul>
+  <li>進入水滴：光偏 $i-r$。</li>
+  <li>在後壁反射：光偏 $180^\circ-2r$。</li>
+  <li>離開水滴：光再偏 $i-r$。</li>
+</ul>
+
+<p>所以一次內反射的偏向角是</p>
+
+\[\begin{aligned}
+D &amp;= 2(i-r)+(180^\circ-2r)\\
+&amp;= 180^\circ+2i-4r
+\end{aligned}\]
+
+<p>出射線與反日方向（太陽的反方向）的夾角叫<strong>彩虹角</strong>。對主虹，</p>
+
+\[\text{彩虹角}=180^\circ-D=4r-2i\]
+
+<p>$D$ 隨撞擊參數 $b$ 改變。當 $D$ 對 $i$ 的導數為零時，$D$ 最小；把 $\sin i=n\sin r$ 微分，</p>
+
+\[\begin{aligned}
+\frac{dr}{di}&amp;=\frac{1}{2}\\
+\Longrightarrow\quad 2\cos i&amp;=n\cos r
+\end{aligned}\]
+
+<p>平方後用 $\sin^2i=n^2\sin^2r$ 消去 $r$，得到</p>
+
+\[\sin i=\sqrt{\frac{4-n^2}{3}}\]
+
+<p>以紅光 $n\approx1.331$ 為例，$i\approx59.5^\circ$、$r\approx40.4^\circ$，$D_{\min}\approx137.6^\circ$，彩虹角約 $42.4^\circ$。</p>
+
+<p><strong>為什麼最小偏向角特別亮？</strong> 在 $D$ 的最小值附近，$D$ 對 $b$ 的變化率是零：一小段範圍內的入射光線，出射方向幾乎相同。這些光線疊在同一個方向，看起來就特別亮。彩虹就是這個「光線最集中的方向」；偏離這個方向，光線很快散開。</p>
+
+<p>副虹有兩次內反射，偏向角是</p>
+
+\[D=360^\circ+2i-6r\]
+
+<p>最小偏向角的條件變成 $3\cos i=n\cos r$，也就是</p>
+
+\[\sin i=\sqrt{\frac{9-n^2}{8}}\]
+
+<p>紅光的 $D_{\min}\approx230.4^\circ$，彩虹角 $D_{\min}-180^\circ\approx50.4^\circ$。</p>
+
+<h3 id="顏色從哪裡來">顏色從哪裡來</h3>
+
+<p>同一種介質對不同顏色的折射率不同，這叫<strong>色散</strong>。水對紅光的折射率約 $1.331$，對紫光約 $1.343$；紫光的折射率比較大。</p>
+
+<p>在同樣的入射角 $i$ 下，$n$ 愈大，$\sin r=\sin i/n$ 愈小，$r$ 愈小。對主虹，$D=180^\circ+2i-4r$：$r$ 愈小，$D$ 愈大，彩虹角 $180^\circ-D$ 愈小。所以<strong>紫光的彩虹角比紅光小</strong>，主虹的顏色是<strong>紅在外、紫在內</strong>。</p>
+
+<p>副虹的式子多了 $-6r$：$r$ 愈小，$D$ 愈大，而彩虹角是 $D-180^\circ$，所以<strong>紫光的彩虹角反而比紅光大</strong>。副虹的顏色順序相反：<strong>紫在外、紅在內</strong>。</p>
+
+<p>主虹紅、紫的彩虹角相差約 $1.7^\circ$，副虹相差約 $3^\circ$。這個角度很小，所以彩虹的顏色是連續變化的，不是七條分開的色帶；「紅橙黃綠藍靛紫」是方便描述的說法。</p>
+
+<h3 id="為什麼彩虹很淡">為什麼彩虹很淡</h3>
+
+<p>光在水滴後壁反射時，入射角是 $r\approx40^\circ$。水的臨界角約 $48.6^\circ$，所以這個角度<strong>小於臨界角</strong>，後壁的反射只是<strong>部分反射</strong>，大部分光直接折射出水滴，只有一小部分被反射回來。主虹已經很淡，副虹還要再多反射一次，所以更暗。</p>
+
+<p>另外，同一種顏色的光也不是集中在一個完美的角度，而是在彩虹角附近有一個亮度高峰；水滴的大小、太陽的大小都會讓彩虹的邊緣變柔和。</p>
+
+<h3 id="天空中的彩虹">天空中的彩虹</h3>
+
+<p>畫面上只有一顆水滴，真實的彩虹是<strong>很多顆水滴</strong>一起造成的。每一顆水滴都把光送回某個方向；觀察者看到的是「所有位在相同角度上的水滴」發出的光。</p>
+
+<ul>
+  <li>主虹是以<strong>反日點</strong>（太陽的反方向）為圓心、半徑約 $42^\circ$ 的圓弧。</li>
+  <li>副虹是半徑約 $51^\circ$ 的圓弧，顏色順序相反。</li>
+  <li>兩道虹之間的區域比較暗，叫<strong>亞歷山大暗帶</strong>：那裡沒有水滴能把光送到觀察者的方向。</li>
+</ul>
+
+<p>彩虹不是掛在天空某個固定位置的物體，而是一個<strong>方向</strong>。你往前走，看到的是另一批水滴；所以沒有人能看到「同一個」彩虹。太陽必須在觀察者背後，而且仰角不能太高：太陽高於 $42^\circ$ 時，主虹整個落到地平線下；高於 $51^\circ$ 時，副虹也看不到。</p>
+
+<h3 id="常見的誤解">常見的誤解</h3>
+
+<ul>
+  <li><strong>「彩虹是水滴把白光『分解』成七色。」</strong> 白光本來就包含各種顏色；水滴只是讓不同顏色偏折到不同角度。顏色是連續的，不是七種分立的色光。</li>
+  <li><strong>「彩虹在天空的固定位置。」</strong> 彩虹的方向由太陽、觀察者和反日點決定；觀察者移動，彩虹也跟著移動。</li>
+  <li><strong>「副虹只是主虹的反射。」</strong> 副虹是兩次內反射，顏色順序相反、亮度更暗。</li>
+  <li><strong>「水滴內部發生全反射。」</strong> 彩虹光線在後壁的入射角小於臨界角，是部分反射；全反射反而會把光留在水滴裡，不會形成我們看到的主虹。</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>光從空氣進入水滴時，為什麼向法線靠近？入射角 i 與折射角 r 滿足什麼關係？</li>
+  <li>光在水滴內壁反射時，入射角為什麼等於 r？如果沒有反射，光會從哪裡出去？</li>
+  <li>偏向角 D 是什麼？為什麼一次內反射的 D = 180° + 2i − 4r？</li>
+  <li>為什麼彩虹出現在偏向角「最小」的方向，而不是最大？「最小」和出射光集中在某個方向有什麼關係？</li>
+  <li>同一顆水滴，紅光與紫光的彩虹角為什麼不同？主虹與副虹的顏色順序為什麼相反？</li>
+  <li>為什麼彩虹是圓弧？如果太陽剛好在地平線上，觀察者會看到什麼？為什麼太陽太高就看不到主虹？</li>
+  <li>為什麼水滴內部的反射不是全反射？這和彩虹為什麼很淡有什麼關係？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/rainbow-dispersion.js"></script>
+    
+
+</body>
+</html>

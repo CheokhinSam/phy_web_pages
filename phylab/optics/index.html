@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometric Optics / 幾何光學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/phylab/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">OPTICS LAB</div>
+            <h1 class="main-title">幾何光學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，用光線、鏡面、透鏡與稜鏡，從影與針孔成像、反射定律與平面鏡，走到平面鏡多次成像與球面鏡，再到折射、視深、全反射與光纖、稜鏡色散、彩虹與彩色視覺，最後是薄透鏡、相機與投影機、眼睛、光學儀器與偏振。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗（標題、關鍵字、標籤）..." autocomplete="off">
+            </div>
+        </header><div id="tagBar" class="tag-bar" style="display: none;"></div>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/48-rectilinear-pinhole/" class="exp-card"
+               data-tags="光的本性"
+               data-keywords="光的直線傳播 影子 本影 半影 針孔成像 針孔相機 相似三角形 像高 模糊 孔徑 光源 屏幕 日食 月食">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>🔦 光的直線傳播：影與針孔成像</h3>
+                    <p>把光源、物體與屏幕排成一列，看本影與半影怎麼隨光源大小改變；切到針孔模式，再用相似三角形算出倒立的像與模糊圈。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/36-reflection-law/" class="exp-card"
+               data-tags="反射與面鏡"
+               data-keywords="光的反射 反射定律 入射角 反射角 法線 光路可逆 平面鏡 反射光線 入射光線">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🪞 光的反射定律</h3>
+                    <p>轉動入射光線，看反射光線怎麼跟著改變，驗證反射角等於入射角，再把光路反過來走一次。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/37-plane-mirror/" class="exp-card"
+               data-tags="反射與面鏡"
+               data-keywords="平面鏡 成像 虛像 物距 像距 物高 像高 放大率 反射 對稱">
+                <div class="card-number">
+                    03
+                </div>
+                <div class="card-content">
+                    <h3>🪞 平面鏡成像</h3>
+                    <p>拖動物的位置與高度，觀察鏡後的虛像怎麼跟著移動，量一量物距、像距與大小。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/44-multiple-mirror-images/" class="exp-card"
+               data-tags="反射與面鏡"
+               data-keywords="平面鏡 多次反射 兩面鏡 夾角 分角線 像的數目 360度 成像 虛像 左右相反 萬花筒 理髮店">
+                <div class="card-number">
+                    04
+                </div>
+                <div class="card-content">
+                    <h3>🪞 平面鏡的多次反射成像</h3>
+                    <p>兩面平面鏡夾一個角，物體在夾角裡，光線來回反射生出一個又一個像；拖動角度與位置，看像的數目怎麼被 n = 360° / θ 決定。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/38-spherical-mirror/" class="exp-card"
+               data-tags="反射與面鏡"
+               data-keywords="球面鏡 凹面鏡 凸面鏡 焦點 焦距 曲率中心 球心 鏡頂 主軸 實像 虛像 面鏡公式 放大率">
+                <div class="card-number">
+                    05
+                </div>
+                <div class="card-content">
+                    <h3>🪞 球面鏡成像</h3>
+                    <p>切換凹面鏡與凸面鏡，拖動物距與焦距，看像的位置、大小與正倒怎麼跟著面鏡公式改變。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/39-refraction-law/" class="exp-card"
+               data-tags="折射與透鏡"
+               data-keywords="光的折射 折射定律 斯涅爾定律 Snell 入射角 折射角 法線 折射率 光疏介質 光密介質 光路可逆 相對折射率 絕對折射率 光速">
+                <div class="card-number">
+                    06
+                </div>
+                <div class="card-content">
+                    <h3>💧 光的折射與折射定律</h3>
+                    <p>拖動兩層介質的折射率與入射角，看折射光線怎麼偏折，驗證 n₁ sin θ₁ = n₂ sin θ₂。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/45-apparent-depth/" class="exp-card"
+               data-tags="折射與透鏡"
+               data-keywords="實深 視深 表觀深度 折射 平行介質 多層介質 水底 硬幣 筷子 折射率 斯涅爾定律 反向延長線">
+                <div class="card-number">
+                    07
+                </div>
+                <div class="card-content">
+                    <h3>💧 實深與視深（含多層平行介質）</h3>
+                    <p>把硬幣放在水底，從斜上方看，它看起來比實際位置淺；切換一層到三層平行介質，拖動厚度與折射率，看視深 h′ 怎麼由每一層的 d/n 加起來。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/40-total-internal-reflection/" class="exp-card"
+               data-tags="折射與透鏡,全反射與應用"
+               data-keywords="全反射 全內反射 臨界角 光密介質 光疏介質 折射率 光導纖維 光纖 全反射稜鏡 潛望鏡 鑽石">
+                <div class="card-number">
+                    08
+                </div>
+                <div class="card-content">
+                    <h3>🪞 全反射與臨界角</h3>
+                    <p>把光從光密介質射向光疏介質，慢慢增大入射角，看折射光線在臨界角之後消失、只剩反射光線。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/50-fiber-optics/" class="exp-card"
+               data-tags="折射與透鏡,全反射與應用"
+               data-keywords="光纖 光導纖維 全反射 臨界角 內芯 外層 折射率 接受角 數值孔徑 全反射稜鏡 潛望鏡 內視鏡 光纖通訊 高錕">
+                <div class="card-number">
+                    09
+                </div>
+                <div class="card-content">
+                    <h3>🧵 光纖與全反射的應用</h3>
+                    <p>把雷射射進光纖的內芯，看光在內芯與外層的介面一次次全反射；把入射角推過接受角，光就從外層漏出去。再切到全反射稜鏡，看 45° 的斜面如何把光轉 90°。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/46-prism-dispersion/" class="exp-card"
+               data-tags="折射與透鏡,光與顏色,色散與彩虹"
+               data-keywords="稜鏡 三稜鏡 折射 偏向角 最小偏向角 色散 光譜 彩虹 折射率 紫光 紅光 頂角 斯涅爾定律">
+                <div class="card-number">
+                    10
+                </div>
+                <div class="card-content">
+                    <h3>🔺 稜鏡折射、最小偏向角與色散</h3>
+                    <p>一束光射進頂角 60° 的稜鏡，在兩個面各折射一次；拖動入射角與折射率，找偏向角最小的位置，再切到七色光看紫光為什麼偏得最多。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/51-rainbow-dispersion/" class="exp-card"
+               data-tags="光與顏色,色散與彩虹"
+               data-keywords="彩虹 主虹 副虹 霓 水滴 色散 折射 內反射 偏向角 彩虹角 最小偏向角 撞擊參數 反日點 亞歷山大暗帶 折射率 紅光 紫光">
+                <div class="card-number">
+                    11
+                </div>
+                <div class="card-content">
+                    <h3>🌈 彩虹與水滴中的色散</h3>
+                    <p>讓一束陽光照進球形的水滴，追蹤它在內壁反射一次或兩次之後的出射方向；拖動撞擊參數，找出偏向角最小的彩虹光線，看紅光與紫光為什麼分開、主虹與副虹的顏色順序為什麼相反。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/47-color-vision/" class="exp-card"
+               data-tags="光與顏色"
+               data-keywords="彩色視覺 光的三原色 加法混色 減法混色 顏料三原色 青 洋紅 黃 濾光片 互補色 紅綠藍 色光 吸收 透過">
+                <div class="card-number">
+                    12
+                </div>
+                <div class="card-content">
+                    <h3>🌈 彩色視覺（光的三原色、濾光）</h3>
+                    <p>把紅、綠、藍三束光疊在一起，看黃、青、洋紅與白怎麼出現；再換成青、洋紅、黃顏料與濾光片，理解加法混色、減法混色與濾光。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/41-thin-lens/" class="exp-card"
+               data-tags="折射與透鏡"
+               data-keywords="薄透鏡 凸透鏡 凹透鏡 會聚透鏡 發散透鏡 成像 物距 像距 焦距 放大率 實像 虛像 透鏡公式 放大鏡 投影機">
+                <div class="card-number">
+                    13
+                </div>
+                <div class="card-content">
+                    <h3>🔍 薄透鏡成像（凸／凹）</h3>
+                    <p>拖動物距與焦距，看凸透鏡的實像、虛像與凹透鏡的正立縮小虛像，兩條作圖光線在像頂交會。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/52-camera-projector/" class="exp-card"
+               data-tags="折射與透鏡,透鏡應用"
+               data-keywords="相機 投影機 凸透鏡 透鏡公式 物距 像距 焦距 對焦 失焦 模糊圈 光圈 景深 實像 倒立 放大率 底片 投影片">
+                <div class="card-number">
+                    14
+                </div>
+                <div class="card-content">
+                    <h3>📷 相機與投影機</h3>
+                    <p>把凸透鏡裝進相機與投影機：拖動物距、焦距與底片距離，看像在焦平面上清楚、離開焦平面就散成模糊圈；再比較相機的縮小實像與投影機的放大實像。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/42-eye-vision/" class="exp-card"
+               data-tags="折射與透鏡"
+               data-keywords="眼睛 視覺 近視 遠視 散光 矯正 眼鏡 凹透鏡 凸透鏡 柱面透鏡 視網膜 焦點 模糊圈 瞳孔 眼球">
+                <div class="card-number">
+                    15
+                </div>
+                <div class="card-content">
+                    <h3>👁️ 眼睛與視覺（近視、遠視、散光）</h3>
+                    <p>切換正視、近視、遠視與散光，拖動瞳孔孔徑，看焦點落在視網膜前後，以及凹透鏡、凸透鏡與柱面透鏡如何把光重新聚到視網膜。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/43-optical-instruments/" class="exp-card"
+               data-tags="折射與透鏡,透鏡應用"
+               data-keywords="光學儀器 顯微鏡 開普勒望遠鏡 物鏡 目鏡 凸透鏡 焦距 中間像 實像 虛像 放大率 投影機 照相機 放大鏡">
+                <div class="card-number">
+                    16
+                </div>
+                <div class="card-content">
+                    <h3>🔭 光學儀器（顯微鏡、開普勒望遠鏡）</h3>
+                    <p>切換顯微鏡與開普勒望遠鏡，拖動焦距與物距，看物鏡先成中間像、目鏡再把它放大成虛像，以及放大倍數怎麼變。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/49-polarization/" class="exp-card"
+               data-tags="光的本性"
+               data-keywords="偏振 偏振片 透光軸 自然光 線偏振光 檢偏片 偏光太陽眼鏡 液晶 立體電影 反射眩光 立體 3D 拖曳 振動平面">
+                <div class="card-number">
+                    17
+                </div>
+                <div class="card-content">
+                    <h3>🕶️ 偏振：偏振片與透光軸</h3>
+                    <p>拖曳轉動立體視角，看自然光變成偏振光，以及第二片如何把振動投影到自己的透光軸；兩片垂直時全暗。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+
+        <div id="gridEmpty" class="no-result" style="display: none;">找不到符合的實驗</div>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const tagBar      = document.getElementById('tagBar');
+        const gridEmpty   = document.getElementById('gridEmpty');
+        const cards       = Array.from(document.querySelectorAll('.exp-card'));
+        const wideGrid    = window.matchMedia('(min-width: 768px)');
+
+        let activeTag = null;
+
+        function tagsOf(card) {
+            return (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        }
+
+        // 建立每張卡片的可比對文字：標題 + 描述 + keywords + tags。
+        // keywords 每個實驗檔都有寫，但 Liquid 從沒把它輸出到 DOM，所以分類頁
+        // 以前搜「SHM」「虎克」「彈簧常數」都是 0 筆——而實驗室首頁有納入。
+        // 這裡只算一次，之後每次按鍵不必重讀 DOM。
+        cards.forEach(card => {
+            const title = card.querySelector('h3');
+            const desc  = card.querySelector('p');
+            card.dataset.searchText = [
+                title ? title.textContent : '',
+                desc  ? desc.textContent  : '',
+                card.dataset.keywords || '',
+                card.dataset.tags || ''
+            ].join(' ').toLowerCase();
+        });
+
+        // 標籤清單與計數直接從卡片掃出來，不另外維護一份資料
+        const tagCounts = new Map();
+        cards.forEach(card => {
+            tagsOf(card).forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+        });
+
+        function renderTagBar() {
+            if (tagCounts.size < 2) return;   // 整個分類只有一種標籤時，chips 沒有意義
+
+            const chips = Array.from(tagCounts.entries())
+                .sort((a, b) => b[1] - a[1])   // 實驗多的標籤排前面
+                .map(([tag, n]) =>
+                    `<button type="button" class="tag-chip" data-tag="${tag}"
+                             title="篩選：${tag}">${tag}<span class="tag-count">${n}</span></button>`
+                ).join('');
+
+            tagBar.innerHTML = '<span class="tag-bar-label">依主題篩選</span>' + chips;
+            tagBar.style.display = '';
+
+            tagBar.addEventListener('click', function (e) {
+                const chip = e.target.closest('.tag-chip');
+                if (!chip) return;
+                const tag = chip.dataset.tag;
+                activeTag = (activeTag === tag) ? null : tag;   // 再點一次 = 取消篩選
+                applyFilters();
+            });
+        }
+
+        // 篩選與搜尋是「且」的關係，統一在這裡決定誰顯示，避免兩處各自
+        // hide/show 造成狀態不同步
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const terms = query ? query.split(/\s+/) : [];
+            let shown = 0;
+
+            tagBar.querySelectorAll('.tag-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.tag === activeTag);
+            });
+
+            cards.forEach(card => {
+                const matchTag  = !activeTag || tagsOf(card).includes(activeTag);
+                const matchText = terms.every(term => card.dataset.searchText.includes(term));
+
+                card.style.display = (matchTag && matchText) ? '' : 'none';
+                if (!(matchTag && matchText)) return;
+
+                // 原本靠 :nth-child(2n) 拿掉每列第二張的右框，但 :nth-child 數的是
+                // DOM 位置，篩選後會對不上，卡片之間會少一條線或多一條線。
+                // 所以在雙欄模式下自己按「看得見的張數」重算。
+                shown++;
+                card.style.borderRight = wideGrid.matches
+                    ? (shown % 2 === 0 ? 'none' : '2px solid #000000')
+                    : '';
+            });
+
+            // 空狀態：顯示在 grid 的位置，而不是搜尋框底下的下拉——
+            // 用 chip 篩選時使用者未必在看搜尋框
+            gridEmpty.style.display = shown ? 'none' : 'block';
+            if (!shown) {
+                gridEmpty.textContent = activeTag && query
+                    ? `找不到同時符合「${activeTag}」與「${query}」的實驗。點一下藍色標籤可取消篩選。`
+                    : activeTag
+                        ? `找不到標籤「${activeTag}」的實驗。`
+                        : `找不到符合「${query}」的實驗。`;
+            }
+
+            // 讓篩選後的檢視可以直接分享：/phylab/mechanics/?tag=運動學
+            const url = new URL(window.location.href);
+            if (activeTag) url.searchParams.set('tag', activeTag);
+            else           url.searchParams.delete('tag');
+            history.replaceState(null, '', url);
+        }
+
+        renderTagBar();
+
+        // 讀取分享連結裡的 ?tag=（標籤不存在就忽略，applyFilters 會把它從網址清掉）
+        const initialTag = new URLSearchParams(window.location.search).get('tag');
+        if (initialTag && tagCounts.has(initialTag)) activeTag = initialTag;
+
+        searchInput.addEventListener('input', applyFilters);
+        wideGrid.addEventListener('change', applyFilters);   // 跨過 768px 時重算邊框
+
+        applyFilters();
+    </script>
+
+</body>
+</html>

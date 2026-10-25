@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thermal Physics / 熱學實驗室</title>
+    <link rel="stylesheet" href="/phylab/assets/css/main-style.css">
+</head>
+<body>
+
+    <main class="landing-container">
+        <header class="hero-section">
+            <a href="/phylab/" class="back-home-link">← 首頁</a>
+
+            <div class="brand-tag">THERMAL LAB</div>
+            <h1 class="main-title">熱學實驗室</h1>
+            <p class="sub-title">點擊下方實驗，探究溫度、熱量傳遞與氣體分子運動規律。</p>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜尋實驗（標題、關鍵字、標籤）..." autocomplete="off">
+            </div>
+        </header><div id="tagBar" class="tag-bar" style="display: none;"></div>
+
+        <section class="experiment-grid">
+            
+            
+            <a href="/phylab/experiments/08-conduction/" class="exp-card"
+               data-tags="熱的傳播,分子運動"
+               data-keywords="熱傳導 傅立葉定律 熱導率 溫度梯度 穩態 熱阻 熱擴散率 銅 木材 隔熱">
+                <div class="card-number">
+                    01
+                </div>
+                <div class="card-content">
+                    <h3>🔥 熱傳導</h3>
+                    <p>握住金屬棒的一端去烤，另一端多久會燙手？用溫度分布、分子抖動與熱流功率，看見熱傳導的三個面向。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/09-convection/" class="exp-card"
+               data-tags="熱的傳播"
+               data-keywords="熱對流 對流 對流胞 浮力 瑞利數 雷利數 臨界溫差 熱傳導 流體 密度">
+                <div class="card-number">
+                    02
+                </div>
+                <div class="card-content">
+                    <h3>🌊 熱對流</h3>
+                    <p>從下面加熱一層水，什麼時候會滾起來？用溫度場與流線粒子，找出熱對流的門檻，以及它為什麼對「層厚」這麼敏感。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/13-thermal-radiation/" class="exp-card"
+               data-tags="熱的傳播"
+               data-keywords="熱輻射 輻射 史蒂芬波茲曼 發射率 輻射率 黑體 保溫瓶 散熱 降溫 紅外線">
+                <div class="card-number">
+                    03
+                </div>
+                <div class="card-content">
+                    <h3>☀️ 熱輻射</h3>
+                    <p>四個一樣的罐子只差表面處理——黑的、白的、灰的、亮晶晶的。它們誰先涼？答案會推翻你對「白色會反光」的直覺。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/14-heat-capacity/" class="exp-card"
+               data-tags="熱量與狀態變化"
+               data-keywords="比熱容量 比熱 潛熱 熔化熱 汽化熱 加熱曲線 相變 狀態變化 熱量 冰 水蒸氣">
+                <div class="card-number">
+                    04
+                </div>
+                <div class="card-content">
+                    <h3>🧊 比熱容量與潛熱</h3>
+                    <p>一直加熱，溫度就會一直上升嗎？把冰塊一路加熱到水蒸氣，你會看到曲線上有兩段完全平坦的地方——而其中一段吃掉了七成的能量。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+            <a href="/phylab/experiments/15-gas-laws/" class="exp-card"
+               data-tags="分子運動,熱量與狀態變化"
+               data-keywords="氣體定律 理想氣體 波以耳定律 查理定律 壓力定律 絕對零度 分子運動 方均根速率 pV=nRT 等溫 等壓 等容 氣體常數">
+                <div class="card-number">
+                    05
+                </div>
+                <div class="card-content">
+                    <h3>🧪 氣體定律</h3>
+                    <p>活塞汽缸裡關著一團氣體，壓力、體積、溫度三個量在互相牽制。固定其中一個，另外兩個就綁在一起——而不管你怎麼拉，右邊那個 pV/(nT) 永遠是同一個數。</p>
+                </div>
+                <div class="card-arrow">→</div>
+            </a>
+            
+        </section>
+
+        <div id="gridEmpty" class="no-result" style="display: none;">找不到符合的實驗</div>
+    </main>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const tagBar      = document.getElementById('tagBar');
+        const gridEmpty   = document.getElementById('gridEmpty');
+        const cards       = Array.from(document.querySelectorAll('.exp-card'));
+        const wideGrid    = window.matchMedia('(min-width: 768px)');
+
+        let activeTag = null;
+
+        function tagsOf(card) {
+            return (card.dataset.tags || '').split(',').map(t => t.trim()).filter(Boolean);
+        }
+
+        // 建立每張卡片的可比對文字：標題 + 描述 + keywords + tags。
+        // keywords 每個實驗檔都有寫，但 Liquid 從沒把它輸出到 DOM，所以分類頁
+        // 以前搜「SHM」「虎克」「彈簧常數」都是 0 筆——而實驗室首頁有納入。
+        // 這裡只算一次，之後每次按鍵不必重讀 DOM。
+        cards.forEach(card => {
+            const title = card.querySelector('h3');
+            const desc  = card.querySelector('p');
+            card.dataset.searchText = [
+                title ? title.textContent : '',
+                desc  ? desc.textContent  : '',
+                card.dataset.keywords || '',
+                card.dataset.tags || ''
+            ].join(' ').toLowerCase();
+        });
+
+        // 標籤清單與計數直接從卡片掃出來，不另外維護一份資料
+        const tagCounts = new Map();
+        cards.forEach(card => {
+            tagsOf(card).forEach(tag => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+        });
+
+        function renderTagBar() {
+            if (tagCounts.size < 2) return;   // 整個分類只有一種標籤時，chips 沒有意義
+
+            const chips = Array.from(tagCounts.entries())
+                .sort((a, b) => b[1] - a[1])   // 實驗多的標籤排前面
+                .map(([tag, n]) =>
+                    `<button type="button" class="tag-chip" data-tag="${tag}"
+                             title="篩選：${tag}">${tag}<span class="tag-count">${n}</span></button>`
+                ).join('');
+
+            tagBar.innerHTML = '<span class="tag-bar-label">依主題篩選</span>' + chips;
+            tagBar.style.display = '';
+
+            tagBar.addEventListener('click', function (e) {
+                const chip = e.target.closest('.tag-chip');
+                if (!chip) return;
+                const tag = chip.dataset.tag;
+                activeTag = (activeTag === tag) ? null : tag;   // 再點一次 = 取消篩選
+                applyFilters();
+            });
+        }
+
+        // 篩選與搜尋是「且」的關係，統一在這裡決定誰顯示，避免兩處各自
+        // hide/show 造成狀態不同步
+        function applyFilters() {
+            const query = searchInput.value.trim().toLowerCase();
+            const terms = query ? query.split(/\s+/) : [];
+            let shown = 0;
+
+            tagBar.querySelectorAll('.tag-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.tag === activeTag);
+            });
+
+            cards.forEach(card => {
+                const matchTag  = !activeTag || tagsOf(card).includes(activeTag);
+                const matchText = terms.every(term => card.dataset.searchText.includes(term));
+
+                card.style.display = (matchTag && matchText) ? '' : 'none';
+                if (!(matchTag && matchText)) return;
+
+                // 原本靠 :nth-child(2n) 拿掉每列第二張的右框，但 :nth-child 數的是
+                // DOM 位置，篩選後會對不上，卡片之間會少一條線或多一條線。
+                // 所以在雙欄模式下自己按「看得見的張數」重算。
+                shown++;
+                card.style.borderRight = wideGrid.matches
+                    ? (shown % 2 === 0 ? 'none' : '2px solid #000000')
+                    : '';
+            });
+
+            // 空狀態：顯示在 grid 的位置，而不是搜尋框底下的下拉——
+            // 用 chip 篩選時使用者未必在看搜尋框
+            gridEmpty.style.display = shown ? 'none' : 'block';
+            if (!shown) {
+                gridEmpty.textContent = activeTag && query
+                    ? `找不到同時符合「${activeTag}」與「${query}」的實驗。點一下藍色標籤可取消篩選。`
+                    : activeTag
+                        ? `找不到標籤「${activeTag}」的實驗。`
+                        : `找不到符合「${query}」的實驗。`;
+            }
+
+            // 讓篩選後的檢視可以直接分享：/phylab/mechanics/?tag=運動學
+            const url = new URL(window.location.href);
+            if (activeTag) url.searchParams.set('tag', activeTag);
+            else           url.searchParams.delete('tag');
+            history.replaceState(null, '', url);
+        }
+
+        renderTagBar();
+
+        // 讀取分享連結裡的 ?tag=（標籤不存在就忽略，applyFilters 會把它從網址清掉）
+        const initialTag = new URLSearchParams(window.location.search).get('tag');
+        if (initialTag && tagCounts.has(initialTag)) activeTag = initialTag;
+
+        searchInput.addEventListener('input', applyFilters);
+        wideGrid.addEventListener('change', applyFilters);   // 跨過 768px 時重算邊框
+
+        applyFilters();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧵 光纖與全反射的應用 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_09</div>
+                <h1 class="lab-title">🧵 光纖與全反射的應用</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面左邊是一道雷射光，右邊是一條水平的光纖：淺綠色的內芯夾在兩層藍色的外層之間。雷射從左上方射進光纖的端面，黃色光線在內芯裡一段一段反射，最後從右端射出。</p>
+
+<p>拖動「入射角 α」，雷射會沿著入口移動，綠色扇形是接受角 α_max 的範圍。α 在扇形內時，光在內芯裡來回彈；把 α 推過 α_max，光第一次碰到介面就變成紅色虛線，漏進外層。</p>
+
+<p>「內芯折射率 n₁」與「外層折射率 n₂」會改變臨界角與接受角。畫面會在第一次反射的地方標出介面入射角 φ 與臨界角 θ_C，右側卡片上的「是否全反射」會跟著翻。</p>
+
+<p>切到「全反射稜鏡」，畫面換成一塊 45°–45°–90° 的玻璃稜鏡。光垂直射入左面，在斜面的入射角固定是 45°；拖動「稜鏡折射率 n」，n 掉到 √2 以下時，光就從斜面折射出去，不再轉 90°。</p>
+
+<p>按下「開始 START」，光纖模式會來回掃描入射角，稜鏡模式會來回掃描折射率。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="全反射的回顧">全反射的回顧</h3>
+
+<p>光從光密介質射向光疏介質時，折射角大於入射角。入射角增加到某個角度，折射角剛好等於 $90^\circ$，這個入射角叫<strong>臨界角</strong> $\theta_C$。入射角再大，折射線消失，光全部反射回原介質，這就是<strong>全反射</strong>。</p>
+
+<p>設光密介質的折射率是 $n_1$、光疏介質是 $n_2$（$n_1&gt;n_2$），由斯涅爾定律</p>
+
+\[\sin\theta_C=\frac{n_2}{n_1}\]
+
+<p>全反射的兩個條件缺一不可：光從光密介質射向光疏介質，而且入射角大於或等於臨界角。</p>
+
+<h3 id="光纖的構造">光纖的構造</h3>
+
+<p>光導纖維由兩層透明的玻璃組成：</p>
+
+<ul>
+  <li><strong>內芯</strong>：折射率 $n_1$ 較高，光主要走在這裡。</li>
+  <li><strong>外層</strong>：折射率 $n_2$ 較低，包住內芯。</li>
+</ul>
+
+<p>因為 $n_1&gt;n_2$，光在內芯裡打到介面時，只要入射角夠大，就會全反射回內芯。光於是被「關」在內芯裡，沿著光纖前進。</p>
+
+<h3 id="光在光纖裡怎麼走">光在光纖裡怎麼走</h3>
+
+<p>光從空氣（折射率近似 1）射進內芯的端面。設入射角是 $\alpha$、折射角是 $\theta$，則</p>
+
+\[n_0\sin\alpha=n_1\sin\theta\]
+
+<p>因為 $n_1&gt;n_0$，$\theta&lt;\alpha$：光進入內芯後會向法線靠攏。</p>
+
+<p>光在內芯裡沿著與軸線夾角 $\theta$ 的方向前進，打到內芯與外層的介面。介面的法線垂直於軸線，所以介面入射角是</p>
+
+\[\phi=90^\circ-\theta\]
+
+<p>只要 $\phi\ge\theta_C$，光就全反射，繼續在內芯裡走。下一次打到對面的介面時，角度仍然是 $\phi$，所以整條光纖都能導光。</p>
+
+<h3 id="接受角與數值孔徑">接受角與數值孔徑</h3>
+
+<p>$\alpha$ 愈大，$\theta$ 愈大，$\phi$ 就愈小。當 $\phi$ 掉到 $\theta_C$ 時，對應的入射角就是<strong>最大入射角</strong> $\alpha_{\max}$。把 $\theta=90^\circ-\theta_C$ 代回入口的斯涅爾定律：</p>
+
+\[n_1\cos\theta_C=n_0\sin\alpha_{\max}\]
+
+<p>用 $\sin(90^\circ-\theta_C)=\cos\theta_C$ 與 $\cos\theta_C=\sqrt{1-(n_2/n_1)^2}$，得到</p>
+
+\[\sin\alpha_{\max}=\sqrt{n_1^2-n_2^2}\]
+
+<p>右邊叫<strong>數值孔徑</strong>（NA）。$\alpha\le\alpha_{\max}$ 的光才能被光纖留住；超過這個角度，光在介面的入射角小於臨界角，會折射進外層而漏掉。</p>
+
+<h3 id="為什麼光纖可以彎">為什麼光纖可以彎</h3>
+
+<p>光纖彎曲時，內芯與外層的介面也跟著彎。光在彎曲處仍然靠全反射前進，但彎得太急時，光在外側介面的入射角會變小；一旦小於臨界角，光就從外側漏出去。所以光纖可以彎，但不能折成直角或纏得過緊。</p>
+
+<h3 id="應用通訊與內視鏡">應用：通訊與內視鏡</h3>
+
+<ul>
+  <li><strong>光纖通訊</strong>：光在玻璃裡衰減很小，一條光纖可以同時傳送很多不同波長的信號，容量大、抗電磁干擾。1966 年高錕提出用石英玻璃光纖長距離傳輸資訊，2009 年獲得諾貝爾物理學獎。</li>
+  <li><strong>醫用內視鏡</strong>：一束光纖把光送進體內，另一束把影像送出來；光纖柔軟，可以順著氣管、腸道彎曲。</li>
+  <li><strong>光纖感測</strong>：溫度、應變、壓力改變會改變光的相位或強度，可以用來監測橋梁、油管。</li>
+</ul>
+
+<h3 id="全反射稜鏡">全反射稜鏡</h3>
+
+<p>把一塊 45°–45°–90° 的玻璃稜鏡拿來用：光垂直射入其中一個直角面，方向不變；到達斜面時，入射角剛好是 45°。如果玻璃的折射率 $n\ge\sqrt{2}\approx1.414$，臨界角</p>
+
+\[\theta_C=\sin^{-1}\frac{1}{n}\le45^\circ\]
+
+<p>光在斜面發生全反射，方向轉 90° 後從另一個直角面射出。</p>
+
+<p>和鍍銀的平面鏡相比，全反射稜鏡的反射率接近 100%，不需要金屬鍍膜，也不會產生鏡面前後的雙重反射。潛望鏡、雙筒望遠鏡、單眼相機的觀景窗都用它來轉折光路。</p>
+
+<h3 id="常見的誤解">常見的誤解</h3>
+
+<ul>
+  <li>光纖不是靠「光在裡面不斷折射」導光，而是靠內芯與外層介面的<strong>全反射</strong>。</li>
+  <li>全反射不是「光碰到鏡子」，介面上沒有金屬膜；它是光密介質射向光疏介質、入射角超過臨界角時，折射線消失的結果。</li>
+  <li>光纖的內芯折射率一定要比外層大。反過來（$n_1&lt;n_2$）就沒有全反射，光留不住。</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>光為什麼會留在光纖的內芯裡？它靠的是折射還是反射？</li>
+  <li>光從空氣進入內芯時，入射角 α 與折射角 θ 滿足什麼關係？為什麼 θ 一定比 α 小？</li>
+  <li>光打到內芯與外層的介面時，介面入射角 φ 和 θ 有什麼關係？為什麼是 90° − θ？</li>
+  <li>把 α 慢慢加大，φ 會變大還是變小？什麼時候光開始漏進外層？</li>
+  <li>接受角 α_max 由 n₁、n₂ 決定。把外層的折射率 n₂ 調大，α_max 會變大還是變小？為什麼？</li>
+  <li>光纖彎曲時仍然能導光。彎得太急時，為什麼外側的光會先漏出去？</li>
+  <li>全反射稜鏡的斜面入射角固定是 45°。為什麼 n 必須大於 √2 才會全反射？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/fiber-optics.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔭 光學儀器（顯微鏡、開普勒望遠鏡） - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_16</div>
+                <h1 class="lab-title">🔭 光學儀器（顯微鏡、開普勒望遠鏡）</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上有一台光學儀器的側面示意圖：左邊是物鏡，右邊是目鏡，兩片都是凸透鏡。黃色光線先經過物鏡，在兩片透鏡之間形成一個中間像 A′B′，再經過目鏡往右射出；紫色箭頭是中間像與最後的虛像。</p>
+
+<p>用「光學儀器」切換顯微鏡與開普勒望遠鏡。顯微鏡可以拖動物距 u₁ 與目鏡焦距 f₂；望遠鏡可以拖動物鏡焦距 f₁ 與目鏡焦距 f₂。中間像的位置、最終像的大小與放大倍數都會跟著改變。</p>
+
+<p>按下「開始 START」，光脈衝會沿著光線從物體（望遠鏡是平行光）走到目鏡外。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="顯微鏡的基本構成">顯微鏡的基本構成</h3>
+
+<p><strong>顯微鏡</strong>由兩個焦距不同的凸透鏡組成：</p>
+
+<ul>
+  <li><strong>物鏡</strong>：靠近物體的那一片，焦距比較<strong>短</strong>。</li>
+  <li><strong>目鏡</strong>：靠近眼睛的那一片，焦距比較<strong>長</strong>。</li>
+</ul>
+
+<h3 id="顯微鏡的成像原理">顯微鏡的成像原理</h3>
+
+<p>載物枱上的實物 AB 放在物鏡的 <strong>1 倍焦距與 2 倍焦距之間</strong>，也就是</p>
+
+\[f_1 &lt; u_1 &lt; 2f_1\]
+
+<p>物鏡相當於<strong>投影機的鏡頭</strong>，成一個<strong>放大、倒立</strong>的實像 A′B′。</p>
+
+<p>這個中間像 A′B′ 落在目鏡的<strong>焦距內</strong>，成為目鏡的物。目鏡相當於<strong>放大鏡的鏡頭</strong>，再把 A′B′ 放大，成一個<strong>正立、放大的虛像</strong> A″B″。</p>
+
+<p>這裡的「正立」是相對於中間像 A′B′ 說的：目鏡成的虛像與 A′B′ 同方向。可是 A′B′ 已經相對原物倒立，所以 A″B″ 相對原物仍然是<strong>倒立</strong>的。</p>
+
+<h3 id="開普勒望遠鏡的基本構成">開普勒望遠鏡的基本構成</h3>
+
+<p><strong>開普勒望遠鏡</strong>也由兩個凸透鏡組成，但焦距的長短相反：</p>
+
+<ul>
+  <li><strong>物鏡</strong>：焦距比較<strong>長</strong>。</li>
+  <li><strong>目鏡</strong>：焦距比較<strong>短</strong>。</li>
+</ul>
+
+<h3 id="開普勒望遠鏡的原理">開普勒望遠鏡的原理</h3>
+
+<p>遠處物體射來的光可以看成平行光。平行光經過物鏡後，在物鏡的焦平面上形成一個<strong>倒立、縮小</strong>的實像 A′B′。物鏡相當於<strong>照相機的鏡頭</strong>。</p>
+
+<p>A′B′ 落在目鏡的焦距內，目鏡再把它放大，成一個<strong>正立、放大的虛像</strong> A″B″（相對於 A′B′）。因為 A′B′ 已經倒立，所以最後看到的像相對原物仍然是<strong>倒立</strong>的。</p>
+
+<h3 id="兩次成像的透鏡公式">兩次成像的透鏡公式</h3>
+
+<p>物鏡與目鏡各自遵守薄透鏡公式</p>
+
+\[\frac{1}{u}+\frac{1}{v}=\frac{1}{f}\]
+
+<p>符號的規定和薄透鏡那一頁相同：</p>
+
+<ul>
+  <li>$u$ 取正值。</li>
+  <li>$v&gt;0$：像在透鏡後，是實像；$v&lt;0$：像在透鏡前，是虛像。</li>
+  <li>$f&gt;0$：凸透鏡。</li>
+</ul>
+
+<p>物鏡的像 A′B′ 就是目鏡的物，所以目鏡的物距是</p>
+
+\[u_2=\text{目鏡位置}-\text{A′B′ 的位置}\]
+
+<p>目鏡的 $u_2&lt;f_2$ 時，$v_2$ 是負值，成虛像。</p>
+
+<h3 id="放大倍數">放大倍數</h3>
+
+<p>每一次成像的放大率都是</p>
+
+\[M=-\frac{v}{u}\]
+
+<p>顯微鏡的總放大倍數是兩次放大倍數的乘積：</p>
+
+\[M=M_1\times M_2\]
+
+<p>物鏡把物體放大一次，目鏡再把中間像放大一次，所以總放大倍數比單獨一片透鏡大很多。</p>
+
+<p>開普勒望遠鏡看的是遠處物體，物鏡的「放大率」不方便直接這樣定義；它把物體的<strong>視角</strong>放大。如果最後的虛像在無限遠（眼睛放鬆），視角放大率是</p>
+
+\[M=\frac{f_1}{f_2}\]
+
+<p>所以物鏡焦距愈長、目鏡焦距愈短，望遠鏡的放大能力愈強。</p>
+
+<p>這一頁為了把虛像畫在畫面上，把中間像 A′B′ 放在目鏡焦距內 $u_2=0.7f_2$ 的位置，虛像因此落在目鏡左邊 $2.33f_2$ 處。在目鏡處量到的視角放大率是</p>
+
+\[M=\frac{f_1}{u_2}=\frac{f_1}{0.7f_2}\]
+
+<p>比 $f_1/f_2$ 大一些。卡片上的數字就是這個實際值；把 $u_2$ 推近 $f_2$，虛像會退到無限遠，數字才趨近 $f_1/f_2$。</p>
+
+<h3 id="為什麼目鏡要把中間像放在焦距內">為什麼目鏡要把中間像放在焦距內</h3>
+
+<p>目鏡是放大鏡。放大鏡只有在物體位於焦距內（$u&lt;f$）時，才會成<strong>正立、放大的虛像</strong>；如果把中間像推到焦距外，目鏡就會成實像，不再是眼睛直接看到的放大虛像。</p>
+
+<h3 id="畫面比例">畫面比例</h3>
+
+<p>畫面上的透鏡孔徑、物體大小與透鏡間距都放大了，比例不是實際儀器的尺寸；卡片上的焦距與像距已經換算成 cm。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>顯微鏡的物鏡和目鏡，哪一個焦距比較短？為什麼？</li>
+  <li>物體放在物鏡的哪一個範圍內，才能在目鏡裡看到放大的虛像？</li>
+  <li>物鏡所成的中間像 A′B′ 是實像還是虛像？它是倒立還是正立？</li>
+  <li>目鏡把 A′B′ 放在自己的焦距內，會把它變成什麼樣的像？</li>
+  <li>為什麼說物鏡像投影機的鏡頭、目鏡像放大鏡？</li>
+  <li>開普勒望遠鏡的物鏡焦距為什麼要比目鏡長？把兩個焦距對調會怎樣？</li>
+  <li>為什麼顯微鏡和開普勒望遠鏡最後看到的像，相對於原物都是倒立的？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/optical-instruments.js"></script>
+    
+
+</body>
+</html>

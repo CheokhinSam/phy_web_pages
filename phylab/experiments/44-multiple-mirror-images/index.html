@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪞 平面鏡的多次反射成像 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_04</div>
+                <h1 class="lab-title">🪞 平面鏡的多次反射成像</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上有兩面斜斜的平面鏡 A、B，在 O 點夾出一個角 θ。藍色點是物體，橘色與紫色的點是它被鏡子來回反射後形成的像，編號從 1 開始；虛線圓通過所有像。</p>
+
+<p>用「兩面鏡子的夾角 θ」切換角度，像的數目、位置與顏色會跟著改變。橘色代表反射奇數次（左右相反），紫色代表反射偶數次（左右和物體相同）。</p>
+
+<p>拖動「物體在夾角中的位置」，讓物體靠近或遠離分角線。角度是 90° 這種 n 為奇數的情形時，物體跨過分角線的那一刻，像的數目會少一個。</p>
+
+<p>按下「開始 START」，物體會沿著圓弧慢慢來回，自動掃過分角線。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="兩面平面鏡為什麼會生出很多像">兩面平面鏡為什麼會生出很多像</h3>
+
+<p>物體放在兩面平面鏡的夾角裡。光線可以先被鏡 A 反射，再被鏡 B 反射，甚至來回反射好幾次。每一次反射，眼睛沿著反射線的反方向看回去，都會看到一個新的像。</p>
+
+<p>所以除了「鏡 A 裡有一個像、鏡 B 裡有一個像」之外，還會出現「鏡 A 裡的像在鏡 B 裡又有一個像」這種一層一層的像。</p>
+
+<h3 id="像的數目n--360--θ">像的數目：n = 360° / θ</h3>
+
+<p>設兩面鏡子的夾角是 $\theta$，令</p>
+
+\[n=\frac{360^\circ}{\theta}\]
+
+<p>像的數目要分三種情形：</p>
+
+<ul>
+  <li><strong>n 是偶數</strong>：像的數目是 $n-1$。</li>
+  <li><strong>n 是奇數，物體在分角線上</strong>：像的數目是 $n-1$。</li>
+  <li><strong>n 是奇數，物體不在分角線上</strong>：像的數目是 $n$。</li>
+</ul>
+
+<p>例如兩面鏡子夾 $90^\circ$，$n=4$ 是偶數，像的數目是 $4-1=3$。夾 $60^\circ$，$n=6$ 是偶數，像的數目是 5。</p>
+
+<p>如果 $n$ 不是正整數，例如 $\theta=50^\circ$ 時 $n=7.2$，就沒有這麼簡單的整數公式，要把每一次反射的像畫出來數。</p>
+
+<h3 id="為什麼-n-為偶數時少一個">為什麼 n 為偶數時少一個</h3>
+
+<p>$n$ 為偶數時，反射到最後，某一個像會和物體（或另一個像）重合，不能算成兩個不同的像。所以實際看到的像比 $n$ 少一個。</p>
+
+<p>物體在分角線上時，左右兩邊的像對稱重合，也會少一個；物體離開分角線，兩邊的像分開，才會補回那一個。</p>
+
+<h3 id="所有像都在同一個圓上">所有像都在同一個圓上</h3>
+
+<p>每一次反射都是把點對鏡面作對稱。對稱不改變點到交點 O 的距離，只改變它的方向。物體到 O 的距離是 $r$，所以每一個像到 O 的距離也都是 $r$。</p>
+
+<p>因此所有像都落在以 O 為圓心、半徑 $r$ 的圓上；物體也在這個圓上。畫面上的虛線圓就是這個圓。</p>
+
+<h3 id="左右為什麼會反過來">左右為什麼會反過來</h3>
+
+<p>一次反射會把左右對調，所以反射奇數次的像左右相反；再反射一次又對調回來，所以反射偶數次的像左右和物體相同。</p>
+
+<p>畫面上橘色的像是奇數次反射，紫色的像是偶數次反射。</p>
+
+<h3 id="像不會再被後面的鏡子反射">像不會再被後面的鏡子反射</h3>
+
+<p>只有落在鏡子<strong>前面</strong>的點，才能被那面鏡子反射。某個像如果落在某面鏡子的背後，它就不能再被那面鏡子成像——這也是為什麼像的數目不會無限增加，而是在某一步停下來。</p>
+
+<h3 id="生活中的例子">生活中的例子</h3>
+
+<p>理髮店把兩面鏡子相對擺放，你坐在中間，就可以從其中一面鏡子看到自己的背面，再從另一面鏡子看到更後面的角度。夾角愈小，來回反射的次數愈多，看到的像也愈多；萬花筒就是把這個效果排成一圈。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>兩面鏡子的夾角 θ 變小，像的數目為什麼會變多？</li>
+  <li>n = 360° / θ 算出來是 6 時，為什麼像的數目是 5 而不是 6？</li>
+  <li>物體在分角線上與不在分角線上，像的數目為什麼差一個？</li>
+  <li>為什麼所有像都落在同一個圓上？圓心在哪裡？</li>
+  <li>哪一些像的左右和物體相同？哪一些左右相反？這和光線反射幾次有什麼關係？</li>
+  <li>把 θ 調成 50°，n = 7.2 不是正整數，為什麼不能直接套公式？</li>
+  <li>理髮店的兩面鏡子為什麼可以讓你看到自己的後腦？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/multiple-mirror-images.js"></script>
+    
+
+</body>
+</html>
