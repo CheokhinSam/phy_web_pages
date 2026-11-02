@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧵 電阻的影響因素 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/electricity/" class="bc-back">← 基礎電學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_02</div>
+                <h1 class="lab-title">🧵 電阻的影響因素</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>一根線的電阻不是憑空冒出來的。它由三件事決定：<strong>什麼材料</strong>、<strong>多長</strong>、<strong>多粗</strong>。</p>
+
+<p>上半部是一條真實的迴路：電池、安培計、待測的線、並聯的伏特計。下半部是這根線切開來的微觀樣子——灰點是卡住不動的晶格，橘點是可以在裡面鑽的電子。</p>
+
+<p>兩張 highlighted 卡片<strong>左邊</strong>用材料的電阻率和幾何算出 $R$，<strong>右邊</strong>用電表的讀數算出 $V/I$。拉長、壓扁、換材料——它們永遠相等。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="電阻定律">電阻定律</h3>
+
+\[R = \rho \frac{L}{A}\]
+
+<p>$\rho$（電阻率）是材料自己的性質，跟形狀無關；$L$ 是線長；$A$ 是截面積。單位上，$\rho$ 用 $\Omega\cdot\text{mm}^2/\text{m}$、$L$ 用公尺、$A$ 用平方公釐，算出來剛好就是歐姆。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>材料</th>
+      <th>$\rho$ / $\Omega\cdot\text{mm}^2\text{m}^{-1}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>銅</td>
+      <td>0.017</td>
+    </tr>
+    <tr>
+      <td>鐵</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <td>鎳鉻</td>
+      <td>1.10</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="為什麼是這個形狀">為什麼是這個形狀</h3>
+
+<p>微觀圖把公式的三個因子各畫成一個看得見的東西：</p>
+
+<ul>
+  <li><strong>線越長</strong>（$L\uparrow$）→ 沿路上晶格<strong>排數越多</strong>，電子要闖過的關卡越多 → $R\uparrow$</li>
+  <li><strong>線越粗</strong>（$A\uparrow$）→ 同時能走的<strong>通道越多</strong>，電子互相擠 → $R\downarrow$</li>
+  <li><strong>$\rho$ 越大</strong> → 晶格<strong>越密</strong>，電子平均走不了多遠就撞一次 → $R\uparrow$</li>
+</ul>
+
+<p>電子撞上晶格時會慢下來一下，這就是電阻發熱的來源。電流通過電阻會發熱，不是因為「摩擦」，是因為電子把動能交給了晶格。</p>
+
+<h3 id="電阻是元件自己的性質">電阻是元件自己的性質</h3>
+
+<p>$R=\rho L/A$ 完全沒有提到電壓或電流——它不需要。</p>
+
+<p>把 $\varepsilon$ 從 2 V 拉到 12 V，$V$ 和 $I$ 都變了六倍，但 $V/I$ 一動也不動。<strong>電阻是原因，電壓和電流是結果</strong>：不是電壓決定了電阻，是電阻決定了「這個電壓下能推過多少電流」。</p>
+
+<h3 id="️-一個誠實的但書">⚠️ 一個誠實的但書</h3>
+
+<p>上面的 $R$ 當成定值，是因為溫度沒有變。真實的金屬線通電會發熱，溫度升高電阻會上升（<strong>正溫度係數</strong>）。鎢絲燈泡就是靠這一點工作的——冷的時候電阻小，一通電電流很大，瞬間加熱到白熾，電阻跟著變大。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把「線長 L」加倍，電阻變成幾倍？把「截面積 A」加倍，電阻又變成幾分之一？</li>
+  <li>只拉「電池電壓 ε」，看兩張 highlighted 卡片。哪一張動了、哪一張沒動？這說明了什麼？</li>
+  <li>切到「銅」。同樣的長度與粗細，為什麼銅線的電阻小這麼多？生活裡什麼地方用銅、什麼地方用鎳鉻？</li>
+  <li>看下半部的微觀圖。把 L 拉長、把 A 加大，晶格的<strong>排數</strong>和<strong>通道數</strong>分別怎麼變？這和 $R=\rho L/A$ 的三個因子對得上嗎？</li>
+  <li>鎳鉻線通電久了會發紅發熱，那時候它的電阻其實會比現在量到的大一點。為什麼？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/circuit-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/circuit-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/resistivity.js"></script>
+    
+
+</body>
+</html>

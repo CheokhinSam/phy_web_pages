@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 定滑輪與動滑輪 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_19</div>
+                <h1 class="lab-title">🎡 定滑輪與動滑輪</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上有兩個模式：<strong>定滑輪</strong>和<strong>動滑輪</strong>。切換上面那個下拉，整組機構會換掉——兩個都是一個圓、
+中間一根軸、一條繩子跨過去，但一個 $F = G$（不省力），另一個 $F = G/2$（省一半）。差別只有
+一件事：<strong>繩子的另一端綁在哪裡</strong>。</p>
+
+<p>按「開始」之後手會往下拉，畫面上疊著一層綠色虛線的<strong>本質疊圖</strong>（把兩條半徑畫出來、標上力臂）。</p>
+
+<ul>
+  <li><strong>切到「動滑輪」</strong>：輪子跟著重物上升。盯著 h 和 s 兩條尺標——s 長得比 h 快一倍。</li>
+  <li><strong>切到「定滑輪」</strong>：把「拉繩的方向」從 0° 拉到 60°，F 完全沒變、箭頭跟著轉——它改變的是<strong>力的方向</strong>。</li>
+  <li><strong>「動滑輪＋框重」那一支</strong>只在動滑輪模式出現，理由在下面。</li>
+  <li>看「F ÷ G（力剩幾成）」那張卡片：物重從 100 N 拉到 800 N，它不會停在 50%。</li>
+</ul>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="定滑輪一個等臂槓桿">定滑輪：一個等臂槓桿</h3>
+
+<p>繩子從輪子的兩側離開，兩邊都是切線，所以從輪心拉到兩個切點的距離<strong>都是半徑 $r$</strong>：</p>
+
+\[l_1 = l_2 = r \quad\Rightarrow\quad F = G\]
+
+<p>定滑輪就是一個兩邊等長的翹翹板，一點力都省不了。那它幹什麼用的？<strong>改變力的方向。</strong>升旗的時候你要往下拉，旗子才會往上升；如果沒有定滑輪，你得爬到旗桿頂上去拉。</p>
+
+<h3 id="動滑輪一個-21-的槓桿">動滑輪：一個 2:1 的槓桿</h3>
+
+<p><strong>關鍵是：支點在哪裡？</strong></p>
+
+<p>不是輪心。<strong>支點在「繩子和滑輪相切的那一側」</strong>——也就是綁在天花板上那一邊的切點，因為輪子上升時是繞著那一點轉的（那一點的繩子不動）。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>力臂</th>
+      <th>從支點量到哪裡</th>
+      <th>長度</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$l_1$（重物的）</td>
+      <td>從切點量到<strong>輪心</strong></td>
+      <td>$r$</td>
+    </tr>
+    <tr>
+      <td>$l_2$（手的）</td>
+      <td>從切點量到<strong>另一側的切點</strong></td>
+      <td>$2r$</td>
+    </tr>
+  </tbody>
+</table>
+
+\[F \cdot 2r = G \cdot r \quad\Rightarrow\quad F = \frac{G}{2}\]
+
+<p>手的力臂是重物的兩倍，所以力只要一半。</p>
+
+<h3 id="動滑輪的代價s--2h">動滑輪的代價：$s = 2h$</h3>
+
+<p>物體上升 $h$ 的時候，<strong>撐住動滑輪的兩段繩子都要縮短 $h$</strong>。它們是同一條繩子，所以整條繩子被抽走了 $2h$——而你拉的是繩子的自由端，所以你抽走了 $2h$。拉著手跑一段，畫面上 h 尺標和 s 尺標會同時長大，但速度差一倍。</p>
+
+<h3 id="真實的滑輪框重與摩擦">真實的滑輪：框重與摩擦</h3>
+
+<p>到目前為止假設動滑輪沒有重量。但真實的動滑輪和它的框<strong>也是要被提起來的東西</strong>，所以是兩段繩子分擔「物重 + 動滑輪重」：</p>
+
+\[F = \frac{G + G_{動}}{2} + f\]
+
+<p>$G_{動}$ 是動滑輪＋框的重量，$f$ 是繩子在輪上磨出來的摩擦阻力。摩擦永遠是<strong>加項</strong>——它讓你出的力比理想值更大，從來不會更小。</p>
+
+<p><strong>但定滑輪完全不吃 $G_{動}$ 這一條。</strong> 它掛在天花板上，繩子只是滑過它，自己一動也不動、也不會被提起來——這就是那一支滑桿只在動滑輪模式出現的原因。</p>
+
+<h2 id="生活中的滑輪">生活中的滑輪</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>現象</th>
+      <th>為什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🚩 旗桿頂端的滑輪</td>
+      <td>定滑輪。它一點力都不省，但讓你在<strong>下面往下拉</strong>——否則你得爬上去</td>
+    </tr>
+    <tr>
+      <td>🏗️ 吊車的吊鉤</td>
+      <td>上面那幾顆是定滑輪（改變方向），下面的才是動滑輪（省力）</td>
+    </tr>
+    <tr>
+      <td>🪣 井邊的汲水桶</td>
+      <td>一個定滑輪加一條繩子，把水提上來</td>
+    </tr>
+    <tr>
+      <td>🧗 攀岩的確保器</td>
+      <td>定滑輪讓下方的確保者能拉住上方的攀岩者——改變方向比省力重要</td>
+    </tr>
+  </tbody>
+</table>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>切到「定滑輪」，把「拉繩的方向」從 0° 一路拉到 60°。手的力 F <strong>完全沒有變</strong>，但畫面上的箭頭跟著轉。既然出力的大小都一樣，那定滑輪到底幫你做了什麼？</li>
+  <li>切到「動滑輪」。畫面上疊著一組綠色虛線（本質疊圖），其中一條從<strong>支點</strong>量到手的施力線、一條量到重物。<strong>那個支點在哪裡？</strong>它在滑輪的圓心上嗎？如果不在，它在哪裡？</li>
+  <li>動滑輪的 $F = G/2$ 看起來很划算，但代價是什麼？拉著手跑一段，同時看 h 和 s 兩張卡片——<strong>手走的距離是物體上升的幾倍？</strong>如果把物重抬高 1 公尺，你總共抽走了幾公尺的繩子？</li>
+  <li>切到「動滑輪」，把「動滑輪＋框重」從 0 慢慢加到 160 N，F 會跟著漲。但切回定滑輪，那一支滑桿就不見了——<strong>為什麼定滑輪不需要它？</strong>（提示：定滑輪掛在天花板上，它自己有被提起來嗎？）</li>
+  <li>看「F ÷ G（力剩幾成）」這張卡片，把物重 G 從 100 N 一路拉到 800 N。<strong>它一直是你以為的 50% 嗎？</strong>它隨什麼改變？（這一題的答案會告訴你：$F = G/2$ 其實是一個理想值。）</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/machine-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/machine-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/pulleys.js"></script>
+    
+
+</body>
+</html>

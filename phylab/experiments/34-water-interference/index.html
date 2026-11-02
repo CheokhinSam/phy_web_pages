@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💧 水波的干涉 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_18</div>
+                <h1 class="lab-title">💧 水波的干涉</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是一座水槽的俯視圖，左邊插著兩根針，右邊是牠們送出的波。</p>
+
+<p>按「開始」，兩根針就會同步上下振動，各自送出一圈一圈的圓形波。整片顏色就是
+這一刻的水面高低——<strong>橙是波峰、藍是波谷</strong>，白色是水面。左下角有顏色圖例可以對照。</p>
+
+<p>兩組圓波疊在一起之後，水面會出現一組<strong>從針尖往右張開的條紋</strong>：有些方向的水
+一直在動，有些方向的水幾乎不動。那些條紋就是這一頁要看的東西。</p>
+
+<ul>
+  <li><strong>拉「兩根針的距離 d」</strong>：條紋會一條一條長出來——新的一條是從最外側冒出來的。</li>
+  <li><strong>拉「波長 λ」</strong>：同一組條紋會整個張開或收窄。</li>
+  <li><strong>把「兩根針的相位」切成「反相」</strong>：整組明暗當場對調，正中央那條從亮的變成不動的。</li>
+</ul>
+
+<p>「輔助線」那個下拉可以把畫在水面上的腹線、節線單獨留下來看。每一條線的末端
+標著它的波程差 Δ，拖 d 的時候可以對照。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p>兩根針是<strong>同調</strong>的：它們的頻率一樣、相位差固定，所以水面上任何一點收到的
+兩列波，相位差也是固定的——固定的相位差就是「一直加強」或「一直減弱」，
+不會今天加強明天減弱。</p>
+
+<p>決定加強還是減弱的，是<strong>波程差</strong>：從兩根針分別走到那一點，路徑長度差了
+多少。記這個差為 $\Delta r$，波長為 $\lambda$：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>波程差</th>
+      <th>兩列波抵達時</th>
+      <th>那一點的水面</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$\Delta r = 0,\ \lambda,\ 2\lambda,\dots$</td>
+      <td>同相</td>
+      <td>一直加強 → <strong>腹線</strong></td>
+    </tr>
+    <tr>
+      <td>$\Delta r = \tfrac{1}{2}\lambda,\ \tfrac{3}{2}\lambda,\dots$</td>
+      <td>反相</td>
+      <td>一直抵消 → <strong>節線</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>腹線是一條雙曲線。</strong> 到兩個定點距離差固定的點的軌跡就是雙曲線，所以每一條
+腹線都是「以兩根針為焦點的一條雙曲線」。兩根針正中間的那一條是直線（$\Delta r$
+永遠是 0，它就是中線本身），其他的都往兩側彎開。</p>
+
+<p>拖「兩根針的距離 d」的時候，條紋之所以會一條一條<strong>長出來</strong>：波程差能取的值
+介於 0 和 d 之間，$d$ 跨過 $m\lambda$ 的那一刻，第 $m$ 條腹線才剛剛從針尖
+後面冒出來。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+<p>最內側那一條腹線（$\Delta r = \lambda$）和正中央那條線的夾角 $\theta_1$：</p>
+
+\[\sin\theta_1 = \frac{\lambda}{d}\]
+
+<p>看畫面上那條黃線和它的灰三角形：最內側腹線離中線愈遠，夾角就愈大，
+而 $\lambda$ 愈大、$d$ 愈小，它就張得愈開。這也是為什麼條紋的疏密<strong>只看
+$d \div \lambda$ 這一個比值</strong>——波長加倍、針距也加倍，畫面一模一樣。</p>
+
+<p>兩種波源的分別要在這裡說清楚：這一頁的兩根針是<strong>點波源</strong>，往四面八方均勻地
+送波。繞射那一頁的開口是一整排點波源排成的一條線，它送出的波在斜的方向上會
+自己抵消掉一部分。所以同一組公式在兩頁裡的樣子不一樣，不要把它們混著用。</p>
+
+<h3 id="腹線和節線各有幾條">腹線和節線各有幾條</h3>
+
+<p>腹線的條數只由 $d \div \lambda$ 決定。波程差最大只能到 $d$，所以只要
+$m\lambda &lt; d$，第 $m$ 條腹線就畫得出來；$\Delta r = m\lambda$ 和
+$\Delta r = -m\lambda$ 各是一條，而中線（$\Delta r = 0$）只有一條，所以：</p>
+
+\[\text{腹線條數} = 2m_{\max} + 1\]
+
+<p>$m_{\max}$ 是<strong>比 $d \div \lambda$ 小的最大整數</strong>。這裡用的是「小於」不是
+「小於等於」：波程差剛好等於 $d$ 的那一條，會退化成兩根針連線上的一條射線，
+不是扇形裡的一條條紋，所以不算。所以 $d \div \lambda$ 剛好是整數時（畫面上
+預設的 $150 \div 50 = 3$ 就是），最外側那一條被扣掉——直接數的話會多算兩條。</p>
+
+<p>節線在 $\Delta r = (m + \tfrac{1}{2})\lambda$ 上，所以：</p>
+
+\[\text{節線條數} = 2\left\lceil \frac{d}{\lambda} - \frac{1}{2} \right\rceil\]
+
+<p>$d \div \lambda$ 不到二分之一時一條節線都沒有——整個水槽都沒有一個地方是靜止的。
+上面兩條式子都是<strong>兩根針同相</strong>的情形；把相位切成反相時，兩組整個對調。</p>
+
+<h3 id="怎麼從畫面讀出來">怎麼從畫面讀出來</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>畫面上的東西</th>
+      <th>代表什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>橙／藍的顏色</td>
+      <td>這一刻的水面高低（橙是波峰、藍是波谷）</td>
+    </tr>
+    <tr>
+      <td>橙色實線</td>
+      <td>腹線：$\Delta r = m\lambda$，兩列波同相抵達</td>
+    </tr>
+    <tr>
+      <td>灰色虛線</td>
+      <td>節線：$\Delta r = (m+\tfrac{1}{2})\lambda$，兩列波反相抵達</td>
+    </tr>
+    <tr>
+      <td>線末端的標籤</td>
+      <td>那一條線的波程差，例如「Δ = 2λ」</td>
+    </tr>
+    <tr>
+      <td>兩根針</td>
+      <td>兩個點波源；它們的距離就是 $d$</td>
+    </tr>
+    <tr>
+      <td>針尖那條黃線與灰色直角三角形</td>
+      <td>$\sin\theta_1 = \lambda/d$ 的那個角</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="兩個容易搞錯的地方">兩個容易搞錯的地方</h3>
+
+<p><strong>一、腹線不是「水最高的那一條線」。</strong> 腹線上的水<strong>一直在動</strong>，而且振幅是
+附近最大的；節線上的水幾乎不動。畫面上橙藍相間的地方一直在變，但腹線的
+<strong>位置</strong>不動——條紋不會跟著水跑。</p>
+
+<p><strong>二、畫在線上的 Δ 是精確的，但亮的地方不完全落在線上。</strong> 兩列波在線上
+確實<strong>同相抵達</strong>（這件事沒有誤差），可是振幅是 $1/\sqrt{r}$ 疊出來的：
+離針愈遠，波愈弱，兩邊的衰減量不一樣，於是水面最亮的那一條脊線會被往內側
+拉一點點。兩根針拉得太近、波長又太長的時候，這個內拉會大過條紋本身的寬度，
+整個干涉圖樣就散掉了——所以「兩根針的距離 d」這支滑桿的下限是量出來的，
+拉到最小時畫面仍然是清楚的條紋。</p>
+
+<p><strong>三、反相不是把畫面左右翻過來。</strong> 兩根針反相時，中線上兩列波正好差
+半個波長，永遠互相抵消——正中央從腹線變成節線，整組腹線與節線的位置互換。</p>
+
+<h2 id="生活中的干涉">生活中的干涉</h2>
+
+<ul>
+  <li>🎧 <strong>降噪耳機</strong>：偵測環境噪音，再送出一個反相的聲波，兩者在耳道裡抵消</li>
+  <li>🛥️ <strong>兩艘船在水面上的波紋</strong>：牠們造出的波疊在一起，有些方向始終顛簸、有些方向特別平靜</li>
+  <li>📡 <strong>無線電的干涉儀</strong>：兩座相隔很遠的天線收同一個訊號，靠波程差推回訊號從哪個方向來</li>
+  <li>🌈 <strong>肥皂泡上的顏色</strong>：薄膜上下兩個表面的反射光互相干涉，不同波長在不同厚度抵消</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把兩根針的距離 d 從最小慢慢拉大。腹線是一條一條<strong>長出來</strong>的，還是整組一起變？
+新的一條從哪裡冒出來？</li>
+  <li>「d ÷ λ」這張卡片調到 2.0、3.0、4.0，數一數腹線有幾條。腹線條數和這個比值
+之間是什麼關係？</li>
+  <li>把相位切成「反相」。正中央那一條本來是腹線還是節線？整個畫面有幾條腹線、
+幾條節線跟著對調了嗎？</li>
+  <li>「最內側腹線夾角 θ₁」在 d 變大時是變大還是變小？把 λ 也一起加倍，它會不變嗎？
+試著找到兩組（d、λ）讓 θ₁ 差不多，看看那時候 d ÷ λ 是不是也差不多。</li>
+  <li>輔助線切成「只看節線」。節線把畫面切成幾塊？每一塊裡的兩根針是同相還是反相？</li>
+  <li>水面上藍橙相間的地方一直在動，條紋本身有沒有跟著動？沿著一條腹線從針尖往外看，
+它在針尖附近是寬的還是窄的？</li>
+  <li>兩艘船在水面上各自造出一組波。什麼情況下牠們會互相抵消、什麼情況下會疊得更高？
+畫面上哪一張卡片在說這件事？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-tank.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/wave-interference.js"></script>
+    
+
+</body>
+</html>

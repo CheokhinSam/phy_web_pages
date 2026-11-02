@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧲 磁場與磁力線 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/magnetism/" class="bc-back">← 磁學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_01</div>
+                <h1 class="lab-title">🧲 磁場與磁力線</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p><strong>磁場長什麼樣子？</strong></p>
+
+<p>磁場看不見，所以物理學家用兩個東西把它畫出來：<strong>磁力線</strong>（形狀）和<strong>羅盤指針</strong>（方向）。這個實驗把兩種都做出來，而且兩者來自同一個磁場。</p>
+
+<p>把滑鼠移到畫布上任何位置，就會出現一個羅盤指針 —— 它就是真的在「探測」那一點的磁場方向，下面的 B–r 圖和右邊的卡片也同時更新成那一點的讀數。切換場源可以看到三種完全不同的磁場形狀。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p><strong>磁力線一定是封閉的。</strong> 它沒有起點也沒有終點 —— 不像電場線可以從正電荷出發、到負電荷結束，因為這個世界上還沒有找到單獨存在的磁極（磁單極）。你把條形磁鐵折成兩段，得到的是兩個完整的小磁鐵，不是一個 N 和一個 S。</p>
+
+<p><strong>磁力線的疏密就是磁場的強弱。</strong> 線畫得越密的地方，磁場越強。螺線管內部線條又直又密，外部散開 —— 這就是「管內是均勻強磁場、管外很弱」的圖形說法。</p>
+
+<p><strong>磁力線的方向由右手定則決定。</strong> 右手握住導線，拇指指著電流方向，四指繞的方向就是磁力線的方向。畫面上電流穿出螢幕的地方標 ⊙，穿入的地方標 ⊗。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+\[\oint \vec{B} \cdot d\vec{l} = \mu_0 I\]
+
+<p>這是<strong>安培定律</strong>：沿著任何一條封閉路徑走一圈，把沿途磁場沿著路徑方向的分量加起來，答案只跟這條路徑圍住的電流有關。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>符號</th>
+      <th>意思</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$\vec{B}$</td>
+      <td>磁場（特斯拉 T）</td>
+    </tr>
+    <tr>
+      <td>$d\vec{l}$</td>
+      <td>路徑上的一小段</td>
+    </tr>
+    <tr>
+      <td>$\mu_0$</td>
+      <td>真空磁導率，$4\pi \times 10^{-7}$</td>
+    </tr>
+    <tr>
+      <td>$I$</td>
+      <td>這條路徑<strong>圍住</strong>的總電流</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>三種場源都被這條式子管：</p>
+
+<ul>
+  <li><strong>長直導線</strong>：繞一個半徑 $r$ 的圓走一圈 → $B = \dfrac{\mu_0 I}{2\pi r}$，所以距離加倍、磁場減半</li>
+  <li><strong>螺線管</strong>：繞一條長方形的路走一圈（一條邊在管內、一條在管外） → $B = \dfrac{\mu_0 N I}{\ell}$</li>
+  <li><strong>條形磁鐵</strong>：磁力線的形狀就是安培定律加上「沒有磁單極」的結果</li>
+</ul>
+
+<h3 id="從圖表看出端倪">從圖表看出端倪</h3>
+
+<p>下方的 B–r 圖是沿著一條水平線量出來的，三種場源的形狀完全不同：</p>
+
+<ul>
+  <li><strong>長直導線</strong>：一條下降的雙曲線，$B \propto 1/r$。距離變成兩倍，磁場就剩一半</li>
+  <li><strong>螺線管</strong>：先是一段幾乎水平的線（管內，磁場均勻），出了管口才急速下降</li>
+  <li><strong>條形磁鐵</strong>：靠近磁極時衝到最高，然後快速衰減</li>
+</ul>
+
+<h3 id="生活中的磁場">生活中的磁場</h3>
+
+<ul>
+  <li>🧭 <strong>指南針</strong>：它其實是一根小磁鐵，被地球的磁場轉到順著磁力線的方向</li>
+  <li>🚪 <strong>冰箱門磁條</strong>：磁力線從磁條的 N 極出發、穿過門縫、回到 S 極，把門吸住</li>
+  <li>🔌 <strong>電磁鐵</strong>：把螺線管裡塞進鐵芯，同樣的電流可以做出強幾百倍的磁場</li>
+  <li>🏥 <strong>核磁共振（MRI）</strong>：用超導線圈做出 1.5 T 以上的均勻磁場（地球磁場只有約 0.00005 T）</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把滑鼠移到導線的不同距離，指針的方向為什麼一直轉？它轉的方向跟電流方向有什麼關係？</li>
+  <li>條形磁鐵的磁力線是封閉的曲線，但靜電的電場線從正電荷出發、到負電荷結束。為什麼磁力線不能有起點和終點？</li>
+  <li>螺線管裡面的磁力線幾乎平行又等距，管外卻散開。這對「管內是均勻磁場」這句話給了什麼證據？</li>
+  <li>為什麼磁鐵斷成兩半之後，每一小段都還是完整的 N 極和 S 極？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/magnetic-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/magnetic-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/field-lines.js"></script>
+    
+
+</body>
+</html>

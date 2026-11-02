@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌈 彩色視覺（光的三原色、濾光） - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_12</div>
+                <h1 class="lab-title">🌈 彩色視覺（光的三原色、濾光）</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上有三個圓，代表三束光或三種顏料。重疊的地方會自動混出新的顏色，圓心附近還會標出「紅、綠、藍、黃、青、洋紅、白、黑」等名稱。</p>
+
+<p>用「混色方式」切換三種模式：</p>
+
+<ul>
+  <li><strong>加法混色（光）</strong>：黑幕上有紅、綠、藍三個聚光燈，拖動 R、G、B 強度，看重疊區怎麼變成黃、青、洋紅或白。</li>
+  <li><strong>減法混色（顏料）</strong>：白紙上有青、洋紅、黃三種顏料，拖動三者的顏料量，看重疊區怎麼變成藍、綠、紅或黑。</li>
+  <li><strong>濾光</strong>：白光（或紅光、綠光、藍光）射向一片濾光片，選濾光片的顏色，看哪些色通道通過、哪些被吸收，以及屏幕上看起來是什麼顏色。</li>
+</ul>
+
+<p>按下「開始 START」，目前模式的數值會緩慢來回變化；也可以暫停後自己拖滑桿。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="光的三原色">光的三原色</h3>
+
+<p><strong>光的三原色</strong>是紅（R）、綠（G）、藍（B）。把三種色光按不同比例疊加，可以合成大部分可見顏色，所以叫<strong>加法混色</strong>。</p>
+
+<p>三種色光兩兩重疊：</p>
+
+<ul>
+  <li>紅＋綠＝黃</li>
+  <li>紅＋藍＝洋紅（品紅）</li>
+  <li>綠＋藍＝青</li>
+  <li>紅＋綠＋藍＝白</li>
+</ul>
+
+<p>三種都沒有＝黑。手機、電視、電腦屏幕的每一個像素，就是由紅、綠、藍三個小燈組成。</p>
+
+<h3 id="顏料的三原色">顏料的三原色</h3>
+
+<p><strong>顏料的三原色</strong>是青（C）、洋紅（M）、黃（Y）。顏料不會發光，它靠<strong>吸收</strong>某些色光、反射其餘色光來呈現顏色，所以叫<strong>減法混色</strong>。</p>
+
+<ul>
+  <li>青色顏料吸收紅光，反射綠光與藍光。</li>
+  <li>洋紅顏料吸收綠光，反射紅光與藍光。</li>
+  <li>黃色顏料吸收藍光，反射紅光與綠光。</li>
+</ul>
+
+<p>兩兩混合：</p>
+
+<ul>
+  <li>青＋洋紅＝藍（紅、綠都被吸收，只剩藍）</li>
+  <li>青＋黃＝綠（紅、藍都被吸收，只剩綠）</li>
+  <li>洋紅＋黃＝紅（綠、藍都被吸收，只剩紅）</li>
+  <li>青＋洋紅＋黃＝黑（紅、綠、藍都被吸收）</li>
+</ul>
+
+<h3 id="為什麼光的原色和顏料的原色剛好相反">為什麼光的原色和顏料的原色剛好相反</h3>
+
+<p>光的加法是「把色光加進來」；顏料的減法是「把色光拿走」。</p>
+
+<p>紅的互補色是青（青＝綠＋藍，紅＋青＝白），綠的互補色是洋紅，藍的互補色是黃。所以光的三原色紅、綠、藍，對應的顏料原色就是青、洋紅、黃。</p>
+
+<h3 id="濾光片">濾光片</h3>
+
+<p>濾光片是一片有顏色的透明片。它讓某些色光通過，把其餘的色光吸收：</p>
+
+<ul>
+  <li><strong>紅濾光片</strong>：只讓紅光通過，吸收綠光與藍光。</li>
+  <li><strong>綠濾光片</strong>：只讓綠光通過，吸收紅光與藍光。</li>
+  <li><strong>藍濾光片</strong>：只讓藍光通過，吸收紅光與綠光。</li>
+  <li><strong>青濾光片</strong>：讓綠光與藍光通過，吸收紅光。</li>
+  <li><strong>洋紅濾光片</strong>：讓紅光與藍光通過，吸收綠光。</li>
+  <li><strong>黃濾光片</strong>：讓紅光與綠光通過，吸收藍光。</li>
+</ul>
+
+<p>把光源的 RGB 和濾光片的 RGB <strong>逐個通道相乘</strong>，就是透過後的顏色：</p>
+
+\[\text{看到的顏色}=\text{光源}\times\text{濾光片}\]
+
+<p>例如白光 $(255,255,255)$ 透過紅濾光片 $(255,0,0)$：</p>
+
+\[\begin{aligned}
+&amp;(255,255,255)\\
+&amp;\quad\times(255,0,0)=(255,0,0)
+\end{aligned}\]
+
+<p>看起來是紅色。綠光 $(0,255,0)$ 透過同一片紅濾光片：</p>
+
+\[\begin{aligned}
+&amp;(0,255,0)\\
+&amp;\quad\times(255,0,0)=(0,0,0)
+\end{aligned}\]
+
+<p>看起來是黑色——因為光源裡沒有紅光可以通過。</p>
+
+<h3 id="物體的顏色">物體的顏色</h3>
+
+<p>不透明物體看起來是什麼顏色，取決於它<strong>反射</strong>哪些色光：</p>
+
+<ul>
+  <li>白紙反射所有色光，所以在白光下是白的。</li>
+  <li>紅紙反射紅光、吸收其他色光，所以在白光下是紅的。</li>
+  <li>把紅紙放在綠光下，綠光被紅紙吸收，沒有光反射進眼睛，所以看起來是黑的。</li>
+</ul>
+
+<p>這也是「紅色衣服在綠色燈光下變黑」的原因。</p>
+
+<h3 id="顏色是眼睛的感覺">顏色是眼睛的感覺</h3>
+
+<p>光是電磁波，眼睛裡有三種對紅、綠、藍比較敏感的感光細胞。不同顏色的光，讓三種細胞產生不同的強弱組合，大腦把這個組合解讀成顏色。</p>
+
+<p>所以「黃色」不一定是某一種波長的光：可以是單一波長的黃光，也可以是紅光與綠光同時進入眼睛。兩種情形在眼睛裡看起來一樣，但在光譜上並不相同。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>紅光與綠光疊在一起，為什麼看起來是黃色？這和顏料混合的黃色一樣嗎？</li>
+  <li>光的三原色是哪三種？顏料的三原色又是哪三種？為什麼兩組不一樣？</li>
+  <li>紅光加藍光變成洋紅，那洋紅顏料加黃顏料會變成什麼？兩者為什麼相反？</li>
+  <li>紅濾光片放在白光前面，為什麼看起來是紅色的？它吸收了哪些色光？</li>
+  <li>把紅濾光片放在綠光前面，為什麼看起來是黑色？</li>
+  <li>一張白紙在紅光下看起來是什麼顏色？在綠光下呢？</li>
+  <li>為什麼手機屏幕只用紅、綠、藍三種小燈，就能顯示各種顏色？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/color-vision.js"></script>
+    
+
+</body>
+</html>

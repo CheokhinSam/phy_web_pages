@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏓 脈波的多重反射 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_08</div>
+                <h1 class="lab-title">🏓 脈波的多重反射</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是一條 8 公尺長的繩子，1.2 公尺的地方有一個凸起的脈波正要往右跑。上面那條是<strong>繩子真正的位置</strong>（所有波疊起來的結果），下面那條把<strong>入射波、反射波、透射波</strong>分開畫，顏色各自對應。</p>
+
+<ul>
+  <li>兩端各是一面牆，可以選<strong>固定端</strong>或<strong>自由端</strong>；4 公尺的地方可以接上一段不同線密度的繩子，那就是<strong>界面</strong>。</li>
+  <li>最下面是<strong>時間軸</strong>：脈波每撞到一次牆或界面，那個位置的三角形就從空心變成實心（還沒撞到的先畫成空心，所以整條軸從一開始就看得到 20 秒的節奏），顏色代表撞到的是哪一種，軸上方那顆徽章寫出<strong>這一次套用的規則</strong>。</li>
+  <li>四個開關可以分別關掉入射／反射／透射／合成，一次只看一種波。</li>
+</ul>
+
+<p>按「開始」，脈波開始跑，撞到牆就彈回來，時間軸一個點一個點長出來。把<strong>播放速度</strong>拉到 0.25× 是慢動作，按<strong>單步前進</strong>一次走 0.1 秒，把<strong>時間軸滑桿</strong>往左拖就是回放。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="撞到牆會怎樣三種撞擊三種下場">撞到牆會怎樣：三種撞擊，三種下場</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>撞到什麼</th>
+      <th>反射係數</th>
+      <th>反射波長什麼樣</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>固定端（繩子釘在牆上）</td>
+      <td>$r = -1$</td>
+      <td><strong>上下顛倒</strong>，振幅一樣大——端點本身從頭到尾不動</td>
+    </tr>
+    <tr>
+      <td>自由端（繩子套在光滑桿上）</td>
+      <td>$r = +1$</td>
+      <td>不顛倒，振幅一樣大——端點會盪到入射波的兩倍</td>
+    </tr>
+    <tr>
+      <td>界面（線密度改變的地方）</td>
+      <td>$r = \dfrac{Z_1 - Z_2}{Z_1 + Z_2}$</td>
+      <td>一份反射、一份透射，兩份都變小</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>界面上那條式子裡的 $Z$ 是<strong>阻抗</strong>，由繩子的張力 $T$ 與線密度 $\mu$ 決定：</p>
+
+\[\begin{aligned}
+Z &amp;= \sqrt{T\mu} \\
+v &amp;= \sqrt{\frac{T}{\mu}} \\
+\tau &amp;= 1 + r
+\end{aligned}\]
+
+<p>同一條繩子（張力一樣）接上線密度 4 倍的粗繩之後，$Z$ 變成兩倍、波速變成一半。這一頁預設的數字是 $Z_1 = 1.00$、$Z_2 = 2.00$，於是</p>
+
+\[\begin{aligned}
+r &amp;= \frac{1 - 2}{1 + 2} = -\frac{1}{3} \approx -0.33 \\
+\tau &amp;= 1 + r = \frac{2}{3} \approx 0.67
+\end{aligned}\]
+
+<h3 id="那一顆-2-公分的脈波撞到界面之後">那一顆 2 公分的脈波，撞到界面之後</h3>
+
+<ul>
+  <li>2.00 公分走 2.8 公尺到界面，花了 0.70 秒。</li>
+  <li>反射回來的那一份是 $2.00 \times \frac{1}{3} = 0.67$ 公分，而且<strong>上下顛倒</strong>（$r$ 是負的）——它往回走，1.00 秒後撞上左邊的牆。</li>
+  <li>透射過去的那一份是 $2.00 \times \frac{2}{3} = 1.33$ 公分。它在比較重的右段上跑得慢（2.00 m/s），而且<strong>被壓得比較扁</strong>：寬度只剩原來的一半。</li>
+  <li>兩份都不是全部：能量被拆成兩半，其中透射帶走的多一些——$r^2 + \tau^2 \dfrac{v_1}{v_2} = \frac{1}{9} + \frac{4}{9} \times 2 = 1$，剛好收支平衡。</li>
+</ul>
+
+<p>⚠️ <strong>同一顆界面，兩個方向的反射不一樣。</strong> 脈波從左邊（輕）撞過去時 $r = -\frac{1}{3}$，反射波上下顛倒；從右邊（重）撞回來時 $r = +\frac{1}{3}$，反射波不顛倒。所以畫面上會同時看到「顛倒的回波」和「不顛倒的回波」——它們真的來自同一顆界面。</p>
+
+<h3 id="為什麼畫面上會愈來愈多顆脈波">為什麼畫面上會愈來愈多顆脈波</h3>
+
+<p>每撞一次界面就多一顆。第一顆反射回來的撞到左牆、又往界面走，再分一次；透射過去的那一顆撞到右牆、折回來撞界面，也再分一次。20 秒之內會生出 500 多顆，可是絕大多數一代比一代小——一顆脈波來回界面一趟，淨效果是乘上 $\frac{2}{3} \times \frac{4}{3} = \frac{8}{9}$，所以畫面上看到的仍然是幾顆跑得比較快的，加上一堆愈來愈扁的小脈波。</p>
+
+<p>⚠️ 振幅<strong>不是只會變小</strong>。透射係數要看是從哪一邊傳到哪一邊：從輕的傳進重的，$\tau = \frac{2}{3}$（變小）；從重的傳回輕的，$\tau = \frac{4}{3}$（<strong>變大</strong>）。畫面上真的會出現一顆比它上一代還高的脈波，最高可以到 1.78 公分——那不是畫錯，是波從重的那一段傳回輕的那一段時，透射係數本來就大於 1。</p>
+
+<h3 id="時間軸上的點為什麼排成那樣">時間軸上的點為什麼排成那樣</h3>
+
+<ul>
+  <li><strong>兩段一樣</strong>（沒有界面）：只有兩面牆。脈波走 8 公尺來回一趟是 2.00 秒，所以事件點每隔 2.00 秒出現一次，左右交替，20 秒正好 10 個。</li>
+  <li><strong>接上界面</strong>：有三個地方會被撞——界面、左端、右端。每一處都是每 2.00 秒被撞一次（左段來回 2.00 秒、右段來回 4.00 秒），可是三處<strong>錯開</strong>了，所以時間軸上看起來幾乎每 1.00 秒就有一個點。</li>
+  <li>為什麼 3.70 秒那個位置是空的？那一刻撞上左牆的那一顆只有 0.22 公分，在畫面上是兩個像素——跟繩子本身一樣細，所以不標。時間軸只標振幅 0.30 公分以上的撞擊（圖例最後一項寫著這件事），更小的脈波照樣在繩子上跑、照樣畫出來，只是不再給它一個點。</li>
+</ul>
+
+<h3 id="生活中的來回反射">生活中的來回反射</h3>
+
+<ul>
+  <li>🏓 <strong>回聲</strong>：對著山谷喊一聲，聲音在兩面山壁之間來回彈，所以你會聽到「喂——喂——喂」一聲比一聲小。時間軸上那排愈來愈密的點，就是回聲在時間上的長相。</li>
+  <li>📡 <strong>雷達與超聲波</strong>：發一個脈衝出去，量它多久之後回來，就知道障礙物多遠。如果回來的訊號有兩三個、間隔固定，那代表中間不只一層界面。</li>
+  <li>🎸 <strong>弦上的駐波</strong>：撥一下弦，波就在兩端之間來回反射。它其實一直在撞牆，只是所有回波疊起來之後剛好站住不動，看起來像一個不會跑的波形。</li>
+  <li>🔌 <strong>電纜斷點測試</strong>：訊號在電纜裡來回反射的道理跟繩子完全一樣，工程師就是用「發一個脈衝、看它多久彈回來」找出電纜斷在哪裡。</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>同一個脈波撞上固定端會上下顛倒、撞上自由端卻不顛倒。這兩種端點在「端點能不能動」上有什麼不一樣？</li>
+  <li>兩段一樣時，事件點每隔 2.00 秒出現一次；接上界面之後變成幾乎每 1.00 秒一個點。多出來的撞擊是撞在哪裡？</li>
+  <li>同一顆界面，脈波從左邊過去時反射波上下顛倒，從右邊回來時卻不顛倒。畫面左邊那三條公式裡，哪一條在管這件事？</li>
+  <li>脈波每撞一次牆就分掉一部分能量。把時間軸拖到 10 秒以後，畫面上最大的那一顆脈波和原來比起來怎麼樣了？</li>
+  <li>時間軸只標振幅 0.30 公分以上的撞擊。在畫面上找一顆沒有被標到的脈波，它大概多大？跟繩子本身比起來呢？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/multiple-reflections.js"></script>
+    
+
+</body>
+</html>

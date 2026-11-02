@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📈 波形圖與振動圖 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_06</div>
+                <h1 class="lab-title">📈 波形圖與振動圖</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是兩張上下堆疊的正弦曲線，長得幾乎一樣，但橫軸完全不同：</p>
+
+<ul>
+  <li><strong>上面那張是波形圖 y–x</strong>，橫軸是<strong>位置</strong>：它把<strong>某一瞬間</strong>整條繩子上<strong>每一顆質點</strong>的位移畫出來。</li>
+  <li><strong>下面那張是振動圖 y–t</strong>，橫軸是<strong>時間</strong>：它畫的是<strong>某一顆質點</strong>在最近 4 秒裡的位移。</li>
+</ul>
+
+<p>按「開始」，兩張圖一起動。波形圖上每一顆質點都有一支橘色箭頭，那是它<strong>這一刻</strong>的速度，箭頭愈長代表動得愈快；紅色的那一顆是「被追蹤的質點」，下面那張圖畫的就是它。</p>
+
+<ul>
+  <li>在<strong>波形圖上點一下</strong>（點在哪個高度都可以），最靠近的質點就變成被追蹤的那一顆，下面那張圖立刻換成它的。</li>
+  <li>把<strong>行進方向</strong>切成「向左」，波形圖上所有箭頭會在同一瞬間全部反過來。</li>
+  <li>拉<strong>頻率</strong>和<strong>振幅</strong>，看波長與箭頭長度怎麼變。</li>
+</ul>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="兩張圖的橫軸是正交的">兩張圖的橫軸是正交的</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>波形圖 y–x</th>
+      <th>振動圖 y–t</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>橫軸</td>
+      <td>位置 $x$</td>
+      <td>時間 $t$</td>
+    </tr>
+    <tr>
+      <td>縱軸</td>
+      <td>位移 $y$</td>
+      <td>位移 $y$</td>
+    </tr>
+    <tr>
+      <td>看的是</td>
+      <td><strong>某一瞬間</strong>、<strong>所有質點</strong></td>
+      <td><strong>某一顆質點</strong>、<strong>所有時間</strong></td>
+    </tr>
+    <tr>
+      <td>問的問題</td>
+      <td>整條繩子現在長什麼樣？</td>
+      <td>這一顆現在怎麼動？</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>波形圖是「把時間停住，把整條繩子看一遍」；振動圖是「把位置釘住，把時間看一遍」。兩張都是正弦曲線，但一個橫軸是公尺、一個是秒，<strong>同一個點在兩張圖裡代表的意思完全不一樣</strong>。</p>
+
+<h3 id="兩張圖都可以看出質點往哪邊動">兩張圖都可以看出質點往哪邊動</h3>
+
+<p>波形圖上，質點的位移寫成</p>
+
+\[y(x,t) = A\sin k(x - vt)\]
+
+<p>對 $x$ 微分得到的是波形圖的斜率，對 $t$ 微分得到的才是質點的速度：</p>
+
+\[v_y = \frac{\partial y}{\partial t} = -v\,\frac{\partial y}{\partial x}\]
+
+<p>也就是說，<strong>波形圖上那一點的斜率決定了質點的運動方向</strong>。前面那個負號就是這件事：波往右跑的時候，波峰<strong>左邊</strong>的質點正在<strong>往下</strong>、<strong>右邊</strong>的正在<strong>往上</strong>——波峰朝誰趕過去，誰就被抬起來；剛被波峰掃過去的，已經在往下走了。反過來，只要知道波往哪邊跑，光看波形圖就能判斷每一顆質點正在往哪裡動。</p>
+
+<p>振動圖上更直接：橫軸本來就是時間，所以</p>
+
+\[v_y = \frac{dy}{dt}\]
+
+<p><strong>振動圖上曲線的斜率就是質點的速度</strong>。圖上那一條橘色切線就是在畫這件事——曲線愈陡，質點動得愈快。</p>
+
+<h3 id="速度什麼時候最大">速度什麼時候最大</h3>
+
+\[\begin{aligned}
+v_y &amp;= -Akv\cos k(x - vt) \\
+    &amp;= -A\omega\cos k(x - vt)
+\end{aligned}\]
+
+<p>$\cos$ 的絕對值最大是 1，所以最大速率是 $A\omega$。它出現在 $\cos = \pm 1$ 的地方，也就是 $y = 0$：</p>
+
+<ul>
+  <li><strong>平衡位置</strong>（$y = 0$）：速度最大，等於 $A\omega$。振動圖在這些時刻最陡，波形圖上這些質點的箭頭最長。</li>
+  <li><strong>振幅端點</strong>（$y = \pm A$）：速度是 0——質點在那裡煞停、準備回頭。振動圖在這些時刻是水平的，波形圖上這些質點的箭頭整個消失。</li>
+</ul>
+
+<p>這也是為什麼兩個端點和平衡位置的「停留感」差那麼多：端點附近速度接近 0，質點會在那裡磨蹭很久；經過平衡位置時是一口氣衝過去。</p>
+
+<h3 id="把方向切過來會發生什麼">把方向切過來會發生什麼</h3>
+
+<p>行進方向一換，$\dfrac{\partial y}{\partial t}$ 整個變號，所以<strong>每一顆質點的速度同時反過來</strong>；而 $y$ 本身只跟當下的波形有關，所以<strong>位移一個都沒變</strong>。畫面上就是：同一條波形、同一組位置，橘色箭頭全部調頭，波開始往另一邊跑。</p>
+
+<h3 id="生活中的兩張圖">生活中的兩張圖</h3>
+
+<ul>
+  <li>📈 <strong>心電圖</strong>：貼片固定在胸口某一點，記錄的是電訊號隨<strong>時間</strong>的變化——那是振動圖。醫院不會去畫「整顆心臟在某一瞬間的電位分布」。</li>
+  <li>🌊 <strong>地震儀</strong>：同一個測站、同一支探針，畫出的是地表隨時間的晃動（振動圖）；而「震波傳到哪裡了」看的是另一張圖（波形圖）。</li>
+  <li>🎸 <strong>吉他弦</strong>：慢動作攝影裡那條弦的形狀是波形圖；而某一點被撥動後來回振動的影片，畫成圖就是振動圖。</li>
+  <li>🏄 <strong>海上的浮標</strong>：浮標只在原地上下（振動圖），海浪的形狀則往岸邊跑（波形圖）。海面本身其實沒有往岸邊搬。</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>為什麼兩張圖長得一模一樣，卻是在講不同的事情？</li>
+  <li>波形圖上，被追蹤的質點走到振幅端點時，它的速度箭頭為什麼會縮成 0？</li>
+  <li>把行進方向從向右切成向左，質點的速度為什麼會全部反過來，而位移一個都沒變？</li>
+  <li>振動圖上曲線最陡的那一瞬間，質點在平衡位置還是振幅端點？</li>
+  <li>為什麼「波形圖的斜率」也可以拿來判斷波往哪邊跑？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/waveform-vibration.js"></script>
+    
+
+</body>
+</html>

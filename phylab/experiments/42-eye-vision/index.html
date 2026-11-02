@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👁️ 眼睛與視覺（近視、遠視、散光） - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_15</div>
+                <h1 class="lab-title">👁️ 眼睛與視覺（近視、遠視、散光）</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是一顆眼睛的側面示意圖：左邊是矯正眼鏡，中間是眼球透鏡與瞳孔，右邊的暗紅色弧線是視網膜。黃色與藍色的光線從左方平行射入，折射後在視網膜附近交會。</p>
+
+<p>用「眼睛的狀態」切換正視、近視、遠視與散光；選了不正常的眼睛後，「矯正眼鏡」可以切換戴或不戴。拖動「瞳孔孔徑」，看視網膜上的紅色模糊圈怎麼變。</p>
+
+<p>按下「開始 START」，光脈衝會沿著光線走一遍，從眼鏡、眼球透鏡一路到視網膜。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="眼睛的成像">眼睛的成像</h3>
+
+<p>眼球前面的<strong>眼球透鏡</strong>（晶狀體）把光聚在<strong>視網膜</strong>上。物體在遠處時，進入眼睛的光可以看成平行光；平行光經眼球透鏡折射後，會聚在焦點上。正常的眼睛，焦點正好落在視網膜，視網膜上的像是一個倒立、縮小的實像，大腦再把它解釋成正立的畫面。</p>
+
+<p>眼球透鏡到視網膜的距離固定，所以眼睛要看清不同距離的物體，只能改變眼球透鏡的焦距，這個過程叫<strong>調節</strong>。這裡固定看遠方物體，平行光不需要調節。</p>
+
+<h3 id="近視">近視</h3>
+
+<p>近視眼的眼球透鏡焦距太短（或眼球前後徑太長），平行光在<strong>視網膜前面</strong>就交會了。光線在視網膜上已經散開，所以看到的像模糊。</p>
+
+<p>近視眼的焦點離視網膜愈遠、瞳孔愈大，視網膜上的<strong>模糊圈</strong>就愈大。</p>
+
+<h3 id="遠視">遠視</h3>
+
+<p>遠視眼的眼球透鏡焦距太長（或眼球前後徑太短），平行光會在<strong>視網膜後面</strong>才交會。光線抵達視網膜時還沒有聚焦，所以像也是模糊的。</p>
+
+<h3 id="散光">散光</h3>
+
+<p>散光眼的眼球透鏡在兩個互相垂直的方向上彎曲程度不同，所以有兩個不同的焦距。這一頁的散光眼，一個方向是正視（焦距 26 mm，焦點正好在視網膜上），另一個方向是近視（焦距 18 mm，焦點在視網膜前 8 mm）。平行光進入眼睛後，視網膜上一個方向聚成一點、另一個方向散成一條模糊圈，所以看到的像有一部分清楚、一部分模糊。</p>
+
+<p>兩個焦點之間差得愈遠、瞳孔愈大，視網膜上的模糊圈就愈大。</p>
+
+<h3 id="近視矯正">近視矯正</h3>
+
+<p>近視眼戴上<strong>凹透鏡</strong>。凹透鏡先把平行光稍微發散，讓眼球透鏡接收到好像從近處射來的光；眼球透鏡的焦距不變，但光線進入眼球時已經發散，焦點因此往後移到視網膜上。</p>
+
+<h3 id="遠視矯正">遠視矯正</h3>
+
+<p>遠視眼戴上<strong>凸透鏡</strong>。凸透鏡先把平行光稍微會聚，眼球透鏡接收到好像從遠處會聚過來的光，焦點因此往前移到視網膜上。</p>
+
+<h3 id="散光矯正">散光矯正</h3>
+
+<p>散光眼戴上<strong>柱面透鏡</strong>。柱面透鏡只在一個方向上會聚或發散，另一個方向幾乎不改變光線，所以兩個主平面可以得到不同的矯正量。這一頁的近視方向用一片凹的柱面透鏡矯正，正視的那個方向不動，兩個方向的焦點就一起回到視網膜上。</p>
+
+<h3 id="透鏡公式與眼睛">透鏡公式與眼睛</h3>
+
+<p>眼球透鏡仍然遵守</p>
+
+\[\frac{1}{u}+\frac{1}{v}=\frac{1}{f}\]
+
+<p>看遠方物體時 $u$ 很大，$\frac{1}{u}$ 接近 0，所以 $v\approx f$。眼球透鏡到視網膜的距離 $v$ 固定，焦距 $f$ 變短，焦點就跑到視網膜前面；$f$ 變長，焦點就跑到視網膜後面。</p>
+
+<p>矯正眼鏡的作用是改變進入眼球透鏡的光線：凹透鏡讓光先發散，凸透鏡讓光先會聚。眼鏡的度數愈高，改變的程度愈大。</p>
+
+<h3 id="模糊圈與瞳孔">模糊圈與瞳孔</h3>
+
+<p>瞳孔孔徑變大，進入眼睛的光束變寬，焦點不落在視網膜時，視網膜上的模糊圈也會變大；孔徑變小，模糊圈變小。所以瞇眼睛可以暫時看得清楚一點，但焦點的位置沒有改變，近視並沒有被治好。</p>
+
+<p>畫面上的眼球與焦距比例都放大了，實際的眼睛小得多；卡片上的焦距與焦點偏移已經換算成 mm。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>正視眼、近視眼與遠視眼的焦點分別落在哪裡？</li>
+  <li>為什麼近視眼要用凹透鏡矯正，遠視眼要用凸透鏡？</li>
+  <li>把瞳孔孔徑從 2 mm 拉到 6 mm，視網膜上的模糊圈變大還是變小？焦點的位置有改變嗎？</li>
+  <li>散光眼的兩個焦點為什麼一個在視網膜上、一個在視網膜前？柱面透鏡和球面透鏡有什麼不同？</li>
+  <li>戴上矯正眼鏡後，焦點回到視網膜，但眼球的焦距有改變嗎？</li>
+  <li>為什麼瞇眼睛可以暫時看得清楚一點？它能把近視治好嗎？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/eye-vision.js"></script>
+    
+
+</body>
+</html>

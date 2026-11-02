@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1380 752" role="img" aria-label="Geometric optics">
+  <circle cx="690" cy="376" r="318" fill="#0b3b2e" stroke="#334155" stroke-width="16"/>
+  <circle cx="690" cy="376" r="300" fill="none" stroke="#86efac" stroke-width="3" opacity="0.5"/>
+
+  <!-- mirror -->
+  <line x1="430" y1="468" x2="950" y2="468" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+  <g stroke="#94a3b8" stroke-width="5" stroke-linecap="round">
+    <line x1="455" y1="468" x2="435" y2="500"/>
+    <line x1="505" y1="468" x2="485" y2="500"/>
+    <line x1="555" y1="468" x2="535" y2="500"/>
+    <line x1="605" y1="468" x2="585" y2="500"/>
+    <line x1="655" y1="468" x2="635" y2="500"/>
+    <line x1="705" y1="468" x2="685" y2="500"/>
+    <line x1="755" y1="468" x2="735" y2="500"/>
+    <line x1="805" y1="468" x2="785" y2="500"/>
+    <line x1="855" y1="468" x2="835" y2="500"/>
+    <line x1="905" y1="468" x2="885" y2="500"/>
+  </g>
+
+  <!-- normal -->
+  <line x1="690" y1="468" x2="690" y2="190" stroke="#cbd5e1" stroke-width="4" stroke-dasharray="14 12"/>
+
+  <!-- incident and reflected rays -->
+  <line x1="525" y1="245" x2="690" y2="468" stroke="#fbbf24" stroke-width="9" stroke-linecap="round"/>
+  <line x1="690" y1="468" x2="855" y2="245" stroke="#fbbf24" stroke-width="9" stroke-linecap="round"/>
+  <g fill="#fbbf24">
+    <polygon points="644,404 616,388 658,384"/>
+    <polygon points="736,404 764,388 722,384"/>
+  </g>
+
+  <!-- angle arcs -->
+  <path d="M 690 330 A 138 138 0 0 0 586 365" fill="none" stroke="#60a5fa" stroke-width="6"/>
+  <path d="M 690 330 A 138 138 0 0 1 794 365" fill="none" stroke="#34d399" stroke-width="6"/>
+
+  <!-- angle labels -->
+  <text x="604" y="300" fill="#bfdbfe" font-family="Georgia, serif" font-style="italic" font-size="42">θ₁</text>
+  <text x="750" y="300" fill="#a7f3d0" font-family="Georgia, serif" font-style="italic" font-size="42">θ₂</text>
+
+  <!-- point of incidence -->
+  <circle cx="690" cy="468" r="11" fill="#f8fafc"/>
+</svg>

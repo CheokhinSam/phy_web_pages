@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📣 回聲測距 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/waves/" class="bc-back">← 波動學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_19</div>
+                <h1 class="lab-title">📣 回聲測距</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是一條路面：車在左邊、山壁在右邊，中間鋪著公尺刻度。按「開始」＝鳴笛，一條藍色箭頭從鳴笛點往右長出去，一路長到山壁；撞上之後折返，變成橘色的一條往回跑。車的頭頂上另有一支深色箭頭，那是車自己的速度。車從第一格就和聲音分家——聲音以 340 m/s 前進，車只有 20 m/s。</p>
+
+<p>箭頭畫的就是聲音走過的路，一筆從鳴笛點畫到山壁、再折回車——去程走上面那條軌、回程走下面那條軌，在牆邊轉一個彎。尖端釘在聲音已經走到的地方，指的方向就是它正在走的方向；尖端碰到車的那一刻，就是聽到回聲。</p>
+
+<p>車底下有三條距離尺，一條對一個量：藍色的<strong>去程</strong>（鳴笛點到山壁）、橘色的<strong>回程</strong>（山壁到回音的前緣，淡橘那一段是還沒回來的）、灰色的<strong>車走的</strong>（鳴笛點到車）。回程的左端永遠貼著回音的前緣。</p>
+
+<p>回音與車之間有一條橘色虛線，兩端各一顆箭頭——那是「還差多遠」。它會在回音追上車的那一刻<strong>縮到零</strong>，車上跳出「聽到回聲了」。</p>
+
+<ul>
+  <li><strong>切「車往哪邊開」</strong>：駛向山壁是最常見的標準題；切到駛離山壁再按一次開始，比較兩次的時間與各段距離。</li>
+  <li><strong>拉「車速 v」和「鳴笛點到山壁 s₀」</strong>：整個橫軸會自動重新縮放，山壁永遠站在右緣。</li>
+  <li><strong>按「重設」</strong>：回到鳴笛前那一刻。</li>
+</ul>
+
+<h2 id="物理知識與公式">物理知識與公式</h2>
+
+<h3 id="三個時刻">三個時刻</h3>
+
+<p>把座標釘在路面上：山壁永遠在 $x = s_0$，車在 $t = 0$ 時在 $x = 0$，以速度 $u$ 沿 $+x$ 前進（駛向山壁 $u = +v$、駛離山壁 $u = -v$）。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>時刻</th>
+      <th>發生什麼事</th>
+      <th>式子</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$t_1$</td>
+      <td>聲音撞到山壁</td>
+      <td>$t_1 = s_0 / c$</td>
+    </tr>
+    <tr>
+      <td>$t$</td>
+      <td>回音追上車，聽到了</td>
+      <td>$t = 2s_0 / (c + u)$</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>$t_1$ 只跟山壁多遠、聲音多快有關，<strong>跟車怎麼走完全無關</strong>——聲音走的就是 $s_0$ 這一段。</p>
+
+<h3 id="那條式子怎麼來的">那條式子怎麼來的</h3>
+
+<p>聲音出發之後車還在走，所以回程的終點不是鳴笛點，而是車往前跑到的 $x = ut$。聲音走的路分成兩段：</p>
+
+\[c\,t = s_0 + (s_0 - u\,t)\]
+
+<p>畫面上那條箭頭就是這個等式：藍色的去程是 $s_0$、橘色的回程是 $s_0 - u\,t$，兩段接起來的總長剛好是 $c\,t$。去程是 $s_0$，回程是 $s_0 - u\,t$（車往前吃掉了 $ut$，所以回程比去程短）。展開移項：</p>
+
+\[(c + u)\,t = 2s_0\]
+
+<p>駛向山壁時 $u = +v$，就是常見的 $2s_0 = (c+v)t$；駛離山壁時 $u = -v$，同一個式子變成 $2s_0 = (c-v)t$。</p>
+
+<h3 id="兩個題型算一次">兩個題型算一次</h3>
+
+<p>$s_0 = 360$ m、$v = 20$ m/s、$c = 340$ m/s：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>題型</th>
+      <th>聽到回聲 t (s)</th>
+      <th>聲音總路程 (m)</th>
+      <th>車走的 (m)</th>
+      <th>回程 (m)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>駛向 $u=+20$</td>
+      <td>2.00</td>
+      <td>680</td>
+      <td>40</td>
+      <td>320</td>
+    </tr>
+    <tr>
+      <td>駛離 $u=-20$</td>
+      <td>2.25</td>
+      <td>765</td>
+      <td>45</td>
+      <td>405</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>駛向那一列：聲音走了 680 m，其中去程 360 m、回程 320 m；車走了 40 m。把車走的和回程加起來，$40 + 320 = 360$，剛好是去程。</p>
+
+<p>駛離那一列：車愈跑愈遠，回程變成 405 m，比去程還長；$360 + 45 = 405$，回程 = 去程 + 車走的。</p>
+
+<p>同一個 360 m，答案一個變小一個變大，差別全在「車往哪邊走」那個正負號。</p>
+
+<h3 id="怎麼從畫面讀出來">怎麼從畫面讀出來</h3>
+
+<ul>
+  <li><strong>箭頭</strong>：藍色那一段是聲音往山壁走的路（去程），橘色那一段是回音往車走的路（回程）。箭尖釘著的那一格，就是聲音（或回音）已經走到的地方，而且整條箭頭的<strong>總長就是「聲音走過的總路程」</strong>。</li>
+  <li><strong>車頂上那支深色箭頭</strong>：那是車速 $v$——方向是車前進的方向，車速愈大它就愈長。聲音在飛的整段時間裡，車就是這樣一路走過去的。</li>
+  <li><strong>回音與車之間那條橘色虛線</strong>：那是「還差多遠」。它在回音追上車的那一刻縮到零——那一刻車上會跳出「聽到回聲了」。</li>
+  <li><strong>三條距離尺</strong>：把回程那條和去程那條比一比——駛向時回程短了一截、駛離時長了一截，而那一截剛好是灰色那條（車走的）。</li>
+</ul>
+
+<h3 id="容易搞錯的地方">容易搞錯的地方</h3>
+
+<ul>
+  <li>直接寫 $s = c\,t$（680 m）：那是聲音走的路，不是山壁的距離。</li>
+  <li>寫 $s = c\,t / 2$（340 m）：這只有在車<strong>停著</strong>的時候才對——回程的終點是車，不是鳴笛點。</li>
+  <li>以為聲音會跟著車跑：鳴笛之後，聲音的源頭就留在鳴笛點那一格，車自己開走了。</li>
+  <li>這兩個錯在車速小的時候看起來「差不多」，車速開到 80 m/s 就很明顯——把車速拉到最大再跑一次。</li>
+</ul>
+
+<h3 id="生活中的回聲">生活中的回聲</h3>
+
+<p>山谷裡的回音、聲納、超聲波測距、倒車雷達都是同一件事：發一個短脈衝出去、量它多久回來。測距儀自己<strong>不動</strong>，所以距離就是 $c\,t / 2$；這一頁多了「車一邊走」，那條式子才變成 $(c+u)\,t = 2s_0$。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>車速 20 m/s、鳴笛點距山壁 360 m，按「開始」——幾秒之後聽到回聲？這段時間車走了多遠？</li>
+  <li>把「車往哪邊開」切成<strong>駛離山壁</strong>再按一次開始：時間變長還是變短？「車走過的距離」和「回程已經走了」兩張卡片，哪一個比較大？</li>
+  <li>把車速拉到 0 再按一次開始：幾秒聽到回聲？「車走過的距離」是多少？車頂上那支箭頭到哪去了？</li>
+  <li>撞上山壁之後，<strong>藍色那一段就不再變長了</strong>——它為什麼停在那裡？同一時間，橘色那一段和車頂那支箭頭各自在做什麼？</li>
+  <li>整條箭頭的總長是「聲音走過的總路程」680 m，而鳴笛點到山壁只有 360 m——多出來的那 320 m 是什麼？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/wave-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/echo-ranging.js"></script>
+    
+
+</body>
+</html>
