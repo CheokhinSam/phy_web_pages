@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 氣體定律 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/thermal/" class="bc-back">← 熱學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_05</div>
+                <h1 class="lab-title">🧪 氣體定律</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>活塞汽缸裡關著一團氣體，三個量在互相牽制：<strong>壓力 p、體積 V、溫度 T</strong>。上面那個下拉可以切三種模式，
+每一種固定其中一個量，看另外兩個怎麼連動。</p>
+
+<ul>
+  <li><strong>等溫</strong>（固定 T）：拉活塞，壓力當場變——畫出一條<strong>雙曲線</strong></li>
+  <li><strong>等壓</strong>（固定 p）：加熱，活塞自己升起來——畫出一條<strong>過原點的直線</strong>（V 對 T）</li>
+  <li><strong>等容</strong>（固定 V）：加熱，壓力往上爬——也是<strong>過原點的直線</strong>（p 對 T）</li>
+  <li><strong>汽缸裡的分子</strong>：彈道飛行、撞牆會亮。缸壁的橘色深淺跟著撞擊跑，撞得越凶越深</li>
+  <li><strong>右邊的方程式面板</strong>：把現在的 p、V、n、T 填進去，最後一行 <code class="language-plaintext highlighter-rouge">pV/(nT)</code> 是結論</li>
+  <li><strong>下面的圖</strong>：淡灰是理論線，紅點是你<strong>已經量過</strong>的數據，連起來就是你自己的曲線</li>
+</ul>
+
+<p>三張圖長得完全不一樣，但它們是<strong>同一條式子</strong>。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="三個量只有兩個是自由的">三個量，只有兩個是自由的</h3>
+
+<p>汽缸裡的氣體有壓力、體積、溫度三個量。看起來你可以各自隨便調，但實際上<strong>只要定下其中兩個，第三個就被決定了</strong>——它沒有自由。</p>
+
+<p>所以「氣體定律」其實不是三條獨立的定律，而是同一條關係式在三種不同約束下的長相：</p>
+
+\[pV = nRT\]
+
+<table>
+  <thead>
+    <tr>
+      <th>你固定什麼</th>
+      <th>剩下的關係</th>
+      <th>圖的形狀</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>溫度 T（<strong>等溫</strong>）</td>
+      <td>$p \propto \dfrac{1}{V}$</td>
+      <td>雙曲線（波以耳定律）</td>
+    </tr>
+    <tr>
+      <td>壓力 p（<strong>等壓</strong>）</td>
+      <td>$V \propto T$</td>
+      <td>過原點的直線（查理定律）</td>
+    </tr>
+    <tr>
+      <td>體積 V（<strong>等容</strong>）</td>
+      <td>$p \propto T$</td>
+      <td>過原點的直線（壓力定律）</td>
+    </tr>
+  </tbody>
+</table>
+
+<ul>
+  <li>$p$：壓力（Pa）</li>
+  <li>$V$：體積（m³）</li>
+  <li>$n$：莫耳數（mol），固定在 0.20 mol</li>
+  <li>$T$：<strong>絕對溫度</strong>（K），不是 °C</li>
+  <li>$R$：理想氣體常數 = <strong>8.314</strong> J/(mol·K)</li>
+</ul>
+
+<p>面板上最後一行 <code class="language-plaintext highlighter-rouge">pV/(nT)</code> 就是把這條式子移項之後的長相。不管你把滑桿拉到哪裡、換成哪一種氣體，它都必須印出 8.314——<strong>所有的實驗都是在驗這件事</strong>。</p>
+
+<h3 id="用具體數字看一次">用具體數字看一次</h3>
+
+<p>莫耳數固定 0.20 mol。三種模式各拉幾個點：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>等溫 T = 300 K</th>
+      <th> </th>
+      <th>等壓 p = 100 kPa</th>
+      <th> </th>
+      <th>等容 V = 5.0 L</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>V (L)</td>
+      <td>p (kPa)</td>
+      <td>T (K)</td>
+      <td>V (L)</td>
+      <td>T (K)</td>
+      <td>p (kPa)</td>
+    </tr>
+    <tr>
+      <td>1.5</td>
+      <td>333</td>
+      <td>200</td>
+      <td>3.33</td>
+      <td>200</td>
+      <td>66</td>
+    </tr>
+    <tr>
+      <td>3.0</td>
+      <td>166</td>
+      <td>300</td>
+      <td>4.99</td>
+      <td>300</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <td>6.0</td>
+      <td>83</td>
+      <td>400</td>
+      <td>6.65</td>
+      <td>400</td>
+      <td>133</td>
+    </tr>
+    <tr>
+      <td>12.0</td>
+      <td>42</td>
+      <td>600</td>
+      <td>9.98</td>
+      <td>600</td>
+      <td>200</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>三張表裡<strong>沒有一欄是同一組數字</strong>，形狀也完全不同。但把每一列的 <code class="language-plaintext highlighter-rouge">pV/(nT)</code> 算出來，三張表都是 8.314。</p>
+
+<p>（順便看一眼第一張表的 p×V：333×1.5 = 499、166×3 = 499、42×12 = 499。單位換成 J 之後，<strong>pV 沿著一條等溫線是一個守恆量</strong>——這就是波以耳定律真正的意思。）</p>
+
+<h3 id="絕對零度是外推出來的不是規定的">絕對零度是「外推」出來的，不是規定的</h3>
+
+<p>把等壓模式的橫軸切到<strong>攝氏</strong>，你會看到那條直線往左延長，穿過 −273.15 °C 那條虛線時剛好撞到 0。切回<strong>克耳文</strong>，同一條線就穿過原點。</p>
+
+<p>兩種刻度畫的是同一筆資料、同一條線，只是換了一把尺。切換刻度<strong>不會清掉你量到的點</strong>——換的是看法，不是實驗條件。</p>
+
+<p>這裡的重點是：<strong>直線並沒有「知道」絕對零度在哪裡</strong>。它是被量出來的。</p>
+
+<p>真實的實驗是這樣做的：在 0 °C、20 °C、40 °C、60 °C 各量一次體積，把點畫出來連成直線，然後<strong>把線往左邊延長</strong>——延到體積變成 0 的地方。那個交點在 −273 °C 附近。當年的人就是這樣發現「溫度有一個下限」的，比分子運動論還早。溫度計做得越準，交點就越靠近 −273.15。</p>
+
+<p>（前提是氣體要夠稀薄。真實氣體降溫到接近液化時，這條線會開始歪掉；理想氣體是「永遠不液化」的抽象模型。）</p>
+
+<h3 id="壓力是分子撞出來的">壓力是分子撞出來的</h3>
+
+<p>缸壁那個橘色深淺不是裝飾——它跟著分子的撞擊跑。</p>
+
+<p>分子運動論把「壓力」還原成一件很具體的事：<strong>每一秒有幾顆分子撞上單位面積、每次撞擊傳遞多少動量</strong>。面板下面那條徽章是畫面上真的數出來的撞擊次數。</p>
+
+<p>但<strong>撞擊次數不等於壓力</strong>。</p>
+
+<p>溫度升高時：</p>
+<ul>
+  <li>分子變快，撞得<strong>更頻繁</strong>——頻率 $\propto \sqrt{T}$</li>
+  <li>而且每次撞擊的動量也變大——$\propto \sqrt{T}$</li>
+</ul>
+
+\[\begin{aligned} p &amp;\propto \text{每秒撞幾次} \times \text{每次撞多用力} \\[2pt] &amp;\propto \sqrt{T} \times \sqrt{T} \;=\; T \end{aligned}\]
+
+<p><strong>是兩個 √T 相乘才變成 T。</strong>所以溫度加倍時，撞擊次數只有 ×1.41、壓力卻是 ×2——兩個數字不一樣，而且必須不一樣。</p>
+
+<p>（分子運動論完整的推導是 $\frac{1}{3}\rho c_{rms}^2 = \frac{nRT}{V}$——算出來<strong>剛好</strong>就是理想氣體方程式。這不是巧合，這是分子運動論十七世紀最重大的成就之一。）</p>
+
+<h3 id="平均動能只跟溫度有關">平均動能只跟溫度有關</h3>
+
+<p>把「氣體」下拉切一輪，你會看到一件奇怪的事：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>氣體</th>
+      <th>莫耳質量 (g/mol)</th>
+      <th>300 K 的方均根速率</th>
+      <th>300 K 的平均動能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>氦氣</td>
+      <td>4.0</td>
+      <td><strong>1367 m/s</strong></td>
+      <td>$6.21\times10^{-21}$ J</td>
+    </tr>
+    <tr>
+      <td>空氣</td>
+      <td>29.0</td>
+      <td>508 m/s</td>
+      <td>$6.21\times10^{-21}$ J</td>
+    </tr>
+    <tr>
+      <td>氬氣</td>
+      <td>40.0</td>
+      <td>432 m/s</td>
+      <td>$6.21\times10^{-21}$ J</td>
+    </tr>
+    <tr>
+      <td>二氧化碳</td>
+      <td>44.0</td>
+      <td>412 m/s</td>
+      <td>$6.21\times10^{-21}$ J</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>速率差了 <strong>3.3 倍</strong>，動能卻<strong>一格都沒動</strong>。</p>
+
+<p>原因是：</p>
+
+\[\begin{aligned} c_{rms} &amp;= \sqrt{\frac{3RT}{M}} \\[2pt] \bar{E} &amp;= \tfrac{3}{2}kT \end{aligned}\]
+
+<p>速率那一條裡有 $M$（分子的質量），動能那一條裡<strong>沒有</strong>。輕的分子跑得快，但每一顆的動能是一樣的——所以同樣溫度、同樣體積、同樣莫耳數的不同氣體，<strong>壓力完全相同</strong>。</p>
+
+<p>這條叫做「能量均分」：溫度就是分子平均動能的度量，跟分子是什麼無關。換氣體只換到速率，換不到能量。</p>
+
+<h2 id="生活中的氣體定律">生活中的氣體定律</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>現象</th>
+      <th>為什麼</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>🍾 香檳瓶塞會彈出來</td>
+      <td>搖晃讓氣體跑出來、瓶內壓力升高；開瓶瞬間壓力驟降，溶解的 CO₂ 全部衝出來</td>
+    </tr>
+    <tr>
+      <td>🎈 波以耳定律：捏氣球</td>
+      <td>把氣球捏小（V 變小），裡面的空氣壓力立刻上升——捏太大力會爆就是這個原因</td>
+    </tr>
+    <tr>
+      <td>🌡️ 查理定律：曬太陽的輪胎</td>
+      <td>路面高溫讓胎內氣體溫度上升，體積被輪胎固定住（等容），所以是<strong>壓力</strong>上升</td>
+    </tr>
+    <tr>
+      <td>🥾 高山上的包裝袋會鼓起來</td>
+      <td>外面氣壓變低，袋內氣體等容膨脹——同一包餅乾在山上比山下肥</td>
+    </tr>
+    <tr>
+      <td>🍲 壓力鍋</td>
+      <td>加熱讓蒸氣壓力升高（等容），水的沸點跟著上升，煮得比較快</td>
+    </tr>
+    <tr>
+      <td>🧊 乾冰不會先熔化</td>
+      <td>二氧化碳的固態在常壓下直接昇華——它的三相點壓力比大氣壓還高</td>
+    </tr>
+    <tr>
+      <td>🔥 熱氣球會升</td>
+      <td>加熱讓氣球內的氣體密度變小（等壓膨脹），浮力就把整顆氣球抬起來</td>
+    </tr>
+  </tbody>
+</table>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>三個模式畫出來的圖形狀完全不同——一條雙曲線、兩條直線——可是右邊的 <code class="language-plaintext highlighter-rouge">pV/(nT)</code> 一直是 <strong>8.314</strong>。如果這三條是「不同的定律」，為什麼它們共用同一個數字？</li>
+  <li>把橫軸從克耳文切到攝氏，兩條直線會一起往左穿過原點，撞上 −273.15 °C 那條虛線。為什麼這條線的位置<strong>不是誰規定的</strong>，而是直線自己指的？如果當年的溫度計做得更準，這個交點會跟著跑嗎？</li>
+  <li>切到「固定 p（等壓）」模式，去拉體積滑桿——它會自己跳回去。為什麼在那個模式裡，「體積」不是你能決定的東西？那活塞上的重物是在決定什麼？</li>
+  <li>把氣體從空氣換成氦氣，方均根速率從 508 跳到 1367 m/s，但<strong>平均動能完全不動</strong>。速率和動能不是同一件事嗎？為什麼換了氣體，一個變了、一個沒變？</li>
+  <li>在等容模式下把溫度從 300 K 加到 600 K：撞擊次數徽章變成幾倍？壓力卡片變成幾倍？為什麼這兩個倍數不一樣？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/thermal-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/thermal-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/gas-laws.js"></script>
+    
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 薄透鏡成像（凸／凹） - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/optics/" class="bc-back">← 光學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_13</div>
+                <h1 class="lab-title">🔍 薄透鏡成像（凸／凹）</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上有一片薄透鏡立在主軸上，左邊是黃色的物（一支向上的箭頭），右邊是透鏡的焦點 F′。兩條黃色光線從物頂出發：一條平行主軸，一條通過鏡心；折射後在像頂交會，像用紫色箭頭表示。</p>
+
+<p>拖動「物距 $u$」與「焦距大小 $\lvert f\rvert$」，像的位置、大小與正倒會跟著改變。凸透鏡在 u &gt; f 時成倒立實像，u &lt; f 時成正立放大虛像；把透鏡切成凹透鏡，像永遠是正立縮小虛像。</p>
+
+<p>拖動「物高 h」會改變物和像的高度。按下「開始 START」，光脈衝會沿著兩條光線前進，在透鏡上折射後繼續往像的方向走。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="凸透鏡與凹透鏡">凸透鏡與凹透鏡</h3>
+
+<p><strong>凸透鏡</strong>的中央部分比邊緣厚，在空氣中有會聚光線的作用，所以又叫<strong>會聚透鏡</strong>。<strong>凹透鏡</strong>的中央部分比邊緣薄，有發散光線的作用，所以又叫<strong>發散透鏡</strong>。</p>
+
+<h3 id="鏡心主軸焦點與焦距">鏡心、主軸、焦點與焦距</h3>
+
+<p>透鏡的中心點叫<strong>鏡心</strong>（$O$）。通過鏡心的直線叫<strong>主軸</strong>。平行主軸的光線經凸透鏡折射後會聚於一點，這點叫<strong>焦點</strong>（$F$）；焦點到鏡心的距離叫<strong>焦距</strong>（$f$）。</p>
+
+<p>透鏡兩側各有一個焦點，離鏡心的距離都是 $f$。畫面上透鏡右邊的焦點記作 $F’$。</p>
+
+<p>凹透鏡會把平行光線發散開來。把散開的光線向後延伸，它們的共同出發點就是凹透鏡的焦點——因為光線實際上沒有從那裡出發，所以叫<strong>虛焦點</strong>。</p>
+
+<h3 id="實像與虛像">實像與虛像</h3>
+
+<ul>
+  <li><strong>實像</strong>：折射後的光線真的在像的位置相交，可以用屏幕承接，像在透鏡的後方。</li>
+  <li><strong>虛像</strong>：折射後的光線本身沒有相交，是它們的<strong>反向延長線</strong>相交，不能用屏幕承接，像在透鏡的前方（物這一側）。</li>
+</ul>
+
+<p>畫面上的虛像用紫色虛線表示；實像用實線。</p>
+
+<h3 id="透鏡成像公式">透鏡成像公式</h3>
+
+<p>物距 $u$、像距 $v$ 與焦距 $f$ 的關係是</p>
+
+\[\frac{1}{u}+\frac{1}{v}=\frac{1}{f}\]
+
+<p>$u$ 取正值。$v$ 與 $f$ 的正負號規定如下：</p>
+
+<ul>
+  <li>像距 $v$：像在透鏡後（實像）取正；像在透鏡前（虛像）取負。</li>
+  <li>焦距 $f$：凸透鏡取正；凹透鏡取負。</li>
+  <li>像高 $h’$：正立的像取正；倒立的像取負。</li>
+  <li>放大率 $M$：正立的像／像物同側取正；倒立的像／像物異側取負。</li>
+</ul>
+
+<p>$v$ 算出負值，代表像在透鏡前方，是虛像；$f$ 取負值，代表這片是凹透鏡。</p>
+
+<h3 id="放大率">放大率</h3>
+
+\[\frac{h'}{h}=M=-\frac{v}{u}\]
+
+<p>$\lvert M\rvert&gt;1$ 表示像被放大，$\lvert M\rvert&lt;1$ 表示像被縮小，$\lvert M\rvert=1$ 表示像與物等大。$M$ 的符號同時告訴我們像是正立（正）還是倒立（負）。</p>
+
+<h3 id="凸透鏡的成像規律">凸透鏡的成像規律</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>物的位置</th>
+      <th>像</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$u&gt;2f$</td>
+      <td>異側、$f&lt;v&lt;2f$；縮小、倒立實像</td>
+    </tr>
+    <tr>
+      <td>$u=2f$</td>
+      <td>異側、$v=2f$；等大、倒立實像</td>
+    </tr>
+    <tr>
+      <td>$f&lt;u&lt;2f$</td>
+      <td>異側、$v&gt;2f$；放大、倒立實像</td>
+    </tr>
+    <tr>
+      <td>$u=f$</td>
+      <td>不成像（折射光線平行射出）</td>
+    </tr>
+    <tr>
+      <td>$u&lt;f$</td>
+      <td>同側；放大、正立虛像</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>物距 $u$ 愈接近 $f$，像距 $v$ 愈大；$u=f$ 時分母為零，像在無窮遠，所以畫面上不成像。</p>
+
+<h3 id="凹透鏡的成像規律">凹透鏡的成像規律</h3>
+
+<p>凹透鏡的 $f$ 是負值，代入透鏡公式後 $v$ 恆為負值。所以凹透鏡<strong>永遠</strong>成正立、縮小的虛像，像與物在透鏡同側，而且像比物更靠近透鏡。</p>
+
+<h3 id="兩條作圖光線">兩條作圖光線</h3>
+
+<p>不用公式，也可以畫兩條特殊光線找出像的位置：</p>
+
+<ol>
+  <li><strong>平行主軸的光線</strong>：經凸透鏡折射後通過 $F’$；經凹透鏡折射後，其反向延長線通過物這一側的焦點 $F$。</li>
+  <li><strong>通過鏡心的光線</strong>：方向不改變，直直穿過透鏡。</li>
+</ol>
+
+<p>兩條折射光線（或它們的反向延長線）的交點，就是像頂。從像頂垂直主軸畫下來，就是像的位置。</p>
+
+<h3 id="生活中的薄透鏡">生活中的薄透鏡</h3>
+
+<ul>
+  <li>🔍 <strong>放大鏡</strong>：物在 $u&lt;f$ 的位置，成正立放大的虛像。</li>
+  <li>📷 <strong>照相機</strong>：景物在 $u&gt;2f$ 的位置，成倒立縮小的實像。</li>
+  <li>📽️ <strong>投影機</strong>：投影片在 $f&lt;u&lt;2f$ 的位置，成倒立放大的實像。透鏡把像上下、左右都反過來，所以投影片要<strong>轉 180° 倒著放</strong>，屏幕上的畫面才是正立的。</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>預設的凸透鏡、u = 18 cm、f = 7 cm，像是倒立還是正立？比物大還是小？</li>
+  <li>把物距拉到 u = 2f，像距 v 是多少？像的大小和物比起來怎樣？</li>
+  <li>把物距縮到 f &lt; u &lt; 2f，像跑到哪裡去了？v 比 2f 大還是小？</li>
+  <li>把物距調到 u = f，畫面為什麼沒有像？兩條出射光線變成什麼樣子？</li>
+  <li>把物距調到 u &lt; f，像在透鏡的哪一側？它是實像還是虛像？能投影在屏幕上嗎？</li>
+  <li>切換成凹透鏡，不管怎麼拖 u，像的性質有什麼不變的地方？</li>
+  <li>透鏡公式裡的 v 和 f 為什麼要有正負號？負號代表什麼？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/optics-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/thin-lens.js"></script>
+    
+
+</body>
+</html>

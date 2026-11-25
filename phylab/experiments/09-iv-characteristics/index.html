@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📈 非歐姆元件的 I–V 特性 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/electricity/" class="bc-back">← 基礎電學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_06</div>
+                <h1 class="lab-title">📈 非歐姆元件的 I–V 特性</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>歐姆定律說 $I \propto V$——但那只對<strong>金屬</strong>成立。</p>
+
+<p>四種元件接在同一個電路上，按「開始」之後電源電壓會從 $-6$ V 一路掃到 $+6$ V 再掃回來，I–V 曲線就一點一點被描出來。</p>
+
+<p><strong>四條曲線裡只有一條是直線。</strong></p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="歐姆元件與非歐姆元件">歐姆元件與非歐姆元件</h3>
+
+<ul>
+  <li><strong>歐姆元件</strong>：$R = V/I$ 是<strong>定值</strong>，圖是一條過原點的直線。金屬（在溫度不變時）就是。</li>
+  <li><strong>非歐姆元件</strong>：$R = V/I$ 會<strong>隨工作點改變</strong>，圖是曲線。「這顆元件的電阻是多少」這個問題，對它們只在<strong>某一點</strong>才有答案。</li>
+</ul>
+
+<p>⚠️ 注意：非歐姆元件不代表歐姆定律錯了。$V=IR$ 在<strong>每一瞬間、每一個工作點</strong>都成立——只是那個 $R$ 一直在變。這也是為什麼曲線圖上要畫<strong>切線</strong>而不是找一條貫穿全部的直線。</p>
+
+<h3 id="四種元件的行為">四種元件的行為</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>元件</th>
+      <th>曲線特徵</th>
+      <th>原因</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>金屬</strong></td>
+      <td>過原點直線</td>
+      <td>溫度不變→$R$ 固定</td>
+    </tr>
+    <tr>
+      <td><strong>鎢絲燈泡</strong></td>
+      <td>電壓越大越<strong>彎向電流軸</strong></td>
+      <td>燈絲燒紅，$R$ 隨溫度<strong>上升</strong></td>
+    </tr>
+    <tr>
+      <td><strong>二極體</strong></td>
+      <td>正半邊過了某個電壓才陡起來，負半邊幾乎為零</td>
+      <td><strong>單向</strong>導通</td>
+    </tr>
+    <tr>
+      <td><strong>熱敏電阻</strong></td>
+      <td>電壓越大越<strong>彎向電壓軸</strong></td>
+      <td>發熱後 $R$ <strong>下降</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="燈泡為什麼會彎">燈泡為什麼會彎</h3>
+
+<p>鎢絲通電會發熱，溫度越高電阻越大（<strong>正溫度係數</strong>）。所以電壓加倍，電流<strong>不會</strong>加倍——燈絲變熱、電阻跟著變大，把電流壓下來。</p>
+
+<p>生活上的後果：<strong>開燈的那一瞬間電流最大</strong>。燈絲冷的時候電阻只有熱的時候的十分之一左右，所以開關一按，湧入的電流比正常亮著時大得多——燈泡通常就是這樣燒掉的。</p>
+
+<h3 id="二極體單向的閥門">二極體：單向的閥門</h3>
+
+<p>二極體是 pn 接面做的，行為像一個有門檻的單向閥：</p>
+
+<ul>
+  <li><strong>順向</strong>：電壓要超過約 <strong>0.6 V</strong>（矽二極體）才開始明顯導通，之後電流急遽上升</li>
+  <li><strong>逆向</strong>：電流幾乎是零（只有極微小的漏電流）</li>
+</ul>
+
+<p>用途：<strong>整流</strong>（把交流變成直流）、防止電源接反、保護電路。</p>
+
+<h3 id="生活中的例子">生活中的例子</h3>
+
+<ul>
+  <li>💡 <strong>LED 也是二極體</strong>，門檻電壓更高（約 1.8–3.3 V，看顏色）。所以 LED 一定要串一顆電阻限流，直接接電源會燒掉。</li>
+  <li>🌡️ <strong>熱敏電阻是溫度計</strong>。它把溫度變成電阻，烤箱、冷氣、電池充電器裡都有。</li>
+  <li>🔌 <strong>手機充電器裡有整流電路</strong>。插座給的是交流電，電池要的是直流電，中間就是二極體在做轉換。</li>
+  <li>🕯️ <strong>燈泡的冷電阻和熱電阻差很多</strong>。這是非歐姆元件最貼近生活的一個例子。</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>切到「金屬線」，按開始。曲線是什麼形狀？把電壓一路掃到負的，它還是一條直線嗎？</li>
+  <li>切到「鎢絲燈泡」。曲線在電壓大的地方是往哪邊彎？想想燈絲的溫度，為什麼會彎那邊？</li>
+  <li>切到「二極體」。負電壓那邊幾乎沒有點——為什麼？正電壓那邊是從多少伏特才開始有電流的？</li>
+  <li>對二極體來說，「這顆元件的電阻是 5 Ω」這句話有沒有意義？什麼情況下才說得通？</li>
+  <li>熱敏電阻和燈泡都是「電阻會變」，但方向相反。生活裡哪一種該用在哪裡？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/circuit-kit.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/lab-scene.js"></script>
+    
+    
+    
+    
+    
+    <script src="/phylab/assets/js/circuit-scene.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/iv-characteristics.js"></script>
+    
+
+</body>
+</html>

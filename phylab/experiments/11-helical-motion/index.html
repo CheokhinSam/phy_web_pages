@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 帶電粒子在磁場中的螺旋運動 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/magnetism/" class="bc-back">← 磁學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_06</div>
+                <h1 class="lab-title">🌀 帶電粒子在磁場中的螺旋運動</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>畫面上是一條沿著磁力線往上盤旋的<strong>螺旋線</strong>，一顆帶電粒子正沿著它走。</p>
+
+<ul>
+  <li><strong>拖曳畫布</strong>可以轉動視角——這是一張立體圖，不是平面圖。</li>
+  <li>拉「垂直分量 v⊥」：圈子變大或變小。</li>
+  <li>拉「平行分量 v∥」：粒子每繞一圈往上爬的距離（<strong>螺距</strong>）跟著變。</li>
+  <li>把 v∥ 拉到 0：螺旋線當場收成一個圓，粒子只在原地繞圈。</li>
+  <li>左下角有一根比例尺；切換粒子時它會跳一個量級，那就是真實尺度差多遠。</li>
+</ul>
+
+<p>按「開始」讓粒子沿著螺旋線走；「暫停」停在原地；「重設」回到起點。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念">核心概念</h3>
+
+<p>磁場對運動電荷的力是 $F = qvB\sin\theta$，其中 $\theta$ 是速度與磁場方向的夾角。把速度拆成兩個分量之後，這件事就變成兩句互不干涉的話：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>分量</th>
+      <th>磁場的作用</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$v_\perp$（垂直於 B）</td>
+      <td>提供向心力，只改變方向</td>
+      <td>等速圓周運動</td>
+    </tr>
+    <tr>
+      <td>$v_\parallel$（平行於 B）</td>
+      <td><strong>沒有作用力</strong></td>
+      <td>沿磁力線等速前進</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>兩個運動疊起來就是螺旋線。<strong>磁場對粒子不作功</strong>——力永遠垂直於速度，所以速率不變，$v_\parallel$ 也從頭到尾不變。</p>
+
+<h3 id="核心公式">核心公式</h3>
+
+\[r = \frac{m v_\perp}{\lvert q \rvert B} \qquad T = \frac{2\pi m}{\lvert q \rvert B} \qquad p = v_\parallel T\]
+
+<table>
+  <thead>
+    <tr>
+      <th>符號</th>
+      <th>意思</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$m$</td>
+      <td>粒子質量（kg）</td>
+    </tr>
+    <tr>
+      <td>$q$</td>
+      <td>電荷量（C）；公式裡取絕對值，符號只決定轉向</td>
+    </tr>
+    <tr>
+      <td>$v_\perp$</td>
+      <td>垂直於磁場的速率（m/s）</td>
+    </tr>
+    <tr>
+      <td>$v_\parallel$</td>
+      <td>平行於磁場的速率（m/s），磁場完全不理它</td>
+    </tr>
+    <tr>
+      <td>$B$</td>
+      <td>磁場（T）</td>
+    </tr>
+    <tr>
+      <td>$r$</td>
+      <td>螺旋的半徑（m）</td>
+    </tr>
+    <tr>
+      <td>$T$</td>
+      <td>繞一圈的時間（s）</td>
+    </tr>
+    <tr>
+      <td>$p$</td>
+      <td>螺距（m）：繞一圈沿磁力線前進的距離</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>螺距是怎麼來的：</strong> 繞一圈要花 $T$，而在這段時間裡，平行分量一直用 $v_\parallel$ 前進，所以每一圈剛好往上走 $v_\parallel T$。</p>
+
+<p><strong>兩個分量各管各的：</strong> 半徑只跟 $v_\perp$ 有關，螺距只跟 $v_\parallel$ 有關。磁場 B 則是同時影響兩者——它讓圓變小、也讓繞一圈變快，於是螺距跟著變小。</p>
+
+<h3 id="從畫面看出端倪">從畫面看出端倪</h3>
+
+<ul>
+  <li><strong>只拉 $v_\perp$</strong>：圓變大變小，螺距卡片的數字<strong>不動</strong>。</li>
+  <li><strong>只拉 $v_\parallel$</strong>：螺距變長變短，半徑卡片的數字<strong>不動</strong>。</li>
+  <li><strong>只拉 $B$</strong>：半徑、週期、螺距一起變小（B 變大時）。</li>
+  <li><strong>切換粒子</strong>：質量愈大，半徑、週期、螺距全部變大。電子比質子小 1836 倍。</li>
+  <li><strong>正負電荷</strong>：轉向相反，但半徑與週期完全相同——公式裡用的是 $\lvert q \rvert$。</li>
+  <li><strong>$v_\parallel = 0$</strong>：螺旋線退化成一個圓，粒子不再沿磁力線前進，但還是在繞圈。</li>
+</ul>
+
+<h3 id="生活中的螺旋">生活中的螺旋</h3>
+
+<ul>
+  <li>🌌 <strong>極光</strong>：太陽風的帶電粒子沿著地球磁力線盤旋而下，撞到高空氣體發光。畫面裡的螺旋線就是那條路徑。</li>
+  <li>🧲 <strong>磁鏡與托卡馬克</strong>：磁場兩端變強時，粒子的螺距會變小、最後被「彈」回去——這是把電漿關在容器裡的方法。</li>
+  <li>🔬 <strong>質譜儀</strong>：離子在磁場中繞圓，質量不同半徑就不同。若離子同時沿磁場漂移，那條路徑其實是螺旋線。</li>
+</ul>
+
+<h3 id="為什麼每種粒子有自己的比例尺">為什麼每種粒子有自己的比例尺</h3>
+
+<p>真實數字差得很遠：同樣的速率與磁場下，質子的螺旋半徑是 0.52 m，電子只有 0.28 mm——差了 1836 倍。畫面上兩者看起來差不多大，是因為<strong>每一種粒子有自己的放大倍率</strong>。</p>
+
+<p>這件事沒有藏起來：左下角永遠有一根比例尺，切換粒子時它會跳一個數量級。那個跳動本身就是訊息——微觀世界的尺度，和日常尺度差多遠。</p>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>把「平行分量 v∥」拉到 0，螺旋線會變成什麼？半徑與週期兩張卡片有沒有跟著變？</li>
+  <li>反過來，只拉「垂直分量 v⊥」。螺距那張卡片的數字動了嗎？為什麼它不該動？</li>
+  <li>只拉「磁場 B」。半徑、週期、螺距三張卡片各自變大還是變小？哪兩張同方向？</li>
+  <li>切換到電子，螺旋線的旋轉方向反過來了，但半徑和週期的大小關係沒變。公式裡哪個符號只影響方向、不影響大小？</li>
+  <li>粒子每一圈都走在同一個半徑上，速率從頭到尾沒變。磁場對它作功嗎？</li>
+  <li>極光裡的帶電粒子沿著地球磁力線盤旋而下。如果它剛好只有垂直於磁力線的速度，它會往哪裡走？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    <script defer src="/phylab/assets/js/helical-motion.js"></script>
+    
+
+</body>
+</html>

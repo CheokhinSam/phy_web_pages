@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌀 豎直彈簧振子 - Physics Lab</title>
+    <link rel="stylesheet" href="/phylab/assets/css/lab-style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap">
+    
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], processEscapes: true }
+      };
+    </script>
+    <!-- ⚠️ CDN 的 script 一律帶 crossorigin="anonymous"（理由見下方 js_deps 的註解）：
+         沒有它的話，這幾支跨來源檔案裡的錯誤在 window.onerror 只會是
+         "Script error."，headless 的 errs=N 就完全失去資訊。 -->
+    <script id="MathJax-script" async crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7" defer></script>
+</head>
+<body>
+
+    <div class="lab-three-column-container">
+        
+
+        <aside class="lab-control-sidebar">
+            <nav class="lab-breadcrumb"><a href="/phylab/mechanics/" class="bc-back">← 經典力學</a></nav>
+
+            <header class="lab-header">
+                <div class="lab-number">EXP_17</div>
+                <h1 class="lab-title">🌀 豎直彈簧振子</h1>
+            </header>
+            
+            <section class="control-panel" id="controlPanel"></section>
+        </aside>
+
+        <main class="lab-stage-center">
+            <div class="canvas-wrapper">
+                <canvas id="physicsCanvas"></canvas>
+            </div>
+        </main>
+
+        <aside class="lab-tabs-sidebar">
+            <div class="tab-headers">
+                <button class="tab-btn active" onclick="switchTab('tab-desc', event)">實驗描述</button>
+                <button class="tab-btn" onclick="switchTab('tab-data', event)">數據與圖表</button>
+                <button class="tab-btn" onclick="switchTab('tab-questions', event)">探究思考</button>
+            </div>
+
+            <div class="tab-content-container">
+                <div id="tab-desc" class="tab-pane active">
+                    <article class="lab-markdown-content">
+                        <h2 id="實驗介紹">實驗介紹</h2>
+
+<p>這個實驗要讓你看一件有點反直覺的事：<strong>重力可以大幅移動彈簧的平衡位置，卻完全動不了它的週期。</strong></p>
+
+<p>畫面上是一條固定在天花板的彈簧，下面掛著一個重物：</p>
+
+<ul>
+  <li>📏 <strong>灰色虛線</strong>：彈簧的<strong>自然長度</strong> $L_0$，也就是還沒掛東西時彈簧的長度</li>
+  <li>🔵 <strong>藍色虛線</strong>：掛上重物後新的<strong>平衡位置</strong> $x = 0$，重物靜止時就停在這裡</li>
+  <li>🔴 <strong>紅色箭頭</strong>：重力 $mg$（向下）</li>
+  <li>🟣 <strong>紫色箭頭</strong>：彈簧的拉力 $F = k \cdot \Delta x$（向上）</li>
+</ul>
+
+<p>按下開始後，重物會先被拉到平衡位置下方 $A$ 處再放手，接著上下振動。試著切換 🌍 地球 / 🌙 月球 / 🪐 火星，盯著藍色虛線和右側的週期卡片看——虛線會大幅上下跑，週期卻幾乎不動。</p>
+
+<h2 id="物理知識">物理知識</h2>
+
+<h3 id="核心概念重力只是搬家不是改變">核心概念：重力只是「搬家」，不是「改變」</h3>
+
+<p>把彈簧垂直吊起來掛上重物，彈簧會被拉長一段 $\Delta x_0$ 才停下來。這段伸長量叫<strong>靜態伸長量</strong>，它就是重物的「新家」。</p>
+
+<p>關鍵在於：<strong>從這個新家量位移，重力就從方程式裡消失了。</strong></p>
+
+<p>直覺的講法是：彈簧被拉得越長，向上的拉力越大。當它被拉到「向上的拉力剛好等於向下的重力」時，兩股力量打平，重物就停住了——這個位置就是新的平衡點。之後不管重物跑到上面還是下面，我們都改從這個新平衡點量它的位置，於是重力（已經被平衡點的伸長吃掉了）和彈簧的拉力剛好互相抵銷，剩下的淨效果只有「彈簧想把重物拉回平衡點」。</p>
+
+<p>這就是為什麼<strong>從新平衡點量起，垂直彈簧和水平彈簧的運動一模一樣</strong>。</p>
+
+<h3 id="有一條不能越過的界線a--delta-x_0">有一條不能越過的界線：$A &lt; \Delta x_0$</h3>
+
+<p>這個模擬把彈簧當成<strong>只能拉、不能推</strong>（像一條彈簧繩）。你可以拉它，它會拉回來；但一旦它回到原長、你繼續往上頂，它就軟掉了——張力當場歸零，重物不再被彈簧管，只剩下重力把它往下拉，變成自由落體，簡諧運動的前提也就消失了。</p>
+
+<p>重物振動時最高會升到平衡位置上方 $A$ 的地方，所以「最高點仍然低於自然長度」就等於：</p>
+
+\[A &lt; \Delta x_0 = \frac{mg}{k}\]
+
+<p>這正是振幅滑桿有上限、而且上限會跟著 $\Delta x_0$ 跑的原因：</p>
+
+<ul>
+  <li>切到 🌙 月球時 $g$ 變小，$\Delta x_0$ 只剩地球的約 1/6，振幅上限也縮到約 1/6</li>
+  <li>把彈簧常數 $k$ 調大（彈簧變硬），$\Delta x_0$ 變小，振幅上限同樣變小</li>
+</ul>
+
+<blockquote>
+  <p>💡 真實世界裡，裝了導桿的彈簧被壓縮時是會推的；那時候重物跑到自然長度以上，彈簧改從上面推它，運動仍然是簡諧運動。所以「只能拉不能推」是這個模擬額外加上去的限制，不是垂直彈簧本身的宿命。</p>
+</blockquote>
+
+<h3 id="核心公式">核心公式</h3>
+
+<p><strong>懸掛後的平衡條件</strong>：</p>
+
+\[mg = k\,\Delta x_0 \quad\Longrightarrow\quad \Delta x_0 = \frac{mg}{k}\]
+
+<ul>
+  <li>$\Delta x_0$：掛上重物後彈簧多伸長多少（m）</li>
+  <li>$m$：重物質量（kg）</li>
+  <li>$g$：重力加速度（m/s²）</li>
+  <li>$k$：彈簧常數，彈簧有多硬（N/m）</li>
+</ul>
+
+<p><strong>振動週期</strong>：</p>
+
+\[T = 2\pi\sqrt{\frac{m}{k}}\]
+
+<ul>
+  <li>$T$：來回振動一次的時間（s）</li>
+  <li>$m$：重物質量（kg）</li>
+  <li>$k$：彈簧常數（N/m）</li>
+  <li>注意：<strong>$g$ 完全不在式子裡！</strong> 公式裡沒有重力加速度，所以換到月球、火星，週期都一樣。</li>
+</ul>
+
+<p><strong>位能與力學能</strong>（從新平衡點量位移 $x$）：</p>
+
+\[E_k = \tfrac{1}{2}mv^2, \qquad E_p = \tfrac{1}{2}kx^2\]
+
+<p>把位移改從新平衡點量之後，彈性位能可以直接寫成熟悉的 $\frac{1}{2}kx^2$，不必再另外加一項重力位能——重力已經被平衡點吸收掉了。這也是為什麼總力學能 $E = E_k + E_p$ 會是一個固定的值。</p>
+
+<h3 id="從圖表看出端倪">從圖表看出端倪</h3>
+
+<ul>
+  <li><strong>位移-時間圖</strong>：漂亮的弦波。切換到月球時，波的<strong>高度</strong>（振幅對應的位移）會變，但兩個波峰之間的<strong>距離</strong>（週期）不變</li>
+  <li><strong>力學能-時間圖</strong>：一條<strong>水平直線</strong>。動能和位能此消彼長，但總和始終固定——這就是力學能守恆</li>
+</ul>
+
+<h3 id="生活中的豎直彈簧">生活中的豎直彈簧</h3>
+
+<ul>
+  <li>🚗 <strong>汽車避震器</strong>：車重把彈簧壓縮一段，遇到坑洞時車身就在那個壓縮位置附近上下振動。載重越重，車身越低（$\Delta x_0$ 越大）</li>
+  <li>⚖️ <strong>彈簧秤</strong>：指針指到哪裡，取決於重物把彈簧拉長了多少——這正是 $\Delta x_0 = mg/k$</li>
+  <li>🛏️ <strong>彈簧床</strong>：躺上去時床面下沉一段距離才撐住你，之後上下晃動的頻率只跟你的質量和彈簧軟硬有關</li>
+  <li>🏗️ <strong>高樓的阻尼器</strong>：台北 101 裡那顆大鋼球就是一顆超大的彈簧振子，用來吸收地震和強風的能量</li>
+</ul>
+
+                    </article>
+                </div>
+
+                <div id="tab-data" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <div class="pane-meta-title">// REAL-TIME DASHBOARD</div>
+                        <div class="data-cards-grid" id="dataCardsGrid"></div>
+                        <div id="chartContainer" class="chart-container" style="display: none;">
+                            <div class="pane-meta-title" style="margin-top: 30px; margin-bottom: 10px;">// HEIGHT GRAPH</div>
+                            <div class="chart-wrapper">
+                                <canvas id="realtimeChart"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div id="tab-questions" class="tab-pane">
+                    <article class="lab-markdown-content">
+                        <h3 id="-實驗探究思考">📊 實驗探究思考</h3>
+<ol>
+  <li>為什麼掛上重物後，彈簧會停在某個位置不動？停下來的那個位置和彈簧原長有什麼關係？</li>
+  <li>切換到月球（$g = 1.6$）時，重物的平衡位置跑掉了，但右邊的週期 $T$ 幾乎沒變。為什麼重力拉得動平衡位置，卻拉不動週期？</li>
+  <li>把質量 $m$ 調成原來的 4 倍，週期 $T$ 會變幾倍？先猜再拉滑桿驗證。</li>
+  <li>把初始振幅 $A$ 拉到滑桿的最大值，來回一趟的時間有改變嗎？這和「等時性」有什麼關係？</li>
+  <li>切到月球、或把彈簧常數 $k$ 調大時，振幅滑桿的上限會跟著縮小。為什麼振幅不能無限調大？</li>
+  <li>為什麼汽車的避震器彈簧，在月球上載同一批貨物時，車身會浮得比較高？</li>
+</ol>
+
+                    </article>
+                </div>
+                
+            </div>
+        </aside>
+
+    </div>
+
+    <script>
+        function switchTab(tabId, evt) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            evt.currentTarget.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // 📊 表格的橫向捲動容器
+        // ------------------------------------------------------------------
+        // ⚠️ **`overflow` 對 `display: table` 的元素不生效**，所以那幾張在
+        //    只有 253px 的右側欄裡排不下的表（`09-convection` 5 欄、
+        //    `15-gas-laws` 6 欄、`21-pulley-systems` 與 `22-efficiency` 5 欄）
+        //    **沒有辦法在 CSS 裡讓它們自己捲**——一定要有一層 block 容器包住。
+        //
+        //    包在這裡而不是寫進 markdown：`_experiments/` 裡 33 頁、52 張表
+        //    **一個字都不用改**，而且以後新開的頁自動適用。
+        //    （CSS 那一側是 `lab-style.css` 的 `.table-scroll`；字級、框線、
+        //    內距則直接下在 `table`／`th`／`td` 上，不需要包裝。）
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.lab-markdown-content table').forEach(function (t) {
+                if (t.parentElement && t.parentElement.classList.contains('table-scroll')) return;
+                const box = document.createElement('div');
+                box.className = 'table-scroll';
+                t.parentNode.insertBefore(box, t);
+                box.appendChild(t);
+            });
+        });
+    </script>
+
+    <script defer src="/phylab/assets/js/physics-utils.js"></script>
+    
+    
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    
+    
+    
+    
+    
+    <script defer src="/phylab/assets/js/vertical-spring.js"></script>
+    
+
+</body>
+</html>
